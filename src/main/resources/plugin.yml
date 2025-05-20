@@ -1,0 +1,6 @@
+name: paws-of-the-forest
+version: '1.0-SNAPSHOT'
+main: org.warriorcats.pawsOfTheForest.PawsOfTheForest
+api-version: '1.21'
+authors: [ Hugo Piat-Lillo ]
+description: PVP plugin inspired by Warrior Cats
