@@ -4,3 +4,50 @@ main: org.warriorcats.pawsOfTheForest.PawsOfTheForest
 api-version: '1.21'
 authors: [ Hugo Piat-Lillo ]
 description: PVP plugin inspired by Warrior Cats
+commands:
+  global:
+    description: Send a message to the global chat
+    usage: /global <message>
+    aliases: [glo]
+    permission: warriorcats.chat.global
+
+  local:
+    description: Send a message to the local chat (50 block radius)
+    usage: /local <message>
+    aliases: [loc]
+    permission: warriorcats.chat.local
+
+  clan:
+    description: Send a message to your clan chat
+    usage: /clan <message>
+    aliases: [c]
+    permission: warriorcats.chat.clan
+
+  roleplay:
+    description: Send a message to the global RP chat
+    usage: /roleplay <message>
+    aliases: [rp]
+    permission: warriorcats.chat.roleplay
+
+  localroleplay:
+    description: Send a message to the local RP chat (50 block radius)
+    usage: /localroleplay <message>
+    aliases: [locrp]
+    permission: warriorcats.chat.localroleplay
+
+  toggle:
+    description: Toggle your default chat channel
+    usage: /toggle <global|local|clan|roleplay|localroleplay>
+    permission: warriorcats.chat.toggle
+
+  message:
+    description: Send a private message to a player
+    usage: /message <player> <message>
+    aliases: [msg]
+    permission: warriorcats.chat.message
+
+  reply:
+    description: Reply to the last private message
+    usage: /reply <message>
+    aliases: [r]
+    permission: warriorcats.chat.reply

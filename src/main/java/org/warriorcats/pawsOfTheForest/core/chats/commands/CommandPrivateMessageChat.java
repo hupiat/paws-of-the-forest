@@ -1,0 +1,61 @@
+package org.warriorcats.pawsOfTheForest.core.chats.commands;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.warriorcats.pawsOfTheForest.core.messages.MessagesConf;
+
+import java.util.*;
+
+public class CommandPrivateMessageChat implements CommandExecutor, TabCompleter {
+
+    public static final Map<UUID, Pair<UUID, Date>> PRIVATE_MESSAGES_MAP = new HashMap<>();
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!sender.hasPermission("warriorcats.chat.message")) {
+            sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_ENOUGH_PERMISSIONS);
+            return true;
+        }
+
+        if (args.length != 3) {
+            sender.sendMessage(ChatColor.RED + "Usage: /message <player> <message>");
+            return true;
+        }
+
+        Player player = Bukkit.getPlayer(args[1]);
+
+        if (player == null) {
+            sender.sendMessage(ChatColor.RED + MessagesConf.Chats.PLAYER_NOT_FOUND);
+        }
+
+        String message = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
+
+        player.sendMessage(ChatColor.AQUA + "[" + sender.getName() + " -> " + player.getName() + "] " +
+                ChatColor.WHITE + message);
+
+        sender.sendMessage(ChatColor.GREEN + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
+
+        PRIVATE_MESSAGES_MAP.put(((Player) sender).getUniqueId(), Pair.of(player.getUniqueId(), new Date()));
+
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        switch (args.length) {
+            case 1:
+                return List.of("player");
+            case 2:
+                return List.of("message");
+            default:
+                return null;
+        }
+    }
+}
