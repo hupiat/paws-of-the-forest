@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.core;
 
+import org.bukkit.ChatColor;
+
 public abstract class MessagesConf {
 
     private static String getPropertyOrDefault(String key, String defaultValue) {
@@ -7,6 +9,14 @@ public abstract class MessagesConf {
     }
 
     public static class Chats {
+        public static final ChatColor COLOR_PRIVATE_MESSAGE = ChatColor.AQUA;
+        public static final ChatColor COLOR_SENDER = ChatColor.WHITE;
+        public static final ChatColor COLOR_MESSAGE = ChatColor.GRAY;
+        public static final ChatColor COLOR_FEEDBACK = ChatColor.GREEN;
+        public static final ChatColor COLOR_GLOBAL = ChatColor.BLACK;
+        public static final ChatColor COLOR_ROLEPLAY = ChatColor.GOLD;
+
+
         public static final String NOT_ENOUGH_PERMISSIONS =
                 getPropertyOrDefault("chats.notEnoughPermissions", "You don't have enough permissions to do that.");
 

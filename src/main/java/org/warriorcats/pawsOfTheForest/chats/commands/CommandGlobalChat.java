@@ -21,12 +21,12 @@ public class CommandGlobalChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.BLACK + "[Global] " +
-                    ChatColor.WHITE + sender.getName() + ": " +
-                    ChatColor.GRAY + args[1]);
+            player.sendMessage(MessagesConf.Chats.COLOR_GLOBAL + "[Global] " +
+                    MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
+                    MessagesConf.Chats.COLOR_MESSAGE + args[1]);
         }
 
-        sender.sendMessage(ChatColor.GREEN + MessagesConf.Chats.MESSAGE_SENT_GLOBAL);
+        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_GLOBAL);
 
         return true;
     }

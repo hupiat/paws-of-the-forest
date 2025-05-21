@@ -31,10 +31,10 @@ public class CommandPrivateMessageChat extends AbstractCommand {
 
         String message = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
 
-        player.sendMessage(ChatColor.AQUA + "[" + sender.getName() + " -> " + player.getName() + "] " +
-                ChatColor.WHITE + message);
+        player.sendMessage(MessagesConf.Chats.COLOR_PRIVATE_MESSAGE + "[" + sender.getName() + " -> " + player.getName() + "] " +
+                MessagesConf.Chats.COLOR_MESSAGE + message);
 
-        sender.sendMessage(ChatColor.GREEN + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
+        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
 
         PRIVATE_MESSAGES_MAP.put(((Player) sender).getUniqueId(), Pair.of(player.getUniqueId(), new Date()));
 

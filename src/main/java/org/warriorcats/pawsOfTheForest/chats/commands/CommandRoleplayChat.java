@@ -21,12 +21,12 @@ public class CommandRoleplayChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.GOLD + "[RolePlay] " +
-                    ChatColor.WHITE + sender.getName() + ": " +
-                    ChatColor.GRAY + args[1]);
+            player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY + "[RolePlay] " +
+                    MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
+                    MessagesConf.Chats.COLOR_MESSAGE + args[1]);
         }
 
-        sender.sendMessage(ChatColor.GREEN + MessagesConf.Chats.MESSAGE_SENT_ROLEPLAY);
+        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_ROLEPLAY);
 
         return true;
     }

@@ -41,6 +41,7 @@ public class CommandPrivateMessageReplyChat extends AbstractCommand {
 
         if (player == null) {
             sender.sendMessage(ChatColor.RED + MessagesConf.Chats.PLAYER_NOT_FOUND);
+            return true;
         } else {
             // Then, updating the Map just as we were running /message command
             CommandPrivateMessageChat.PRIVATE_MESSAGES_MAP.put(((Player) sender).getUniqueId(), Pair.of(player.getUniqueId(), new Date()));
@@ -48,10 +49,10 @@ public class CommandPrivateMessageReplyChat extends AbstractCommand {
 
         String message = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
 
-        player.sendMessage(ChatColor.AQUA + "[" + sender.getName() + " -> " + player.getName() + "] " +
-                ChatColor.WHITE + message);
+        player.sendMessage(MessagesConf.Chats.COLOR_PRIVATE_MESSAGE + "[" + sender.getName() + " -> " + player.getName() + "] " +
+                MessagesConf.Chats.COLOR_MESSAGE + message);
 
-        sender.sendMessage(ChatColor.GREEN + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
+        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
 
         return true;
     }
