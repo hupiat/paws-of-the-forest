@@ -2,7 +2,7 @@ package org.warriorcats.pawsOfTheForest.players;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
 
 import java.util.UUID;
 

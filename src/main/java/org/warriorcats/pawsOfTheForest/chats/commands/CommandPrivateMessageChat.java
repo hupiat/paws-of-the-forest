@@ -1,31 +1,25 @@
-package org.warriorcats.pawsOfTheForest.core.chats.commands;
+package org.warriorcats.pawsOfTheForest.chats.commands;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.warriorcats.pawsOfTheForest.core.messages.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.AbstractCommand;
+import org.warriorcats.pawsOfTheForest.core.MessagesConf;
 
 import java.util.*;
 
-public class CommandPrivateMessageChat implements CommandExecutor, TabCompleter {
+public class CommandPrivateMessageChat extends AbstractCommand {
 
     public static final Map<UUID, Pair<UUID, Date>> PRIVATE_MESSAGES_MAP = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!sender.hasPermission("warriorcats.chat.message")) {
-            sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_ENOUGH_PERMISSIONS);
-            return true;
-        }
-
-        if (args.length != 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: /message <player> <message>");
+        if (!checkForPermissionsAndArgs(sender, args, 3,
+                "warriorcats.chat.message", "/message <player> <message>")) {
             return true;
         }
 

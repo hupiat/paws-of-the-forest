@@ -1,10 +1,10 @@
 package org.warriorcats.pawsOfTheForest;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandGlobalChat;
-import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandPrivateMessageChat;
-import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandPrivateMessageReplyChat;
-import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandRoleplayChat;
+import org.warriorcats.pawsOfTheForest.chats.commands.CommandGlobalChat;
+import org.warriorcats.pawsOfTheForest.chats.commands.CommandPrivateMessageChat;
+import org.warriorcats.pawsOfTheForest.chats.commands.CommandPrivateMessageReplyChat;
+import org.warriorcats.pawsOfTheForest.chats.commands.CommandRoleplayChat;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public final class PawsOfTheForest extends JavaPlugin {

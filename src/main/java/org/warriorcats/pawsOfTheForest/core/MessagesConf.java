@@ -1,4 +1,4 @@
-package org.warriorcats.pawsOfTheForest.core.messages;
+package org.warriorcats.pawsOfTheForest.core;
 
 public abstract class MessagesConf {
 
