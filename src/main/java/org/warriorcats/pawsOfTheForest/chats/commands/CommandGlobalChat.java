@@ -1,7 +1,6 @@
 package org.warriorcats.pawsOfTheForest.chats.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ public class CommandGlobalChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(MessagesConf.Chats.COLOR_GLOBAL + "[Global] " +
+            player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Global] " +
                     MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
                     MessagesConf.Chats.COLOR_MESSAGE + args[1]);
         }
