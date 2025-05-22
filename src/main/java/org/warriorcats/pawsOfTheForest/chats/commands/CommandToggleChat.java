@@ -3,18 +3,32 @@ package org.warriorcats.pawsOfTheForest.chats.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
 import org.warriorcats.pawsOfTheForest.core.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.MessagesConf;
+import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class CommandToggleChat extends AbstractCommand {
 
-    public static final Map<UUID, ChatChannel> MAP_CHATS_TOGGLED = new HashMap<>();
+    public static ChatChannel getToggledChat(Player player) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            return entity.getSettings().getToggledChat();
+        }
+    }
+
+    public static void setToggledChat(Player player, ChatChannel chatToggled) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            PlayerEntity senderEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            senderEntity.getSettings().setToggledChat(chatToggled);
+            session.getTransaction().commit();
+        }
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +40,7 @@ public class CommandToggleChat extends AbstractCommand {
 
         ChatChannel chatToggled = ChatChannel.valueOf(args[1].toUpperCase());
 
-        MAP_CHATS_TOGGLED.put(((Player) sender).getUniqueId(), chatToggled);
+        setToggledChat((Player) sender, chatToggled);
 
         sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.CHAT_TOGGLED + " " + chatToggled.toString().toLowerCase());
 

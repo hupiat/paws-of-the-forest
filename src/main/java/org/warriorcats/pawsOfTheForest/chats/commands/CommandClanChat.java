@@ -24,7 +24,6 @@ public class CommandClanChat extends AbstractCommand {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                session.beginTransaction();
                 PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
                 PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
 

@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest.players;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.warriorcats.pawsOfTheForest.clans.ClanEntity;
+import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 
 import java.util.UUID;
 
@@ -21,4 +22,8 @@ public class PlayerEntity {
     @OneToOne
     @JoinColumn(name = "clan_uuid")
     private ClanEntity clan;
+
+    @OneToOne
+    @JoinColumn(name = "settings_uuid")
+    private SettingsEntity settings;
 }

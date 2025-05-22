@@ -6,6 +6,16 @@ import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public final class PawsOfTheForest extends JavaPlugin {
 
+    private static PawsOfTheForest INSTANCE;
+
+    public PawsOfTheForest() {
+        INSTANCE = this;
+    }
+
+    public static PawsOfTheForest getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void onEnable() {
         // Initializing database
@@ -33,6 +43,9 @@ public final class PawsOfTheForest extends JavaPlugin {
 
         this.getCommand("reply").setExecutor(new CommandPrivateMessageReplyChat());
         this.getCommand("reply").setTabCompleter(new CommandPrivateMessageReplyChat());
+
+        this.getCommand("toggle").setExecutor(new CommandToggleChat());
+        this.getCommand("toggle").setTabCompleter(new CommandToggleChat());
     }
 
     @Override
