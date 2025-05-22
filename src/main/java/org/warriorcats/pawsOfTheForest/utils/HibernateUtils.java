@@ -11,7 +11,7 @@ public abstract class HibernateUtils {
         try {
             return new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
-            throw new ExceptionInInitializerError("SessionFactory init failed: " + ex);
+            throw new ExceptionInInitializerError(ex);
         }
     }
 
