@@ -25,6 +25,9 @@ public abstract class MessagesConf {
         public static final String PLAYER_NOT_FOUND =
                 getPropertyOrDefault("chats.playerNotFound", "Player specified is offline or doesn't exist.");
 
+        public static final String CHAT_TOGGLED =
+                getPropertyOrDefault("chats.chatToggled", "Chat toggled :");
+
         public static final String MESSAGE_SENT =
                 getPropertyOrDefault("chats.messageSent", "Message sent to :");
 
