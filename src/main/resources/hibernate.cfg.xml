@@ -19,6 +19,6 @@
         <property name="hibernate.format_sql">true</property>
 
         <!-- Mapped entity -->
-        <mapping class="fr.warriorcats.model.PlayerData"/>
+        <mapping class="org.warriorcats.pawsOfTheForest.players.PlayerEntity"/>
     </session-factory>
 </hibernate-configuration>
