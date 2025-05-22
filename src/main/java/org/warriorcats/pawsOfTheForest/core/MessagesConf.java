@@ -15,6 +15,7 @@ public abstract class MessagesConf {
         public static final ChatColor COLOR_MESSAGE = ChatColor.GRAY;
         public static final ChatColor COLOR_FEEDBACK = ChatColor.GREEN;
         public static final ChatColor COLOR_STANDARD_CHANNEL = ChatColor.BLACK;
+        public static final ChatColor COLOR_CLAN_CHANNEL = ChatColor.DARK_PURPLE;
         public static final ChatColor COLOR_ROLEPLAY_CHANNEL = ChatColor.GOLD;
 
 
@@ -38,5 +39,8 @@ public abstract class MessagesConf {
 
         public static final String MESSAGE_SENT_LOCAL_ROLEPLAY =
                 getPropertyOrDefault("chats.messageSentLocalRolePlay", "Message sent to players within " + ChatChannel.LOCAL_CHANNEL_RADIUS + " blocks in roleplay.");
+
+        public static final String MESSAGE_SENT_CLAN =
+                getPropertyOrDefault("chats.messageSentClan", "Message sent to all players in clan.");
     }
 }

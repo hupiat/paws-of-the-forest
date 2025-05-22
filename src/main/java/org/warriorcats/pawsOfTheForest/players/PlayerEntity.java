@@ -2,7 +2,7 @@ package org.warriorcats.pawsOfTheForest.players;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.clans.ClanEntity;
 
 import java.util.UUID;
 
@@ -15,7 +15,10 @@ public class PlayerEntity {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "chat_toggled", nullable = false)
-    private ChatChannel chatToggled = ChatChannel.GLOBAL;
+    @Column(name = "biography", columnDefinition = "TEXT")
+    private String biography;
+
+    @OneToOne
+    @JoinColumn(name = "clan_uuid")
+    private ClanEntity clan;
 }

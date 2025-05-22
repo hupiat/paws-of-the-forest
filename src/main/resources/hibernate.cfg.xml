@@ -18,7 +18,8 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
-        <!-- Mapped entity -->
+        <!-- Mapped entities -->
         <mapping class="org.warriorcats.pawsOfTheForest.players.PlayerEntity"/>
+        <mapping class="org.warriorcats.pawsOfTheForest.clans.ClanEntity"/>
     </session-factory>
 </hibernate-configuration>

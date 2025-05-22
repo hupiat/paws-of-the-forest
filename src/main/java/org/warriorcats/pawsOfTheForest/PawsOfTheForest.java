@@ -19,6 +19,9 @@ public final class PawsOfTheForest extends JavaPlugin {
         this.getCommand("local").setExecutor(new CommandLocalChat());
         this.getCommand("local").setTabCompleter(new CommandLocalChat());
 
+        this.getCommand("clan").setExecutor(new CommandClanChat());
+        this.getCommand("clan").setTabCompleter(new CommandClanChat());
+
         this.getCommand("roleplay").setExecutor(new CommandRoleplayChat());
         this.getCommand("roleplay").setTabCompleter(new CommandRoleplayChat());
 
