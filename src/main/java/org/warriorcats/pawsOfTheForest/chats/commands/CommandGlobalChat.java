@@ -22,7 +22,7 @@ public class CommandGlobalChat extends AbstractCommand {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Global] " +
                     MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
-                    MessagesConf.Chats.COLOR_MESSAGE + args[1]);
+                    MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
         }
 
         sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_GLOBAL);

@@ -30,7 +30,7 @@ public class CommandLocalChat extends AbstractCommand {
             if (x && y && z) {
                 player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Local] " +
                         MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
-                        MessagesConf.Chats.COLOR_MESSAGE + args[1]);
+                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
             }
         }
 

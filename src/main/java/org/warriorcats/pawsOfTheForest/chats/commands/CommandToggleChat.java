@@ -38,7 +38,7 @@ public class CommandToggleChat extends AbstractCommand {
             return true;
         }
 
-        ChatChannel chatToggled = ChatChannel.valueOf(args[1].toUpperCase());
+        ChatChannel chatToggled = ChatChannel.valueOf(args[0].toUpperCase());
 
         setToggledChat((Player) sender, chatToggled);
 

@@ -23,13 +23,13 @@ public class CommandPrivateMessageChat extends AbstractCommand {
             return true;
         }
 
-        Player player = Bukkit.getPlayer(args[1]);
+        Player player = Bukkit.getPlayer(args[0]);
 
         if (player == null) {
             sender.sendMessage(ChatColor.RED + MessagesConf.Chats.PLAYER_NOT_FOUND);
         }
 
-        String message = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
+        String message = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
 
         player.sendMessage(MessagesConf.Chats.COLOR_PRIVATE_MESSAGE + "[" + sender.getName() + " -> " + player.getName() + "] " +
                 MessagesConf.Chats.COLOR_MESSAGE + message);
