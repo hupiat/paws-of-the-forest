@@ -15,7 +15,7 @@ public class ClanEntity {
 
     @Id
     @Column(name = "uuid", nullable = false, unique = true)
-    private UUID uuid;
+    private UUID uuid = UUID.randomUUID();
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
