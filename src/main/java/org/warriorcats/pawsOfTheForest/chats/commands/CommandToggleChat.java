@@ -51,6 +51,16 @@ public class CommandToggleChat extends AbstractCommand {
             }
         }
 
+        if (chatToggled == ChatChannel.LOCALROLEPLAY || chatToggled == ChatChannel.ROLEPLAY) {
+            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+                PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
+                if (!senderEntity.getSettings().isShowRoleplay()) {
+                    sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_SHOWING_ROLEPLAY);
+                    return true;
+                }
+            }
+        }
+
         setToggledChat((Player) sender, chatToggled);
 
         sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.CHAT_TOGGLED + " " + chatToggled.toString().toLowerCase());

@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.CoreEvents;
+import org.warriorcats.pawsOfTheForest.core.settings.SettingsEvents;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public final class PawsOfTheForest extends JavaPlugin {
@@ -50,6 +51,7 @@ public final class PawsOfTheForest extends JavaPlugin {
 
         // Registering events
         this.getServer().getPluginManager().registerEvents(new CoreEvents(), INSTANCE);
+        this.getServer().getPluginManager().registerEvents(new SettingsEvents(), INSTANCE);
     }
 
     @Override

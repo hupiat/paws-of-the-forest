@@ -25,6 +25,9 @@ public abstract class MessagesConf {
         public static final String NOT_A_CLAN_MEMBER =
                 getPropertyOrDefault("chats.notAClanMember", "You are not a member of a clan.");
 
+        public static final String NOT_SHOWING_ROLEPLAY =
+                getPropertyOrDefault("chats.notShowingRoleplay", "You have disabled roleplay messages.");
+
         public static final String PLAYER_NOT_FOUND =
                 getPropertyOrDefault("chats.playerNotFound", "Player specified is offline or doesn't exist.");
 
