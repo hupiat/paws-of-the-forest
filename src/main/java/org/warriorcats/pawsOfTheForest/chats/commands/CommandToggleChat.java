@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.chats.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +40,16 @@ public class CommandToggleChat extends AbstractCommand {
         }
 
         ChatChannel chatToggled = ChatChannel.valueOf(args[0].toUpperCase());
+
+        if (chatToggled == ChatChannel.CLAN) {
+            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+                PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
+                if (senderEntity.getClan() == null) {
+                    sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
+                    return true;
+                }
+            }
+        }
 
         setToggledChat((Player) sender, chatToggled);
 

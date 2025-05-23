@@ -34,8 +34,6 @@ public class CommandLocalChat extends AbstractCommand {
             }
         }
 
-        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_LOCAL);
-
         return true;
     }
 

@@ -13,7 +13,7 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        if (args.length != argsLength) {
+        if (args.length < argsLength) {
             sender.sendMessage(ChatColor.RED + "Usage: " + usage);
             return false;
         }

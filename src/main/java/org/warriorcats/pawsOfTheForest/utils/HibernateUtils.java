@@ -22,7 +22,7 @@ public abstract class HibernateUtils {
                     .applySetting("hibernate.connection.username", "root")
                     .applySetting("hibernate.connection.password", "mysql")
                     .applySetting("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
-                    .applySetting("hibernate.hbm2ddl.auto", "update")
+                    .applySetting("hibernate.hbm2ddl.auto", "create-drop")
                     .applySetting("hibernate.show_sql", "true")
                     .applySetting("hibernate.format_sql", "true")
                     .build();

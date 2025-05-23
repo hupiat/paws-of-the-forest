@@ -34,8 +34,6 @@ public class CommandLocalRoleplayChat extends AbstractCommand {
             }
         }
 
-        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_LOCAL_ROLEPLAY);
-
         return true;
     }
 

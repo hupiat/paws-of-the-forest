@@ -52,8 +52,6 @@ public class CommandPrivateMessageReplyChat extends AbstractCommand {
         player.sendMessage(MessagesConf.Chats.COLOR_PRIVATE_MESSAGE + "[" + sender.getName() + " -> " + player.getName() + "] " +
                 MessagesConf.Chats.COLOR_MESSAGE + message);
 
-        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT + " " + player.getName() + ".");
-
         return true;
     }
 

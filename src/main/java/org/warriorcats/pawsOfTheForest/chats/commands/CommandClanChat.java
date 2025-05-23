@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.chats.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,21 +23,24 @@ public class CommandClanChat extends AbstractCommand {
             return true;
         }
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
-                PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
 
+            if (senderEntity.getClan() == null) {
+                sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
+                return true;
+            }
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                 if (!senderEntity.getClan().getUuid().equals(entity.getClan().getUuid())) {
                     continue;
                 }
+                player.sendMessage(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] " +
+                        MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
+                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
             }
-            player.sendMessage(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] " +
-                    MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
-                    MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
         }
-
-        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.MESSAGE_SENT_CLAN);
 
         return true;
     }
