@@ -26,7 +26,7 @@ public class SettingsEvents implements Listener {
         event.setCancelled(true);
         int slot = event.getRawSlot();
 
-        if (slot == 10) {
+        if (slot == SettingsMenu.INDEX_RP_TOGGLE) {
             Bukkit.getScheduler().runTaskAsynchronously(PawsOfTheForest.getInstance(), () -> {
                 try (Session session = HibernateUtils.getSessionFactory().openSession()) {
                     session.beginTransaction();
@@ -35,6 +35,7 @@ public class SettingsEvents implements Listener {
                     entity.getSettings().setShowRoleplay(!current);
                     if (!entity.getSettings().isShowRoleplay() &&
                             (entity.getSettings().getToggledChat() == ChatChannel.ROLEPLAY || entity.getSettings().getToggledChat() == ChatChannel.LOCALROLEPLAY)) {
+                        // Resetting the chat toggled if user disabled RP, and it was RP channel
                         entity.getSettings().setToggledChat(ChatChannel.DEFAULT_TOGGLED);
                     }
                     session.getTransaction().commit();
@@ -45,7 +46,7 @@ public class SettingsEvents implements Listener {
             });
         }
 
-        if (slot == 12) {
+        if (slot == SettingsMenu.INDEX_CHAT_DROPDOWN) {
             Bukkit.getScheduler().runTaskAsynchronously(PawsOfTheForest.getInstance(), () -> {
                 try (Session session = HibernateUtils.getSessionFactory().openSession()) {
                     session.beginTransaction();

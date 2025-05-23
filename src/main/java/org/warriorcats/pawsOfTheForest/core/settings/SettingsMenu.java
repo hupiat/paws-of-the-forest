@@ -16,11 +16,14 @@ import java.util.Arrays;
 
 public abstract class SettingsMenu {
 
+    public static final int INDEX_RP_TOGGLE = 10;
+    public static final int INDEX_CHAT_DROPDOWN = 12;
+
     public static Inventory create(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, "Chat Settings");
 
-        inv.setItem(10, createToggleItem("RP Chat", isRpEnabled(player)));
-        inv.setItem(12, createChatDropdown("Toggled Chat", getToggledChat(player)));
+        inv.setItem(INDEX_RP_TOGGLE, createToggleItem("RP Chat", isRpEnabled(player)));
+        inv.setItem(INDEX_CHAT_DROPDOWN, createChatDropdown("Toggled Chat", getToggledChat(player)));
 
         return inv;
     }
