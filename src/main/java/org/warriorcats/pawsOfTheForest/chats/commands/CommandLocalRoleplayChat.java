@@ -28,7 +28,7 @@ public class CommandLocalRoleplayChat extends AbstractCommand {
             boolean z = Math.abs(player.getLocation().getZ() - senderLocation.getZ()) < ChatChannel.LOCAL_CHANNEL_RADIUS;
 
             if (x && y && z) {
-                player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[RolePlay] " +
+                player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[Local RolePlay] " +
                         MessagesConf.Chats.COLOR_SENDER + sender.getName() + ": " +
                         MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
             }
