@@ -11,6 +11,7 @@ import org.warriorcats.pawsOfTheForest.core.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandToggleChat extends AbstractCommand {
@@ -72,7 +73,7 @@ public class CommandToggleChat extends AbstractCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 1:
-                return List.of("global", "local", "clan", "roleplay", "localroleplay");
+                return List.of(Arrays.stream(ChatChannel.values()).map(e -> e.toString().toLowerCase()).toArray(String[]::new));
             default:
                 return null;
         }
