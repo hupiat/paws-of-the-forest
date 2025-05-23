@@ -9,6 +9,10 @@ import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
 @Table(name = "player_settings")
 public class SettingsEntity {
 
+    @Id
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
+
     @Column(name = "show_roleplay")
     private boolean showRoleplay;
 
