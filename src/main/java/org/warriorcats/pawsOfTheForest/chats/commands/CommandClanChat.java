@@ -17,7 +17,7 @@ public class CommandClanChat extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!checkForPermissionsAndArgs(sender, args, 2,
+        if (!checkForPermissionsAndArgs(sender, args, 1,
                 "warriorcats.chat.clan", "/clan <message>")) {
             return true;
         }

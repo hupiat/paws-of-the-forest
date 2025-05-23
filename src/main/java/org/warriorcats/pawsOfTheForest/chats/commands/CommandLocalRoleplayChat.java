@@ -16,7 +16,7 @@ public class CommandLocalRoleplayChat extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!checkForPermissionsAndArgs(sender, args, 2,
+        if (!checkForPermissionsAndArgs(sender, args, 1,
                 "warriorcats.chat.localroleplay", "/localroleplay <message>")) {
             return true;
         }

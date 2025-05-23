@@ -18,7 +18,7 @@ public class CommandPrivateMessageChat extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (!checkForPermissionsAndArgs(sender, args, 3,
+        if (!checkForPermissionsAndArgs(sender, args, 2,
                 "warriorcats.chat.message", "/message <player> <message>")) {
             return true;
         }
