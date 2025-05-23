@@ -14,9 +14,9 @@ public class SettingsEntity {
     private String uuid;
 
     @Column(name = "show_roleplay")
-    private boolean showRoleplay;
+    private boolean showRoleplay = true;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "toggled_chat")
-    private ChatChannel toggledChat;
+    private ChatChannel toggledChat = ChatChannel.DEFAULT_TOGGLED;
 }

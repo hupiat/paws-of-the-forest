@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.chats.commands.*;
+import org.warriorcats.pawsOfTheForest.core.CoreEvents;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public final class PawsOfTheForest extends JavaPlugin {
@@ -46,6 +47,9 @@ public final class PawsOfTheForest extends JavaPlugin {
 
         this.getCommand("toggle").setExecutor(new CommandToggleChat());
         this.getCommand("toggle").setTabCompleter(new CommandToggleChat());
+
+        // Registering events
+        this.getServer().getPluginManager().registerEvents(new CoreEvents(), INSTANCE);
     }
 
     @Override

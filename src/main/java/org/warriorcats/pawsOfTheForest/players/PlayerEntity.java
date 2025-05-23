@@ -23,7 +23,7 @@ public class PlayerEntity {
     @JoinColumn(name = "clan_uuid")
     private ClanEntity clan;
 
-    @OneToOne
-    @JoinColumn(name = "settings_uuid")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "settings_uuid", nullable = false)
     private SettingsEntity settings;
 }
