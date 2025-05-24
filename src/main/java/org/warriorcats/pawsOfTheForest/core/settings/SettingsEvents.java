@@ -21,7 +21,7 @@ public class SettingsEvents implements Listener {
     public void on(InventoryClickEvent event) {
 
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!event.getView().getTitle().equals("⚙️ Chat Settings")) return;
+        if (!event.getView().getTitle().equals(SettingsMenu.TITLE)) return;
 
         event.setCancelled(true);
         int slot = event.getRawSlot();
