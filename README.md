@@ -62,15 +62,6 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar p
 
 ---
 
-## 📥 Download
-
-You can download the latest version of the plugin here:  
-[**Download paws-of-the-forest-1.0.0.jar**](https://github.com/your-username/paws-of-the-forest/releases/latest/download/paws-of-the-forest-1.0.0.jar)
-
-> Replace `your-username` with your actual GitHub username after publishing a release.
-
----
-
 ## 🧭 Coming Soon
 
 - Plugin configuration guide
