@@ -72,5 +72,4 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar p
 
 ## 📄 License
 
-This project is licensed under the MIT License.  
 See the [LICENSE](LICENSE) file for more details.
