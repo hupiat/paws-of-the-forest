@@ -51,3 +51,9 @@ commands:
     usage: /reply <message>
     aliases: [r]
     permission: warriorcats.chat.reply
+
+  list:
+    description: List all the players which are online
+    usage: /list
+    aliases: [l]
+    permission: warriorcats.chat.list

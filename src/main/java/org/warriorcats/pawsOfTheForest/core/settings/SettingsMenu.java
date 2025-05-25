@@ -8,7 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.hibernate.Session;
-import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 

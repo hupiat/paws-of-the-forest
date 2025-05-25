@@ -1,4 +1,4 @@
-package org.warriorcats.pawsOfTheForest.chats;
+package org.warriorcats.pawsOfTheForest.core.chats;
 
 public enum ChatChannel {
     GLOBAL, LOCAL, CLAN, ROLEPLAY, LOCALROLEPLAY;

@@ -1,0 +1,32 @@
+package org.warriorcats.pawsOfTheForest.core.commands;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.warriorcats.pawsOfTheForest.core.MessagesConf;
+
+import java.util.List;
+
+public class CommandList extends AbstractCommand {
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!checkForPermissionsAndArgs(sender, args, 0,
+                "warriorcats.chat.list", "/list")) {
+            return true;
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            sender.sendMessage(MessagesConf.Chats.COLOR_PLAYER_NAME + player.getName());
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return null;
+    }
+}

@@ -1,9 +1,10 @@
-package org.warriorcats.pawsOfTheForest.core;
+package org.warriorcats.pawsOfTheForest.core.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.warriorcats.pawsOfTheForest.core.MessagesConf;
 
 public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 

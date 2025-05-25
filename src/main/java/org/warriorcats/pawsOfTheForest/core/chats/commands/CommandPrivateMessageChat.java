@@ -1,4 +1,4 @@
-package org.warriorcats.pawsOfTheForest.chats.commands;
+package org.warriorcats.pawsOfTheForest.core.chats.commands;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.warriorcats.pawsOfTheForest.core.AbstractCommand;
+import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.MessagesConf;
 
 import java.util.*;

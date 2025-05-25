@@ -1,7 +1,6 @@
 package org.warriorcats.pawsOfTheForest.core;
 
 import org.bukkit.ChatColor;
-import org.warriorcats.pawsOfTheForest.chats.ChatChannel;
 
 public abstract class MessagesConf {
 
@@ -11,7 +10,7 @@ public abstract class MessagesConf {
 
     public static class Chats {
         public static final ChatColor COLOR_PRIVATE_MESSAGE = ChatColor.AQUA;
-        public static final ChatColor COLOR_SENDER = ChatColor.WHITE;
+        public static final ChatColor COLOR_PLAYER_NAME = ChatColor.DARK_AQUA;
         public static final ChatColor COLOR_MESSAGE = ChatColor.GRAY;
         public static final ChatColor COLOR_FEEDBACK = ChatColor.GREEN;
         public static final ChatColor COLOR_STANDARD_CHANNEL = ChatColor.DARK_GREEN;
