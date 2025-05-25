@@ -11,7 +11,6 @@ It enriches gameplay with advanced systems such as role management, dynamic weat
 - Java 17 or higher
 - [Maven](https://maven.apache.org/)
 - A Minecraft **Paper 1.21.1** server
-- The [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) plugin installed in the `plugins/` folder
 
 ---
 
