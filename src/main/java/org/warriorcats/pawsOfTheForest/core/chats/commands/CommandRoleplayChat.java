@@ -30,7 +30,7 @@ public class CommandRoleplayChat extends AbstractCommand {
                 }
             }
 
-            player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[RolePlay] " +
+            player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[RP] " +
                     MessagesConf.Chats.COLOR_PLAYER_NAME + sender.getName() + ": " +
                     MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
         }

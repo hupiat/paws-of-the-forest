@@ -64,7 +64,7 @@ public class CommandToggleChat extends AbstractCommand {
 
         setToggledChat((Player) sender, chatToggled);
 
-        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.CHAT_TOGGLED + " " + chatToggled.toString().toLowerCase());
+        sender.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Chats.CHAT_TOGGLED + " " + chatToggled.name().toLowerCase());
 
         return true;
     }
@@ -73,7 +73,7 @@ public class CommandToggleChat extends AbstractCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 1:
-                return List.of(Arrays.stream(ChatChannel.values()).map(e -> e.toString().toLowerCase()).toArray(String[]::new));
+                return List.of(Arrays.stream(ChatChannel.values()).map(e -> e.name().toLowerCase()).toArray(String[]::new));
             default:
                 return null;
         }

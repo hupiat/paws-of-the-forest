@@ -71,7 +71,7 @@ public abstract class SettingsMenu {
     private static ItemStack createChatDropdown(String name, ChatChannel selected) {
         ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.YELLOW + name + ": " + ChatColor.AQUA + selected.name());
+        meta.setDisplayName(ChatColor.YELLOW + name + ": " + ChatColor.AQUA + selected.toString());
         item.setItemMeta(meta);
         return item;
     }

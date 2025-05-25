@@ -47,7 +47,7 @@ public class CoreEvents implements Listener {
         ChatChannel chatToggled = CommandToggleChat.getToggledChat(event.getPlayer());
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
-            Bukkit.dispatchCommand(event.getPlayer(), chatToggled.toString().toLowerCase() + " " + message);
+            Bukkit.dispatchCommand(event.getPlayer(), chatToggled.name().toLowerCase() + " " + message);
         });
     }
 }
