@@ -27,6 +27,7 @@ public class CoreEvents implements Listener {
                 session.beginTransaction();
                 existing = new PlayerEntity();
                 existing.setUuid(event.getPlayer().getUniqueId());
+                existing.setName(event.getPlayer().getName());
                 existing.setSettings(new SettingsEntity());
                 session.persist(existing);
                 session.getTransaction().commit();

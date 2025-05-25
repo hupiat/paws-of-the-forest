@@ -14,7 +14,11 @@ public class PlayerEntity {
 
     @Id
     @Column(name = "uuid", nullable = false, unique = true)
+    // No default initializer here as it is supposed to come from Bukkit getUniqueId()
     private UUID uuid;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "biography", columnDefinition = "TEXT")
     private String biography;
