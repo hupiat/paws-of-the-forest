@@ -50,7 +50,7 @@ public class CommandToggleChat extends AbstractCommand {
             }
         }
 
-        if (chatToggled == ChatChannel.LOCALROLEPLAY || chatToggled == ChatChannel.ROLEPLAY) {
+        if (ChatChannel.isRoleplay(chatToggled)) {
             try (Session session = HibernateUtils.getSessionFactory().openSession()) {
                 PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
                 if (!senderEntity.getSettings().isShowRoleplay()) {

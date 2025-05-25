@@ -32,8 +32,7 @@ public class SettingsEvents implements Listener {
                     PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                     boolean current = entity.getSettings().isShowRoleplay();
                     entity.getSettings().setShowRoleplay(!current);
-                    if (!entity.getSettings().isShowRoleplay() &&
-                            (entity.getSettings().getToggledChat() == ChatChannel.ROLEPLAY || entity.getSettings().getToggledChat() == ChatChannel.LOCALROLEPLAY)) {
+                    if (!entity.getSettings().isShowRoleplay() && ChatChannel.isRoleplay(entity.getSettings().getToggledChat())) {
                         // Resetting the chat toggled if user disabled RP, and it was RP channel
                         entity.getSettings().setToggledChat(ChatChannel.DEFAULT_TOGGLED);
                     }

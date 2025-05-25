@@ -13,4 +13,8 @@ public enum ChatChannel {
         }
         return super.toString();
     }
+
+    public static boolean isRoleplay(ChatChannel channel) {
+        return channel == ROLEPLAY || channel == LOCALROLEPLAY;
+    }
 }

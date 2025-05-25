@@ -46,7 +46,7 @@ public abstract class SettingsMenu {
             values = Arrays.stream(ChatChannel.values()).filter(channel -> {
                 boolean filtered = true;
                 if (!settings.isShowRoleplay()) {
-                    filtered = filtered && channel != ChatChannel.ROLEPLAY && channel != ChatChannel.LOCALROLEPLAY;
+                    filtered = filtered && !ChatChannel.isRoleplay(channel);
                 }
                 if (entity.getClan() == null) {
                     filtered = filtered && channel != ChatChannel.CLAN;
