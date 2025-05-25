@@ -19,8 +19,7 @@ public class CoreEvents implements Listener {
     @EventHandler
     public void on(PlayerJoinEvent event) {
         // Saving player data at joining if it does not exist
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-
+        HibernateUtils.withSession(session -> {
             PlayerEntity existing = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
 
             if (existing == null) {
@@ -32,8 +31,7 @@ public class CoreEvents implements Listener {
                 session.persist(existing);
                 session.getTransaction().commit();
             }
-
-        }
+        });
 
         // Toggling default chat
         CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannel.DEFAULT_TOGGLED);

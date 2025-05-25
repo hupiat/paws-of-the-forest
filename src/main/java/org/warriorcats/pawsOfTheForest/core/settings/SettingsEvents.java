@@ -28,8 +28,7 @@ public class SettingsEvents implements Listener {
 
         if (slot == SettingsMenu.INDEX_RP_TOGGLE) {
             Bukkit.getScheduler().runTaskAsynchronously(PawsOfTheForest.getInstance(), () -> {
-                try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                    session.beginTransaction();
+                HibernateUtils.withTransaction(((transaction, session) -> {
                     PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                     boolean current = entity.getSettings().isShowRoleplay();
                     entity.getSettings().setShowRoleplay(!current);
@@ -38,8 +37,7 @@ public class SettingsEvents implements Listener {
                         // Resetting the chat toggled if user disabled RP, and it was RP channel
                         entity.getSettings().setToggledChat(ChatChannel.DEFAULT_TOGGLED);
                     }
-                    session.getTransaction().commit();
-                }
+                }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
                     player.openInventory(SettingsMenu.create(player));
                 });
@@ -48,14 +46,12 @@ public class SettingsEvents implements Listener {
 
         if (slot == SettingsMenu.INDEX_CHAT_DROPDOWN) {
             Bukkit.getScheduler().runTaskAsynchronously(PawsOfTheForest.getInstance(), () -> {
-                try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                    session.beginTransaction();
+                HibernateUtils.withTransaction(((transaction, session) -> {
                     PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                     ChatChannel current = entity.getSettings().getToggledChat();
                     ChatChannel next = SettingsMenu.getNextChat(player, current);
                     entity.getSettings().setToggledChat(next);
-                    session.getTransaction().commit();
-                }
+                }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
                     player.openInventory(SettingsMenu.create(player));
                 });

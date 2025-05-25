@@ -1,16 +1,34 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.warriorcats.pawsOfTheForest.clans.ClanEntity;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 public abstract class HibernateUtils {
+
+    public static void withSession(Consumer<Session> callback) {
+        try (Session session = getSessionFactory().openSession()) {
+            callback.accept(session);
+        }
+    }
+
+    public static void withTransaction(BiConsumer<Transaction, Session> callback) {
+        withSession(session -> {
+            var transaction = session.beginTransaction();
+            callback.accept(transaction, session);
+            transaction.commit();
+        });
+    }
 
     private static final SessionFactory sessionFactory = buildSessionFactory();
 

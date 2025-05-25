@@ -39,8 +39,8 @@ public abstract class SettingsMenu {
     }
 
     public static ChatChannel getNextChat(Player player, ChatChannel current) {
-        SettingsEntity settings = fetchSettings(player);
         ChatChannel[] values;
+        SettingsEntity settings = fetchSettings(player);
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
             values = Arrays.stream(ChatChannel.values()).filter(channel -> {

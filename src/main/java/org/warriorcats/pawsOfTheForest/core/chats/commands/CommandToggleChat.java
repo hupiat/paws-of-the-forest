@@ -24,12 +24,10 @@ public class CommandToggleChat extends AbstractCommand {
     }
 
     public static void setToggledChat(Player player, ChatChannel chatToggled) {
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            session.beginTransaction();
+        HibernateUtils.withTransaction(((transaction, session) -> {
             PlayerEntity senderEntity = session.get(PlayerEntity.class, player.getUniqueId());
             senderEntity.getSettings().setToggledChat(chatToggled);
-            session.getTransaction().commit();
-        }
+        }));
     }
 
     @Override
