@@ -52,6 +52,6 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("preys.xpEarned", "You have killed a prey ! You have earned xp :", CONFIG_FILE_NAME);
 
         public static final String COINS_EARNED =
-                getPropertyOrDefault("preys.coinsEarned", "You have killed a prey ! You have earned coins :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("preys.coinsEarned", "You have killed a prey ! You have earned Paw coins :", CONFIG_FILE_NAME);
     }
 }
