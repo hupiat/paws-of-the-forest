@@ -8,9 +8,17 @@ import java.util.Properties;
 
 public abstract class AbstractConfiguration {
 
-    protected static Properties propertiesSource = null;
+    protected static Properties propertiesSource = new Properties();
 
-    protected static YamlConfiguration yamlSource = null;
+    protected static YamlConfiguration yamlSource = new YamlConfiguration();
+
+    public static void load(String configFilePath) {
+        if (FileUtils.isYaml(configFilePath)) {
+            loadYamlSource(configFilePath);
+        } else {
+            loadPropertiesSource(configFilePath);
+        }
+    }
 
     protected static void loadPropertiesSource(String configFilePath) {
         propertiesSource = FileUtils.load(configFilePath, propertiesSource);

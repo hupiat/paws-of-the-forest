@@ -7,16 +7,14 @@ import org.bukkit.inventory.ItemStack;
 import org.warriorcats.pawsOfTheForest.shops.Prey;
 import org.warriorcats.pawsOfTheForest.shops.ShopItem;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ShopsConf extends AbstractConfiguration {
 
-    private static final String CONFIG_FILE_NAME = "shops_config.yaml";
-
-    static {
-        loadYamlSource(CONFIG_FILE_NAME);
-    }
+    public static final String CONFIG_FILE_NAME = "shops_config.yaml";
 
     public static class Preys {
         public static final Set<Prey> PREYS = new HashSet<>();
@@ -35,7 +33,8 @@ public class ShopsConf extends AbstractConfiguration {
     }
 
     public static class Shops {
-        public static final Set<ShopItem> SHOP_ITEMS = new HashSet<>();
+        // We need the indexes so we are using a List here
+        public static final List<ShopItem> SHOP_ITEMS = new ArrayList<>();
 
         static {
             ConfigurationSection shopSource = yamlSource.getConfigurationSection("shop");
@@ -44,7 +43,7 @@ public class ShopsConf extends AbstractConfiguration {
                         ItemStack.of(Material.valueOf(shopSource.getString(entry + ".item").toUpperCase())),
                         shopSource.getString(entry + ".name"),
                         shopSource.getLong(entry + ".price"),
-                        shopSource.getString(entry + ".lore")
+                        (List<String>) shopSource.getList(entry + ".lore")
                 );
                 SHOP_ITEMS.add(shopItem);
             }

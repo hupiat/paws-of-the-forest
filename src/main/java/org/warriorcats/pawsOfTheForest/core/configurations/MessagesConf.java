@@ -4,11 +4,7 @@ import org.bukkit.ChatColor;
 
 public abstract class MessagesConf extends AbstractConfiguration {
 
-    private static final String CONFIG_FILE_NAME = "messages_config.properties";
-
-    static {
-        loadPropertiesSource(CONFIG_FILE_NAME);
-    }
+    public static final String CONFIG_FILE_NAME = "messages_config.properties";
 
     public static class Chats {
         public static final ChatColor COLOR_PRIVATE_MESSAGE =
@@ -31,7 +27,7 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("chats.notEnoughPermissions", "You don't have enough permissions to do that.", CONFIG_FILE_NAME);
 
         public static final String NOT_A_CLAN_MEMBER =
-                getPropertyOrDefault("chats.notAClanMember", "You are not a member of a clan.", CONFIG_FILE_NAME);
+                getPropertyOrDefault("chats.notAClanMember", "You are not a member of a Clan.", CONFIG_FILE_NAME);
 
         public static final String NOT_SHOWING_ROLEPLAY =
                 getPropertyOrDefault("chats.notShowingRoleplay", "You have disabled roleplay messages.", CONFIG_FILE_NAME);
@@ -58,6 +54,12 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("preys.coinsEarned", "You have killed a prey ! You have earned Paw coins :", CONFIG_FILE_NAME);
 
         public static final String COINS_LEFT =
-                getPropertyOrDefault("preys.coinsLeft", "Your total coins is :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("preys.coinsLeft", "Your total Paw Coins is :", CONFIG_FILE_NAME);
+
+        public static final String NOT_ENOUGH_COINS =
+                getPropertyOrDefault("preys.notEnoughCoins", "You have not enough coins to buy this !", CONFIG_FILE_NAME);
+
+        public static final String MADE_BUY =
+                getPropertyOrDefault("preys.madeBuy", "You have bought a shop item for :", CONFIG_FILE_NAME);
     }
 }
