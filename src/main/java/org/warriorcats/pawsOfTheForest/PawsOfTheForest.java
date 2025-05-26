@@ -5,7 +5,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.core.CoreEvents;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
+import org.warriorcats.pawsOfTheForest.core.commands.CommandCoins;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
+import org.warriorcats.pawsOfTheForest.core.commands.CommandOpenShop;
+import org.warriorcats.pawsOfTheForest.core.commands.CommandXp;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEvents;
 import org.warriorcats.pawsOfTheForest.shops.ShopsEvents;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
@@ -38,6 +41,9 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("reply", new CommandPrivateMessageReplyChat());
         registerCommand("toggle", new CommandToggleChat());
         registerCommand("list", new CommandList());
+        registerCommand("coins", new CommandCoins());
+        registerCommand("xp", new CommandXp());
+        registerCommand("shop", new CommandOpenShop());
 
         // Registering events
         this.getServer().getPluginManager().registerEvents(new CoreEvents(), INSTANCE);
