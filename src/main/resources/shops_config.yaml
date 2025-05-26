@@ -7,12 +7,14 @@ prey:
     coins: 2
 
 shop:
-  - item: BONE
+  bone:
+    item: BONE
     name: "Bone"
     price: 10
     lore:
       - "A great bone to dig"
-  - item: COOKED_BEEF
+  steak:
+    item: COOKED_BEEF
     name: "Steak"
     price: 15
     lore:
