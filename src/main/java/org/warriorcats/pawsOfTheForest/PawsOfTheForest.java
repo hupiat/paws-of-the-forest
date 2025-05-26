@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest;
 
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.core.CoreEvents;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
@@ -27,32 +29,15 @@ public final class PawsOfTheForest extends JavaPlugin {
         getLogger().info("Hibernate/MySQL connected.");
 
         // Registering commands
-        this.getCommand("global").setExecutor(new CommandGlobalChat());
-        this.getCommand("global").setTabCompleter(new CommandGlobalChat());
-
-        this.getCommand("local").setExecutor(new CommandLocalChat());
-        this.getCommand("local").setTabCompleter(new CommandLocalChat());
-
-        this.getCommand("clan").setExecutor(new CommandClanChat());
-        this.getCommand("clan").setTabCompleter(new CommandClanChat());
-
-        this.getCommand("roleplay").setExecutor(new CommandRoleplayChat());
-        this.getCommand("roleplay").setTabCompleter(new CommandRoleplayChat());
-
-        this.getCommand("localroleplay").setExecutor(new CommandLocalRoleplayChat());
-        this.getCommand("localroleplay").setTabCompleter(new CommandLocalRoleplayChat());
-
-        this.getCommand("message").setExecutor(new CommandPrivateMessageChat());
-        this.getCommand("message").setTabCompleter(new CommandPrivateMessageChat());
-
-        this.getCommand("reply").setExecutor(new CommandPrivateMessageReplyChat());
-        this.getCommand("reply").setTabCompleter(new CommandPrivateMessageReplyChat());
-
-        this.getCommand("toggle").setExecutor(new CommandToggleChat());
-        this.getCommand("toggle").setTabCompleter(new CommandToggleChat());
-
-        this.getCommand("list").setExecutor(new CommandList());
-        this.getCommand("list").setTabCompleter(new CommandList());
+        registerCommand("global", new CommandGlobalChat());
+        registerCommand("local", new CommandLocalChat());
+        registerCommand("clan", new CommandClanChat());
+        registerCommand("roleplay", new CommandRoleplayChat());
+        registerCommand("localroleplay", new CommandLocalRoleplayChat());
+        registerCommand("message", new CommandPrivateMessageChat());
+        registerCommand("reply", new CommandPrivateMessageReplyChat());
+        registerCommand("toggle", new CommandToggleChat());
+        registerCommand("list", new CommandList());
 
         // Registering events
         this.getServer().getPluginManager().registerEvents(new CoreEvents(), INSTANCE);
@@ -63,5 +48,14 @@ public final class PawsOfTheForest extends JavaPlugin {
     @Override
     public void onDisable() {
         HibernateUtils.shutdown();
+    }
+
+    private void registerCommand(String name, Object instance) {
+        if (instance instanceof CommandExecutor executor) {
+            INSTANCE.getCommand(name).setExecutor(executor);
+        }
+        if (instance instanceof TabCompleter completer) {
+            INSTANCE.getCommand(name).setTabCompleter(completer);
+        }
     }
 }
