@@ -12,6 +12,10 @@ public abstract class FileUtils {
 
     private static final File PLUGIN_DATA_FOLDER = PawsOfTheForest.getInstance().getDataFolder();
 
+    public static boolean isYaml(String fileName) {
+        return fileName.endsWith(".yaml");
+    }
+
     public static <T> T load(String fileName, T source) {
         File file = new File(PLUGIN_DATA_FOLDER, fileName);
 
@@ -33,7 +37,7 @@ public abstract class FileUtils {
             }
         }
 
-        if (fileName.endsWith(".yaml")) {
+        if (isYaml(fileName)) {
             source = (T) YamlConfiguration.loadConfiguration(file);
         } else {
             // Properties file
@@ -51,7 +55,7 @@ public abstract class FileUtils {
         File file = new File(PLUGIN_DATA_FOLDER, fileName);
 
         try (OutputStream output = new FileOutputStream(file)) {
-            if (fileName.endsWith(".yaml")) {
+            if (isYaml(fileName)) {
                 ((YamlConfiguration) config).save(file);
             } else {
                 // Properties file
