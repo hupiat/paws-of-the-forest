@@ -24,10 +24,11 @@ public class ShopsConf extends AbstractConfiguration {
         static {
             ConfigurationSection preysSource = yamlSource.getConfigurationSection("prey");
             for (var entry : preysSource.getKeys(false)) {
-                Prey prey = new Prey();
-                prey.setEntityType(EntityType.valueOf(entry.toUpperCase()));
-                prey.setXp(preysSource.getDouble(entry + ".xp"));
-                prey.setCoins(preysSource.getLong(entry + ".coins"));
+                Prey prey = new Prey(
+                        EntityType.valueOf(entry.toUpperCase()),
+                        preysSource.getDouble(entry + ".xp"),
+                        preysSource.getLong(entry + ".coins")
+                );
                 PREYS.add(prey);
             }
         }
@@ -39,11 +40,12 @@ public class ShopsConf extends AbstractConfiguration {
         static {
             ConfigurationSection shopSource = yamlSource.getConfigurationSection("shop");
             for (var entry : shopSource.getKeys(false)) {
-                ShopItem shopItem = new ShopItem();
-                shopItem.setItem(ItemStack.of(Material.valueOf(shopSource.getString(entry + ".item").toUpperCase())));
-                shopItem.setName(shopSource.getString(entry + ".name"));
-                shopItem.setPrice(shopSource.getLong(entry + ".price"));
-                shopItem.setLore(shopSource.getString(entry + ".lore"));
+                ShopItem shopItem = new ShopItem(
+                        ItemStack.of(Material.valueOf(shopSource.getString(entry + ".item").toUpperCase())),
+                        shopSource.getString(entry + ".name"),
+                        shopSource.getLong(entry + ".price"),
+                        shopSource.getString(entry + ".lore")
+                );
                 SHOP_ITEMS.add(shopItem);
             }
         }
