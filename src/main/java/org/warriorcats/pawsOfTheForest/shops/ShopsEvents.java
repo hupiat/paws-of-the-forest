@@ -19,18 +19,18 @@ public class ShopsEvents implements Listener {
         if (event.getEntity().getKiller() == null) return;
         Player killer = event.getEntity().getKiller();
 
-        Optional<Prey> existing = ShopsConf.Preys.PREYS.stream()
+        Optional<Prey> existingPrey = ShopsConf.Preys.PREYS.stream()
                 .filter(prey -> prey.getEntityType() == event.getEntityType())
                 .findFirst();
 
-        if (existing.isPresent()) {
+        if (existingPrey.isPresent()) {
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
-                player.setXp(player.getXp() + existing.get().getXp());
-                player.setCoins(player.getCoins() + existing.get().getCoins());
+                player.setXp(player.getXp() + existingPrey.get().getXp());
+                player.setCoins(player.getCoins() + existingPrey.get().getCoins());
             }));
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + " " + existing.get().getXp());
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + " " + existing.get().getCoins());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + " " + existingPrey.get().getXp());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + " " + existingPrey.get().getCoins());
         }
     }
 }
