@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
@@ -14,7 +13,7 @@ import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
-public class CoreEvents implements Listener {
+public class EventsCore implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {

@@ -11,7 +11,7 @@ import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.Optional;
 
-public class ShopsEvents implements Listener {
+public class EventsShop implements Listener {
 
     // Handling xp and coins giving
     @EventHandler

@@ -14,7 +14,7 @@ import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.Arrays;
 
-public abstract class SettingsMenu {
+public abstract class MenuSettings {
 
     public static final String TITLE = "Chat Settings";
 
