@@ -5,6 +5,7 @@ import org.warriorcats.pawsOfTheForest.core.CoreEvents;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEvents;
+import org.warriorcats.pawsOfTheForest.shops.ShopsEvents;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public final class PawsOfTheForest extends JavaPlugin {
@@ -56,6 +57,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         // Registering events
         this.getServer().getPluginManager().registerEvents(new CoreEvents(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new SettingsEvents(), INSTANCE);
+        this.getServer().getPluginManager().registerEvents(new ShopsEvents(), INSTANCE);
     }
 
     @Override

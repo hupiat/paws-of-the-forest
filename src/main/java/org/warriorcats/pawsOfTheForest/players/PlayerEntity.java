@@ -23,6 +23,12 @@ public class PlayerEntity {
     @Column(name = "biography", columnDefinition = "TEXT")
     private String biography;
 
+    @Column(name = "xp", nullable = false)
+    private double xp;
+
+    @Column(name = "coins", nullable = false)
+    private long coins;
+
     @OneToOne
     @JoinColumn(name = "clan_uuid")
     private ClanEntity clan;

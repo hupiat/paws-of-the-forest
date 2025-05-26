@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 
 import java.io.*;
@@ -11,7 +12,7 @@ public abstract class FileUtils {
 
     private static final File PLUGIN_DATA_FOLDER = PawsOfTheForest.getInstance().getDataFolder();
 
-    public static Properties load(String fileName, Properties source) {
+    public static <T> T load(String fileName, T source) {
         File file = new File(PLUGIN_DATA_FOLDER, fileName);
 
         // If the file does not exist, copying it from the jar
@@ -32,22 +33,32 @@ public abstract class FileUtils {
             }
         }
 
-        try (InputStream input = new FileInputStream(file)) {
-            source.load(input);
-        } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load " + fileName, ex);
+        if (fileName.endsWith(".yaml")) {
+            source = (T) YamlConfiguration.loadConfiguration(file);
+        } else {
+            // Properties file
+            try (InputStream input = new FileInputStream(file)) {
+                ((Properties) source).load(input);
+            } catch (IOException ex) {
+                Bukkit.getLogger().log(Level.SEVERE, "Could not load: " + fileName, ex);
+            }
         }
 
         return source;
     }
 
-    public static void store(String fileName, Properties config) {
+    public static <T> void store(String fileName, T config) {
         File file = new File(PLUGIN_DATA_FOLDER, fileName);
 
         try (OutputStream output = new FileOutputStream(file)) {
-            config.store(output, "Updated by PawsOfTheForest plugin");
+            if (fileName.endsWith(".yaml")) {
+                ((YamlConfiguration) config).save(file);
+            } else {
+                // Properties file
+                ((Properties) config).store(output, "Updated by PawsOfTheForest plugin");
+            }
         } catch (IOException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not store in properties file: " + fileName, e);
+            Bukkit.getLogger().log(Level.SEVERE, "Could not store in config file: " + fileName, e);
         }
     }
 }
