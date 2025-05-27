@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
+import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
@@ -31,6 +32,9 @@ public class EventsCore implements Listener {
                 session.getTransaction().commit();
             }
         });
+
+        // Toggling HUD
+        HUD.open(event.getPlayer());
 
         // Toggling default chat
         CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannel.DEFAULT_TOGGLED);

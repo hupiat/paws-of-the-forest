@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
+import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -30,6 +31,7 @@ public class EventsShop implements Listener {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
                 player.setXp(player.getXp() + existingPrey.get().xp());
                 player.setCoins(player.getCoins() + existingPrey.get().coins());
+                HUD.updateXpProgressBar(killer, player);
             }));
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + existingPrey.get().xp());
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + existingPrey.get().coins());
