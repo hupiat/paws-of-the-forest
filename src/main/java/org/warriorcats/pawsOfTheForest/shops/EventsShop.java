@@ -31,8 +31,8 @@ public class EventsShop implements Listener {
                 player.setXp(player.getXp() + existingPrey.get().xp());
                 player.setCoins(player.getCoins() + existingPrey.get().coins());
             }));
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + " " + existingPrey.get().xp());
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + " " + existingPrey.get().coins());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + existingPrey.get().xp());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + existingPrey.get().coins());
         }
     }
 

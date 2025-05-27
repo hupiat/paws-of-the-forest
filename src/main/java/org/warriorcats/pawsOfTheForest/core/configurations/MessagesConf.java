@@ -45,16 +45,16 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("preys.colors.feedback", ChatColor.GREEN, CONFIG_FILE_NAME);
 
         public static final String XP_EARNED =
-                getPropertyOrDefault("preys.xpEarned", "You have killed a prey ! You have earned xp :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("preys.xpEarned", "XP : +", CONFIG_FILE_NAME);
 
         public static final String XP_LEFT =
                 getPropertyOrDefault("preys.xpLeft", "Your total xp is :", CONFIG_FILE_NAME);
 
         public static final String COINS_EARNED =
-                getPropertyOrDefault("preys.coinsEarned", "You have killed a prey ! You have earned Paw coins :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("preys.coinsEarned", "Paw coins : +", CONFIG_FILE_NAME);
 
         public static final String COINS_LEFT =
-                getPropertyOrDefault("preys.coinsLeft", "Your total Paw Coins is :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("preys.coinsLeft", "Your total Paw coins is :", CONFIG_FILE_NAME);
 
         public static final String NOT_ENOUGH_COINS =
                 getPropertyOrDefault("preys.notEnoughCoins", "You have not enough coins to buy this !", CONFIG_FILE_NAME);
