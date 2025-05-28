@@ -27,4 +27,5 @@ replay_pid*
 target/
 
 # misc
+.gradle/
 .idea/
