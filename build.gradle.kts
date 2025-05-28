@@ -1,6 +1,5 @@
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("io.papermc.paperweight.userdev") version "1.7.7"
 }
 
@@ -48,18 +47,25 @@ dependencies {
 }
 
 tasks {
-    build {
-        dependsOn(shadowJar)
+    jar {
+        archiveClassifier.set("fat")
+
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        from(sourceSets.main.get().output)
+
+        from({
+            configurations.runtimeClasspath.get()
+                .filter { it.name.endsWith(".jar") }
+                .map { zipTree(it) }
+        })
+
+        from("src/main/resources") {
+            include("plugin.yml")
+        }
     }
 
-    shadowJar {
-        relocate("org.hibernate", "org.warriorcats.libs.hibernate")
-        relocate("org.jboss", "org.warriorcats.libs.jboss")
-        relocate("jakarta.persistence", "org.warriorcats.libs.jakarta.persistence")
-        relocate("jakarta.transaction", "org.warriorcats.libs.jakarta.transaction")
-        relocate("jakarta.xml.bind", "org.warriorcats.libs.jakarta.xml.bind")
-        relocate("org.glassfish.jaxb", "org.warriorcats.libs.glassfish.jaxb")
-
-        mergeServiceFiles()
+    build {
+        dependsOn(jar)
     }
 }
