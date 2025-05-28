@@ -40,7 +40,7 @@ public class ShopsConf extends AbstractConfiguration {
             ConfigurationSection shopSource = yamlSource.getConfigurationSection("shop");
             for (var entry : shopSource.getKeys(false)) {
                 ShopItem shopItem = new ShopItem(
-                        ItemStack.of(Material.valueOf(shopSource.getString(entry + ".item").toUpperCase())),
+                        new ItemStack(Material.valueOf(shopSource.getString(entry + ".item").toUpperCase())),
                         shopSource.getString(entry + ".name"),
                         shopSource.getLong(entry + ".price"),
                         (List<String>) shopSource.getList(entry + ".lore")
