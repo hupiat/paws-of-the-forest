@@ -74,6 +74,8 @@ val runServer by tasks.registering(JavaExec::class) {
     group = "paper"
     description = "Start local Paper server."
 
+    dependsOn(tasks.named("build"))
+
     val paperJar = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${version}-dev.jar")
 
     val serverDir = file("run/")
