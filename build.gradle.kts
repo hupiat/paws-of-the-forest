@@ -95,3 +95,31 @@ val runServer by tasks.registering(JavaExec::class) {
     )
     standardInput = System.`in`
 }
+
+val debugServer by tasks.registering(JavaExec::class) {
+    group = "paper"
+    description = "Start local Paper server in debug mode."
+
+    val paperJar = file("run/paper-1.21.1-133.jar")
+    val serverDir = file("run/")
+    val pluginsDir = serverDir.resolve("plugins")
+    pluginsDir.mkdirs()
+
+    doFirst {
+        val pluginJar = layout.buildDirectory.file("libs/${rootProject.name}-${version}-dev.jar").get().asFile
+        val target = pluginsDir.resolve(pluginJar.name)
+        pluginJar.copyTo(target, overwrite = true)
+    }
+
+    workingDir = serverDir
+    standardInput = System.`in`
+    mainClass.set("-jar")
+    args = listOf(paperJar.name, "--nogui")
+
+    // Add remote debug JVM arguments
+    jvmArgs = listOf(
+        "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005",
+        "-Xmx2G",
+        "-Xms1G"
+    )
+}
