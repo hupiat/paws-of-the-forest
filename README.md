@@ -35,7 +35,7 @@ target/paws-of-the-forest-1.0.0.jar
 Copy the `.jar` into your Paper server's `plugins/` folder:
 
 ```bash
-cp target/paws-of-the-forest-1.0.0.jar ../Minecraft_server_paper_1.21.1/plugins/
+cp build/libs/paws-of-the-forest-1.0.0-dev-all.jar ../Minecraft_server_paper_1.21.1/plugins/
 ```
 
 > ⚠️ **Important:** The path `../Minecraft_server_paper_1.21.1/` is just an example.  
@@ -51,8 +51,8 @@ A helper script `start_server.sh` is included to build and run the server with t
 
 ```bash
 #!/bin/bash
-mvn clean package
-cp target/paws-of-the-forest-1.0.0.jar ../Minecraft_server_paper_1.21.1/plugins/
+./gradlew clean build
+cp build/libs/paws-of-the-forest-1.0.0-dev-all.jar ../Minecraft_server_paper_1.21.1/plugins/
 cd ../Minecraft_server_paper_1.21.1
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar paper-1.21.1-231.jar nogui
 ```
