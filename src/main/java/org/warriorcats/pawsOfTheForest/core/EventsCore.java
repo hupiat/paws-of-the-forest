@@ -12,6 +12,7 @@ import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.preys.PreyMouse;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public class EventsCore implements Listener {
@@ -38,6 +39,10 @@ public class EventsCore implements Listener {
 
         // Toggling default chat
         CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannel.DEFAULT_TOGGLED);
+
+        new PreyMouse(event.getPlayer().getLocation(), PreyMouse.Variant.HOUSE).spawn();
+        new PreyMouse(event.getPlayer().getLocation(), PreyMouse.Variant.WOOD).spawn();
+        new PreyMouse(event.getPlayer().getLocation(), PreyMouse.Variant.WHITE_FOOTED).spawn();
     }
 
     // Handling toggled chats redirections

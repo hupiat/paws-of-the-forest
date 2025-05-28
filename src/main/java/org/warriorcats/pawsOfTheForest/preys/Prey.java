@@ -22,10 +22,10 @@ public interface Prey {
             public void run() {
 
                 // Movements
-                double dx = entity.getX() + (Math.random() - 0.5) * 0.1;
-                double dz = entity.getZ() + (Math.random() - 0.5) * 0.1;
+                double dx = (Math.random() - 0.5) * 0.1;
+                double dz = (Math.random() - 0.5) * 0.1;
 
-                entity.setPos(dx, entity.getY(), dz);
+                entity.setPos(entity.getX() + dx, entity.getY(), entity.getZ() + dz);
 
                 // Orientation
                 float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
