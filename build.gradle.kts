@@ -1,7 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.5.10"
+    id("io.papermc.paperweight.userdev") version "1.7.7"
 }
 
 group = "org.warriorcats"
@@ -14,6 +14,7 @@ java {
 repositories {
     mavenLocal()
     mavenCentral()
+    maven("https://repo.papermc.io/repository/maven-snapshots/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://jitpack.io")
@@ -21,7 +22,7 @@ repositories {
 
 dependencies {
     // Paper mappings
-    paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.21.1-R0.1-SNAPSHOT")
 
     // Compile-only dependencies
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
@@ -58,9 +59,6 @@ tasks {
         relocate("jakarta.transaction", "org.warriorcats.libs.jakarta.transaction")
         relocate("jakarta.xml.bind", "org.warriorcats.libs.jakarta.xml.bind")
         relocate("org.glassfish.jaxb", "org.warriorcats.libs.glassfish.jaxb")
-
-        // NE PAS minimiser Hibernate (casse le service loader)
-        // minimize() <-- ne pas activer
 
         mergeServiceFiles()
     }
