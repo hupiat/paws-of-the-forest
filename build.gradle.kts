@@ -52,10 +52,16 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier.set("")
         relocate("org.hibernate", "org.warriorcats.libs.hibernate")
-        relocate("jakarta.xml.bind", "org.warriorcats.libs.jaxb")
-        relocate("org.glassfish.jaxb", "org.warriorcats.libs.jaxb.runtime")
-        minimize()
+        relocate("org.jboss", "org.warriorcats.libs.jboss")
+        relocate("jakarta.persistence", "org.warriorcats.libs.jakarta.persistence")
+        relocate("jakarta.transaction", "org.warriorcats.libs.jakarta.transaction")
+        relocate("jakarta.xml.bind", "org.warriorcats.libs.jakarta.xml.bind")
+        relocate("org.glassfish.jaxb", "org.warriorcats.libs.glassfish.jaxb")
+
+        // NE PAS minimiser Hibernate (casse le service loader)
+        // minimize() <-- ne pas activer
+
+        mergeServiceFiles()
     }
 }
