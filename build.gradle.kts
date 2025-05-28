@@ -69,3 +69,29 @@ tasks {
         dependsOn(jar)
     }
 }
+
+val runServer by tasks.registering(JavaExec::class) {
+    group = "paper"
+    description = "Start local Paper server."
+
+    val paperJar = rootProject.layout.buildDirectory.file("libs/${rootProject.name}-${version}-dev.jar")
+
+    val serverDir = file("run/")
+
+    val pluginsDir = serverDir.resolve("plugins")
+    pluginsDir.mkdirs()
+
+    doFirst {
+        val pluginJar = paperJar.get().asFile
+        val target = pluginsDir.resolve(pluginJar.name)
+        pluginJar.copyTo(target, overwrite = true)
+    }
+
+    workingDir = serverDir
+    mainClass.set("-jar")
+    args = listOf(
+        "paper-1.21.1-133.jar",
+        "--nogui"
+    )
+    standardInput = System.`in`
+}

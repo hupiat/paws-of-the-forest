@@ -26,6 +26,9 @@ replay_pid*
 # build
 build/
 
+# run (paper.jar still included)
+run/
+
 # misc
 .gradle/
 .idea/
