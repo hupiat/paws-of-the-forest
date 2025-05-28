@@ -25,7 +25,7 @@ mvn clean package
 The compiled `.jar` will be located at:
 
 ```
-target/paws-of-the-forest-1.0.0.jar
+build/libs/paws-of-the-forest-1.0.0.jar
 ```
 
 ---
