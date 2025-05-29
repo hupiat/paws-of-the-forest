@@ -1,5 +1,11 @@
 package org.warriorcats.pawsOfTheForest.shops;
 
+import com.ticxo.modelengine.api.ModelEngineAPI;
+import com.ticxo.modelengine.api.entity.BaseEntity;
+import com.ticxo.modelengine.api.entity.BukkitEntity;
+import com.ticxo.modelengine.api.model.ModeledEntity;
+import com.ticxo.modelengine.core.ModelEngine;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +17,7 @@ import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ModelEngineUtils;
 
 import java.util.Optional;
 
@@ -22,19 +29,31 @@ public class EventsShop implements Listener {
         if (event.getEntity().getKiller() == null) return;
         Player killer = event.getEntity().getKiller();
 
-        Optional<Prey> existingPrey = ShopsConf.Preys.PREYS.stream()
-                .filter(prey -> prey.entityType() == event.getEntityType())
-                .findFirst();
+        String entityType = event.getEntityType().name().toUpperCase();
+
+        ModeledEntity modeledEntity = ModelEngine.getModeledEntity(event.getEntity());
+        if (modeledEntity != null) {
+            entityType = ModelEngineUtils.getModelName(modeledEntity).toUpperCase();
+        }
+
+        Optional<Prey> existingPrey = Optional.empty();
+        for (Prey prey : ShopsConf.Preys.PREYS) {
+            if (prey.entityType().equals(entityType)) {
+                existingPrey = Optional.of(prey);
+                break;
+            }
+        }
 
         if (existingPrey.isPresent()) {
+            Prey prey = existingPrey.get();
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
-                player.setXp(player.getXp() + existingPrey.get().xp());
-                player.setCoins(player.getCoins() + existingPrey.get().coins());
+                player.setXp(player.getXp() + prey.xp());
+                player.setCoins(player.getCoins() + prey.coins());
                 HUD.updateXpProgressBar(killer, player);
             }));
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + existingPrey.get().xp());
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + existingPrey.get().coins());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + prey.xp());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + prey.coins());
         }
     }
 

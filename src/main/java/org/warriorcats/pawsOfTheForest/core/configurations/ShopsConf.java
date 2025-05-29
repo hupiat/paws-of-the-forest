@@ -23,7 +23,7 @@ public class ShopsConf extends AbstractConfiguration {
             ConfigurationSection preysSource = yamlSource.getConfigurationSection("prey");
             for (var entry : preysSource.getKeys(false)) {
                 Prey prey = new Prey(
-                        EntityType.valueOf(entry.toUpperCase()),
+                        entry.toUpperCase(),
                         preysSource.getDouble(entry + ".xp"),
                         preysSource.getLong(entry + ".coins")
                 );

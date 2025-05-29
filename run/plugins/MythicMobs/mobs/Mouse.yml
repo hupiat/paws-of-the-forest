@@ -1,5 +1,5 @@
 Mouse:
-  Type: ARMOR_STAND
+  Type: ZOMBIE
   Display: "Mouse"
   Skills:
     - model{mid=mouse} @self
