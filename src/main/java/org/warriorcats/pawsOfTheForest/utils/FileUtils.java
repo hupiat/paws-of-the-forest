@@ -5,12 +5,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public abstract class FileUtils {
 
-    private static final File PLUGIN_DATA_FOLDER = PawsOfTheForest.getInstance().getDataFolder();
+    public static final File PLUGIN_DATA_FOLDER = PawsOfTheForest.getInstance().getDataFolder();
+
+    public static final String RESOURCES_PACK_PATH = "resources_pack.zip";
 
     public static boolean isYaml(String fileName) {
         return fileName.endsWith(".yaml");
@@ -65,4 +73,64 @@ public abstract class FileUtils {
             Bukkit.getLogger().log(Level.SEVERE, "Could not store in config file: " + fileName, e);
         }
     }
+
+    public static void deleteDirectory(Path path) {
+        try {
+            if (Files.exists(path)) {
+                Files.walk(path)
+                        .sorted(Comparator.reverseOrder())
+                        .forEach(p -> {
+                            try {
+                                Files.delete(p);
+                            } catch (IOException e) {
+                                Bukkit.getLogger().log(Level.WARNING, "Failed to delete: " + p, e);
+                            }
+                        });
+            }
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to delete directory", e);
+        }
+    }
+
+    public static void zipFolder(Path sourceFolderPath, Path zipPath) {
+        Path tempCopy = PLUGIN_DATA_FOLDER.toPath().resolve("resources_pack");
+
+        try {
+            // Copy the source folder to a temp location
+            Files.walk(sourceFolderPath).forEach(source -> {
+                try {
+                    Path destination = tempCopy.resolve(sourceFolderPath.relativize(source));
+                    if (Files.isDirectory(source)) {
+                        Files.createDirectories(destination);
+                    } else {
+                        Files.copy(source, destination);
+                    }
+                } catch (IOException e) {
+                    Bukkit.getLogger().log(Level.SEVERE, "Error copying resources for zipping", e);
+                }
+            });
+
+            // Zip the copied folder into the destination .zip
+            try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(zipPath))) {
+                Files.walk(tempCopy)
+                        .filter(path -> !Files.isDirectory(path))
+                        .forEach(path -> {
+                            ZipEntry zipEntry = new ZipEntry(tempCopy.relativize(path).toString().replace("\\", "/"));
+                            try {
+                                zs.putNextEntry(zipEntry);
+                                Files.copy(path, zs);
+                                zs.closeEntry();
+                            } catch (IOException e) {
+                                Bukkit.getLogger().log(Level.SEVERE, "Error zipping resources", e);
+                            }
+                        });
+            }
+
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to create zipped file", e);
+        } finally {
+            deleteDirectory(tempCopy);
+        }
+    }
+
 }

@@ -15,7 +15,12 @@ import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.settings.EventsSettings;
 import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
+import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class PawsOfTheForest extends JavaPlugin {
 
@@ -59,6 +64,11 @@ public final class PawsOfTheForest extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventsSettings(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsShop(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsPreys(), INSTANCE);
+
+        // Zipping resources pack to be sent to all players, and serving in local
+        Path resourcesPackZipPath = Paths.get(FileUtils.PLUGIN_DATA_FOLDER.getPath(), FileUtils.RESOURCES_PACK_PATH);
+        FileUtils.zipFolder(Paths.get("plugins", "ModelEngine", "resource pack"), resourcesPackZipPath);
+        HttpServerUtils.start(HttpServerUtils.RESOURCES_PACK_PORT, resourcesPackZipPath, "/" + FileUtils.RESOURCES_PACK_PATH);
     }
 
     @Override

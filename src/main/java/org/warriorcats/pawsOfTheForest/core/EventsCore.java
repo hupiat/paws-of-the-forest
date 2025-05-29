@@ -12,7 +12,9 @@ import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
 
 public class EventsCore implements Listener {
 
@@ -35,6 +37,9 @@ public class EventsCore implements Listener {
 
         // Toggling HUD
         HUD.open(event.getPlayer());
+
+        // Toggling resources pack
+        event.getPlayer().setResourcePack("http://localhost:" + HttpServerUtils.RESOURCES_PACK_PORT + "/" + FileUtils.RESOURCES_PACK_PATH);
 
         // Toggling default chat
         CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannel.DEFAULT_TOGGLED);
