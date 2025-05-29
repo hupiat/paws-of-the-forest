@@ -10,8 +10,10 @@ import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandOpenShop;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandXp;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.settings.EventsSettings;
+import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -36,6 +38,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         // Loading config
         MessagesConf.load(MessagesConf.CONFIG_FILE_NAME);
         ShopsConf.load(ShopsConf.CONFIG_FILE_NAME);
+        PreysConf.load(PreysConf.CONFIG_FILE_NAME);
 
         // Registering commands
         registerCommand("global", new CommandGlobalChat());
@@ -55,6 +58,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventsCore(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsSettings(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsShop(), INSTANCE);
+        this.getServer().getPluginManager().registerEvents(new EventsPreys(), INSTANCE);
     }
 
     @Override
