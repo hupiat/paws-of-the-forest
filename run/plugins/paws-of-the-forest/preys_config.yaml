@@ -1,0 +1,10 @@
+prey:
+  RABBIT:
+    xp: 3
+    coins: 5
+  CHICKEN:
+    xp: 1
+    coins: 2
+  MOUSE:
+    xp: 10
+    coins: 5
