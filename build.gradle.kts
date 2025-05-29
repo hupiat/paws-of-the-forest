@@ -14,7 +14,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-snapshots/")
-    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-public/")
     maven("https://jitpack.io")
 }
@@ -26,6 +25,9 @@ dependencies {
     // Compile-only dependencies
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     compileOnly("org.projectlombok:lombok:1.18.30")
+    compileOnly(files("run/plugins/ModelEngine-4.0.8.jar"))
+    compileOnly(files("run/plugins/LibsDisguises-11.0.6-Free.jar"))
+    compileOnly(files("run/plugins/MythicMobs-5.8.2.jar"))
 
     // Annotation processor for Lombok
     annotationProcessor("org.projectlombok:lombok:1.18.30")

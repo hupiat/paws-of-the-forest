@@ -4,7 +4,7 @@ main: org.warriorcats.pawsOfTheForest.PawsOfTheForest
 api-version: '1.21'
 authors: [ Hugo Piat-Lillo ]
 description: PVP plugin inspired by Warrior Cats
-depend: [ProtocolLib]
+depend: [ProtocolLib, MythicMobs, ModelEngine, LibsDisguises]
 commands:
   global:
     description: Send a message to the global chat
