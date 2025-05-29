@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
@@ -42,7 +42,7 @@ public class EventsCore implements Listener {
         event.getPlayer().setResourcePack("http://localhost:" + HttpServerUtils.RESOURCES_PACK_PORT + "/" + FileUtils.RESOURCES_PACK_PATH);
 
         // Toggling default chat
-        CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannel.DEFAULT_TOGGLED);
+        CommandToggleChat.setToggledChat(event.getPlayer(), ChatChannels.DEFAULT_TOGGLED);
     }
 
     // Handling toggled chats redirections
@@ -51,7 +51,7 @@ public class EventsCore implements Listener {
 
         event.setCancelled(true);
 
-        ChatChannel chatToggled = CommandToggleChat.getToggledChat(event.getPlayer());
+        ChatChannels chatToggled = CommandToggleChat.getToggledChat(event.getPlayer());
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
             Bukkit.dispatchCommand(event.getPlayer(), chatToggled.name().toLowerCase() + " " + message);

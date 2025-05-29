@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -31,9 +31,9 @@ public class EventsSettings implements Listener {
                     PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                     boolean current = entity.getSettings().isShowRoleplay();
                     entity.getSettings().setShowRoleplay(!current);
-                    if (!entity.getSettings().isShowRoleplay() && ChatChannel.isRoleplay(entity.getSettings().getToggledChat())) {
+                    if (!entity.getSettings().isShowRoleplay() && ChatChannels.isRoleplay(entity.getSettings().getToggledChat())) {
                         // Resetting the chat toggled if user disabled RP, and it was RP channel
-                        entity.getSettings().setToggledChat(ChatChannel.DEFAULT_TOGGLED);
+                        entity.getSettings().setToggledChat(ChatChannels.DEFAULT_TOGGLED);
                     }
                 }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
@@ -46,8 +46,8 @@ public class EventsSettings implements Listener {
             Bukkit.getScheduler().runTaskAsynchronously(PawsOfTheForest.getInstance(), () -> {
                 HibernateUtils.withTransaction(((transaction, session) -> {
                     PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-                    ChatChannel current = entity.getSettings().getToggledChat();
-                    ChatChannel next = MenuSettings.getNextChat(player, current);
+                    ChatChannels current = entity.getSettings().getToggledChat();
+                    ChatChannels next = MenuSettings.getNextChat(player, current);
                     entity.getSettings().setToggledChat(next);
                 }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {

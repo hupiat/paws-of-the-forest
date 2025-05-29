@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 
@@ -23,9 +23,9 @@ public class CommandLocalChat extends AbstractCommand {
 
         Location senderLocation = ((Player) sender).getLocation();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            boolean x = Math.abs(player.getLocation().getX() - senderLocation.getX()) < ChatChannel.LOCAL_CHANNEL_RADIUS;
-            boolean y = Math.abs(player.getLocation().getY() - senderLocation.getY()) < ChatChannel.LOCAL_CHANNEL_RADIUS;
-            boolean z = Math.abs(player.getLocation().getZ() - senderLocation.getZ()) < ChatChannel.LOCAL_CHANNEL_RADIUS;
+            boolean x = Math.abs(player.getLocation().getX() - senderLocation.getX()) < ChatChannels.LOCAL_CHANNEL_RADIUS;
+            boolean y = Math.abs(player.getLocation().getY() - senderLocation.getY()) < ChatChannels.LOCAL_CHANNEL_RADIUS;
+            boolean z = Math.abs(player.getLocation().getZ() - senderLocation.getZ()) < ChatChannels.LOCAL_CHANNEL_RADIUS;
 
             if (x && y && z) {
                 player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Local] " +

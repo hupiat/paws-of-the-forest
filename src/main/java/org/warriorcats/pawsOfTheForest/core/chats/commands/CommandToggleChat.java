@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hibernate.Session;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
@@ -16,14 +16,14 @@ import java.util.List;
 
 public class CommandToggleChat extends AbstractCommand {
 
-    public static ChatChannel getToggledChat(Player player) {
+    public static ChatChannels getToggledChat(Player player) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
             return entity.getSettings().getToggledChat();
         }
     }
 
-    public static void setToggledChat(Player player, ChatChannel chatToggled) {
+    public static void setToggledChat(Player player, ChatChannels chatToggled) {
         HibernateUtils.withTransaction(((transaction, session) -> {
             PlayerEntity senderEntity = session.get(PlayerEntity.class, player.getUniqueId());
             senderEntity.getSettings().setToggledChat(chatToggled);
@@ -38,9 +38,9 @@ public class CommandToggleChat extends AbstractCommand {
             return true;
         }
 
-        ChatChannel chatToggled = ChatChannel.valueOf(args[0].toUpperCase());
+        ChatChannels chatToggled = ChatChannels.valueOf(args[0].toUpperCase());
 
-        if (chatToggled == ChatChannel.CLAN) {
+        if (chatToggled == ChatChannels.CLAN) {
             try (Session session = HibernateUtils.getSessionFactory().openSession()) {
                 PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
                 if (senderEntity.getClan() == null) {
@@ -50,7 +50,7 @@ public class CommandToggleChat extends AbstractCommand {
             }
         }
 
-        if (ChatChannel.isRoleplay(chatToggled)) {
+        if (ChatChannels.isRoleplay(chatToggled)) {
             try (Session session = HibernateUtils.getSessionFactory().openSession()) {
                 PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
                 if (!senderEntity.getSettings().isShowRoleplay()) {
@@ -71,7 +71,7 @@ public class CommandToggleChat extends AbstractCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 1:
-                return List.of(Arrays.stream(ChatChannel.values()).map(e -> e.name().toLowerCase()).toArray(String[]::new));
+                return List.of(Arrays.stream(ChatChannels.values()).map(e -> e.name().toLowerCase()).toArray(String[]::new));
             default:
                 return null;
         }

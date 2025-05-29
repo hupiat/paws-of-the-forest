@@ -2,7 +2,7 @@ package org.warriorcats.pawsOfTheForest.core.settings;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannel;
+import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 
 import java.util.UUID;
 
@@ -20,5 +20,5 @@ public class SettingsEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "toggled_chat")
-    private ChatChannel toggledChat = ChatChannel.DEFAULT_TOGGLED;
+    private ChatChannels toggledChat = ChatChannels.DEFAULT_TOGGLED;
 }
