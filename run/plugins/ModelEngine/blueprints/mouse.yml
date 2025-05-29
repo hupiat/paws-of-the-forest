@@ -1,0 +1,11 @@
+name: mouse
+base:
+  bone: mount
+  offset: [0, 1, 0]
+
+render:
+  type: ITEM
+  item: LEATHER_HORSE_ARMOR
+  scale: 1.0
+
+model: mouse/mouse

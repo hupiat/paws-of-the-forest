@@ -1,0 +1,21 @@
+prey:
+  RABBIT:
+    xp: 3
+    coins: 5
+  CHICKEN:
+    xp: 1
+    coins: 2
+
+shop:
+  bone:
+    item: BONE
+    name: "Bone"
+    price: 10
+    lore:
+      - "A great bone to dig"
+  steak:
+    item: COOKED_BEEF
+    name: "Steak"
+    price: 15
+    lore:
+      - "Big meal"
