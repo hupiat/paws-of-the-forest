@@ -33,7 +33,7 @@ public class CommandClanChat extends AbstractCommand {
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-                if (!senderEntity.getClan().getUuid().equals(entity.getClan().getUuid())) {
+                if (senderEntity.getClan() != entity.getClan()) {
                     continue;
                 }
                 player.sendMessage(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] " +

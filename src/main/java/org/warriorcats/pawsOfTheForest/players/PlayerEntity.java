@@ -2,7 +2,7 @@ package org.warriorcats.pawsOfTheForest.players;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.warriorcats.pawsOfTheForest.clans.ClanEntity;
+import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 
 import java.util.UUID;
@@ -29,9 +29,9 @@ public class PlayerEntity {
     @Column(name = "coins", nullable = false)
     private long coins;
 
-    @OneToOne
-    @JoinColumn(name = "clan_uuid")
-    private ClanEntity clan;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "clan")
+    private Clans clan;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "settings_uuid", nullable = false)

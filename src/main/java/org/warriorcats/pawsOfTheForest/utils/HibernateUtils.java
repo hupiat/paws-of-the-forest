@@ -7,7 +7,6 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.warriorcats.pawsOfTheForest.clans.ClanEntity;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 
@@ -49,7 +48,6 @@ public abstract class HibernateUtils {
 
             sources.addAnnotatedClass(PlayerEntity.class);
             sources.addAnnotatedClass(SettingsEntity.class);
-            sources.addAnnotatedClass(ClanEntity.class);
 
             Metadata metadata = sources.getMetadataBuilder().build();
             return metadata.getSessionFactoryBuilder().build();
