@@ -80,15 +80,15 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
     public static class Clans {
         public static final String PLAYER_NOT_BELONG_TO_CLAN =
-                getPropertyOrDefault("chats.playerNotBelongToClan", "This player is not in this Clan !", CONFIG_FILE_NAME);
+                getPropertyOrDefault("clans.playerNotBelongToClan", "This player is not in this Clan !", CONFIG_FILE_NAME);
 
         public static final String CLAN_NOT_FOUND =
-                getPropertyOrDefault("chats.clanNotFound", "Clan specified doesn't exist.", CONFIG_FILE_NAME);
+                getPropertyOrDefault("clans.clanNotFound", "Clan specified doesn't exist.", CONFIG_FILE_NAME);
 
         public static final String CLAN_ADDED =
-                getPropertyOrDefault("chats.clanAdded", "You've been added to Clan :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("clans.clanAdded", "You've been added to Clan :", CONFIG_FILE_NAME);
 
         public static final String CLAN_REMOVED =
-                getPropertyOrDefault("chats.clanRemoved", "You've been removed from Clan :", CONFIG_FILE_NAME);
+                getPropertyOrDefault("clans.clanRemoved", "You've been removed from Clan :", CONFIG_FILE_NAME);
     }
 }
