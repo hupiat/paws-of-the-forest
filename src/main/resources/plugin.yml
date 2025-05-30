@@ -76,3 +76,9 @@ commands:
     usage: /shop
     aliases: [ sh ]
     permission: warriorcats.shop
+
+  clans:
+    description: Manage clans
+    usage: /clans <clan> <add|remove> <player>
+    aliases: [ cl ]
+    permission: warriorcats.chat.clans

@@ -1,15 +1,17 @@
 package org.warriorcats.pawsOfTheForest.core.configurations;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.hibernate.Session;
+import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public abstract class MessagesConf extends AbstractConfiguration {
 
     public static final String CONFIG_FILE_NAME = "messages_config.properties";
 
     public static class Chats {
-        public static final ChatColor COLOR_PRIVATE_MESSAGE =
-                getPropertyOrDefault("chats.colors.privateMessage", ChatColor.AQUA, CONFIG_FILE_NAME);
-        public static final ChatColor COLOR_PLAYER_NAME =
+        public static final ChatColor COLOR_PLAYER_NAME_DEFAULT =
                 getPropertyOrDefault("chats.colors.playerName", ChatColor.DARK_AQUA, CONFIG_FILE_NAME);
         public static final ChatColor COLOR_MESSAGE =
                 getPropertyOrDefault("chats.colors.message", ChatColor.GRAY, CONFIG_FILE_NAME);
@@ -35,8 +37,21 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String PLAYER_NOT_FOUND =
                 getPropertyOrDefault("chats.playerNotFound", "Player specified is offline or doesn't exist.", CONFIG_FILE_NAME);
 
+        public static final String GENERIC_ERROR =
+                getPropertyOrDefault("chats.clanNotFound", "Unknown usage :", CONFIG_FILE_NAME);
+
         public static final String CHAT_TOGGLED =
                 getPropertyOrDefault("chats.chatToggled", "Chat toggled :", CONFIG_FILE_NAME);
+
+        public static String getColorName(Player player) {
+            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+                PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+                if (entity.getClan() == null) {
+                    return COLOR_PLAYER_NAME_DEFAULT.toString();
+                }
+                return net.md_5.bungee.api.ChatColor.of(entity.getClan().getColor()).toString();
+            }
+        }
 
     }
 
@@ -61,5 +76,19 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String MADE_BUY =
                 getPropertyOrDefault("preys.madeBuy", "You have bought a shop item for :", CONFIG_FILE_NAME);
+    }
+
+    public static class Clans {
+        public static final String PLAYER_NOT_BELONG_TO_CLAN =
+                getPropertyOrDefault("chats.playerNotBelongToClan", "This player is not in this Clan !", CONFIG_FILE_NAME);
+
+        public static final String CLAN_NOT_FOUND =
+                getPropertyOrDefault("chats.clanNotFound", "Clan specified doesn't exist.", CONFIG_FILE_NAME);
+
+        public static final String CLAN_ADDED =
+                getPropertyOrDefault("chats.clanAdded", "You've been added to Clan :", CONFIG_FILE_NAME);
+
+        public static final String CLAN_REMOVED =
+                getPropertyOrDefault("chats.clanRemoved", "You've been removed from Clan :", CONFIG_FILE_NAME);
     }
 }

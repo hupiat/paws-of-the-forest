@@ -39,7 +39,7 @@ public class CommandLocalRoleplayChat extends AbstractCommand {
 
             if (x && y && z) {
                 player.sendMessage(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[Local RP] " +
-                        MessagesConf.Chats.COLOR_PLAYER_NAME + sender.getName() + ": " +
+                        MessagesConf.Chats.getColorName((Player) sender) + sender.getName() + ": " +
                         MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
             }
         }

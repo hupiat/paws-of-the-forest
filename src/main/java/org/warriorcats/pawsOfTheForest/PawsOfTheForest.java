@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.warriorcats.pawsOfTheForest.clans.CommandClans;
 import org.warriorcats.pawsOfTheForest.core.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandCoins;
@@ -58,6 +59,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("coins", new CommandCoins());
         registerCommand("xp", new CommandXp());
         registerCommand("shop", new CommandOpenShop());
+        registerCommand("clans", new CommandClans());
 
         // Registering events
         this.getServer().getPluginManager().registerEvents(new EventsCore(), INSTANCE);

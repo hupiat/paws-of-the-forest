@@ -31,8 +31,12 @@ public class CommandPrivateMessageChat extends AbstractCommand {
 
         String message = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
 
-        player.sendMessage(MessagesConf.Chats.COLOR_PRIVATE_MESSAGE + "[" + sender.getName() + " -> " + player.getName() + "] " +
-                MessagesConf.Chats.COLOR_MESSAGE + message);
+        player.sendMessage(MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + "["
+                + MessagesConf.Chats.getColorName((Player) sender) + sender.getName()
+                + MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + " -> "
+                + MessagesConf.Chats.getColorName(player) + player.getName()
+                + MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + "] "
+                + MessagesConf.Chats.COLOR_MESSAGE + message);
 
         PRIVATE_MESSAGES_MAP.put(((Player) sender).getUniqueId(), Pair.of(player.getUniqueId(), new Date()));
 
