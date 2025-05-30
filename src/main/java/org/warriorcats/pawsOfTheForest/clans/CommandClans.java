@@ -44,7 +44,7 @@ public class CommandClans extends AbstractCommand {
             switch (args[1].toLowerCase()) {
                 case "add":
                     playerEntity.setClan(clan);
-                    player.sendMessage(MessagesConf.Chats.COLOR_FEEDBACK + MessagesConf.Clans.CLAN_ADDED + " " + clan);
+                    player.sendMessage(MessagesConf.Clans.COLOR_FEEDBACK + MessagesConf.Clans.CLAN_ADDED + " " + clan);
                     break;
                 case "remove":
                     if (playerEntity.getClan() != clan) {
@@ -52,10 +52,10 @@ public class CommandClans extends AbstractCommand {
                         return true;
                     }
                     playerEntity.setClan(null);
-                    player.sendMessage(ChatColor.RED + MessagesConf.Clans.CLAN_REMOVED + " " + clan);
+                    player.sendMessage(MessagesConf.Clans.COLOR_FEEDBACK + MessagesConf.Clans.CLAN_REMOVED + " " + clan);
                     break;
                 default:
-                    sender.sendMessage(ChatColor.RED + MessagesConf.Chats.GENERIC_ERROR + " " + usage);
+                    sender.sendMessage(ChatColor.RED + MessagesConf.GENERIC_ERROR + " " + usage);
                     return true;
             }
             transaction.commit();

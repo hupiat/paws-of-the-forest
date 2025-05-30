@@ -10,6 +10,9 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
     public static final String CONFIG_FILE_NAME = "messages_config.properties";
 
+    public static final String GENERIC_ERROR =
+            getPropertyOrDefault("generic_error", "Unknown usage :", CONFIG_FILE_NAME);
+
     public static class Chats {
         public static final ChatColor COLOR_PLAYER_NAME_DEFAULT =
                 getPropertyOrDefault("chats.colors.playerName", ChatColor.DARK_AQUA, CONFIG_FILE_NAME);
@@ -36,9 +39,6 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_NOT_FOUND =
                 getPropertyOrDefault("chats.playerNotFound", "Player specified is offline or doesn't exist.", CONFIG_FILE_NAME);
-
-        public static final String GENERIC_ERROR =
-                getPropertyOrDefault("chats.clanNotFound", "Unknown usage :", CONFIG_FILE_NAME);
 
         public static final String CHAT_TOGGLED =
                 getPropertyOrDefault("chats.chatToggled", "Chat toggled :", CONFIG_FILE_NAME);
@@ -79,6 +79,9 @@ public abstract class MessagesConf extends AbstractConfiguration {
     }
 
     public static class Clans {
+        public static final ChatColor COLOR_FEEDBACK =
+                getPropertyOrDefault("clans.colors.feedback", ChatColor.GREEN, CONFIG_FILE_NAME);
+
         public static final String PLAYER_NOT_BELONG_TO_CLAN =
                 getPropertyOrDefault("clans.playerNotBelongToClan", "This player is not in this Clan !", CONFIG_FILE_NAME);
 
