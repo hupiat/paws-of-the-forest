@@ -11,4 +11,8 @@ public enum Clans {
     Clans(String color) {
         this.color = color;
     }
+
+    public String getColorCode() {
+        return net.md_5.bungee.api.ChatColor.of(this.color).toString();
+    }
 }

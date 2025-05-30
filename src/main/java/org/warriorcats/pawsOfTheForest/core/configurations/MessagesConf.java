@@ -49,7 +49,7 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 if (entity.getClan() == null) {
                     return COLOR_PLAYER_NAME_DEFAULT.toString();
                 }
-                return net.md_5.bungee.api.ChatColor.of(entity.getClan().getColor()).toString();
+                return entity.getClan().getColorCode();
             }
         }
 
