@@ -1,5 +1,10 @@
-Mouse:
+mouse:
   Type: ZOMBIE
-  Display: "Mouse"
+  Display: "§fMouse"
+  Health: 5
+  Damage: 1
+  Armor: 0
+  Options:
+    PreventSunburn: true
   Skills:
     - model{mid=mouse} @self

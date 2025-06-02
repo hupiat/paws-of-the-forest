@@ -5,17 +5,31 @@ import com.ticxo.modelengine.core.ModelEngine;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
-import org.warriorcats.pawsOfTheForest.utils.ModelEngineUtils;
+import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.Optional;
 
 public class EventsPreys implements Listener {
+
+    public static final float COMMON_SPAWN_CHANCE = 0.5f;
+
+    // Handling spawn
+    @EventHandler
+    public void on(CreatureSpawnEvent event) {
+        if (event.isCancelled()) return;
+
+        if (Math.random() < COMMON_SPAWN_CHANCE) {
+            event.setCancelled(true);
+            MobsUtils.spawn(event.getLocation(), "mouse", Math.random());
+        }
+    }
 
     // Handling xp and coins giving when killing a prey
     @EventHandler
@@ -27,7 +41,7 @@ public class EventsPreys implements Listener {
 
         ModeledEntity modeledEntity = ModelEngine.getModeledEntity(event.getEntity());
         if (modeledEntity != null) {
-            entityType = ModelEngineUtils.getModelName(modeledEntity).toUpperCase();
+            entityType = MobsUtils.getModelName(modeledEntity).toUpperCase();
         }
 
         Optional<Prey> existingPrey = Optional.empty();
