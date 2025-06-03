@@ -69,7 +69,7 @@ public class CommandClans extends AbstractCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 1:
-                return List.of(Arrays.stream(Clans.values()).map(Clans::toString).map(String::toUpperCase).toArray(String[]::new));
+                return List.of(Arrays.stream(Clans.values()).map(Clans::name).map(String::toUpperCase).toArray(String[]::new));
             case 2:
                 return List.of("add", "remove");
             case 3:

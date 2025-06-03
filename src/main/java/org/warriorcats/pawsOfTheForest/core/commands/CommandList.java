@@ -19,7 +19,7 @@ public class CommandList extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            sender.sendMessage(MessagesConf.Chats.getColorName(player) + player.getName());
+            sender.sendMessage(MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + player.getName());
         }
 
         return true;

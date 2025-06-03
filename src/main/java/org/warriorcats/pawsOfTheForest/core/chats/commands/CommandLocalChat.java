@@ -28,9 +28,9 @@ public class CommandLocalChat extends AbstractCommand {
             boolean z = Math.abs(player.getLocation().getZ() - senderLocation.getZ()) < ChatChannels.LOCAL_CHANNEL_RADIUS;
 
             if (x && y && z) {
-                player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Local] " +
-                        MessagesConf.Chats.getColorName((Player) sender) + sender.getName() + ": " +
-                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
+                player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Local]",
+                        MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
+                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)), (Player) sender));
             }
         }
 

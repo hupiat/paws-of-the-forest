@@ -37,7 +37,7 @@ public class CommandClanChat extends AbstractCommand {
                     continue;
                 }
                 player.sendMessage(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] " +
-                        MessagesConf.Chats.getColorName((Player) sender) + sender.getName() + ": " +
+                        MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
                         MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
             }
         }

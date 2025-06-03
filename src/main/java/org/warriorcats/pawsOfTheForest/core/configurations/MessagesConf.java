@@ -42,17 +42,6 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String CHAT_TOGGLED =
                 getPropertyOrDefault("chats.chatToggled", "Chat toggled :", CONFIG_FILE_NAME);
-
-        public static String getColorName(Player player) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-                if (entity.getClan() == null) {
-                    return COLOR_PLAYER_NAME_DEFAULT.toString();
-                }
-                return entity.getClan().getColorCode();
-            }
-        }
-
     }
 
     public static class Preys {

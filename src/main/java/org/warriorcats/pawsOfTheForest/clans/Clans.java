@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.clans;
 
 import lombok.Getter;
+import org.warriorcats.pawsOfTheForest.utils.StringUtils;
 
 @Getter
 public enum Clans {
@@ -14,5 +15,10 @@ public enum Clans {
 
     public String getColorCode() {
         return net.md_5.bungee.api.ChatColor.of(this.color).toString();
+    }
+
+    @Override
+    public String toString() {
+        return StringUtils.capitalize(name().toLowerCase()) + StringUtils.capitalize("clan");
     }
 }

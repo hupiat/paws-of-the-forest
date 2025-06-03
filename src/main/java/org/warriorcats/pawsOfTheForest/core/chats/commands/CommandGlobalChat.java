@@ -20,9 +20,9 @@ public class CommandGlobalChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Global] " +
-                    MessagesConf.Chats.getColorName((Player) sender) + sender.getName() + ": " +
-                    MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
+            player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_STANDARD_CHANNEL + "[Global]",
+                    MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
+                    MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)), (Player) sender));
         }
 
         return true;
