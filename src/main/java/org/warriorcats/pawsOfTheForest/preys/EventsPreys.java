@@ -9,20 +9,28 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class EventsPreys implements Listener {
 
     public static final float COMMON_SPAWN_CHANCE = 0.5f;
 
     public static final int DEFAULT_FLEE_RADIUS = 6;
+
+    public static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
 
     // Handling spawn
     @EventHandler
@@ -47,7 +55,7 @@ public class EventsPreys implements Listener {
                     double speed = player.getVelocity().length();
                     boolean isTooFast = speed > 0.25 || player.isSprinting() || player.isFlying();
 
-                    if (isTooFast) continue;
+                    if (isTooFast && !FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) continue;
 
                     Vector fleeVector = event.getEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.35);
                     fleeVector.setY(0.1);
@@ -63,6 +71,29 @@ public class EventsPreys implements Listener {
 
                     break;
                 }
+            }
+            if (!FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) {
+                FLEEING_PREYS.put(event.getEntity().getUniqueId(), new BukkitRunnable() {
+                    int ticks = 0;
+
+                    @Override
+                    public void run() {
+                        if (!event.getEntity().isValid()) {
+                            FLEEING_PREYS.remove(event.getEntity().getUniqueId());
+                            this.cancel();
+                            return;
+                        }
+
+                        if (FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) {
+                            ticks += 20;
+                            if (ticks >= 160) {
+                                FLEEING_PREYS.remove(event.getEntity().getUniqueId());
+                                this.cancel();
+                                return;
+                            }
+                        }
+                    }
+                }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20));
             }
         }
     }
