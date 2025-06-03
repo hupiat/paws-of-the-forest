@@ -27,7 +27,7 @@ public class CommandClans extends AbstractCommand {
 
         Clans clan;
         try {
-            clan = Clans.valueOf(args[0].toUpperCase());
+            clan = Clans.from(args[0]);
         } catch (IllegalArgumentException e) {
             sender.sendMessage(ChatColor.RED + MessagesConf.Clans.CLAN_NOT_FOUND);
             return true;
@@ -69,7 +69,7 @@ public class CommandClans extends AbstractCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 1:
-                return List.of(Arrays.stream(Clans.values()).map(Clans::name).map(String::toUpperCase).toArray(String[]::new));
+                return List.of(Arrays.stream(Clans.values()).map(Clans::toString).toArray(String[]::new));
             case 2:
                 return List.of("add", "remove");
             case 3:
