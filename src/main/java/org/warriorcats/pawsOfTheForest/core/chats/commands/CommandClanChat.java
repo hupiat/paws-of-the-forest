@@ -36,9 +36,9 @@ public class CommandClanChat extends AbstractCommand {
                 if (senderEntity.getClan() != entity.getClan()) {
                     continue;
                 }
-                player.sendMessage(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] " +
+                player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] ",
                         MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
-                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)));
+                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)), (Player) sender));
             }
         }
 
