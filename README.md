@@ -19,7 +19,7 @@ It enriches gameplay with advanced systems such as role management, dynamic weat
 To compile the plugin, run:
 
 ```bash
-mvn clean package
+./gradlew clean build
 ```
 
 The compiled `.jar` will be located at:
