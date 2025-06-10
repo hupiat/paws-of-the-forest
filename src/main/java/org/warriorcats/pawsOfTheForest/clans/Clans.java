@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 @Getter
 public enum Clans {
-    BREEZE("#FFFACD"), ECHO("#800080"), CREEK("#008080"), SHADE("#800020");
+    BREEZE("#FFFACD"), ECHO("#800080"), CREEK("#008080"), SHADE("#B3002C");
 
     private final String color;
 
