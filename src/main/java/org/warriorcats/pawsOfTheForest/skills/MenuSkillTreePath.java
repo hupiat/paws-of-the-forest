@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.skills;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -19,6 +20,8 @@ import java.util.List;
 public class MenuSkillTreePath {
 
     private String title = "Skill Tree";
+
+    public static final ChatColor COLOR_HIGHLIGHT = ChatColor.GRAY;
 
     public static final int INDEX_PREY_SENSE = 4;
     public static final int INDEX_HUNTERS_COMPASS = 12;
@@ -74,86 +77,86 @@ public class MenuSkillTreePath {
     }
 
     private static void drawHuntingBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_PREY_SENSE, createSkillItem(Material.GHAST_TEAR, "Prey Sense", "Reveal nearby prey (5s glowing, 25 blocks)",
-                entity.hasAbility("Prey Sense"), 8));
+        menu.setItem(INDEX_PREY_SENSE, createSkillItem(Material.GHAST_TEAR, Skills.PREY_SENSE.toString(), "Reveal nearby prey (5s glowing, 25 blocks)",
+                entity.hasAbility(Skills.PREY_SENSE), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(Material.COMPASS, "Hunter’s Compass", "Points to closest huntable target (updates every 60s)",
-                entity.hasAbility("Hunter’s Compass"), 8));
+        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(Material.COMPASS, Skills.HUNTERS_COMPASS.toString(), "Points to closest huntable target (updates every 60s)",
+                entity.hasAbility(Skills.HUNTERS_COMPASS), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(Material.RABBIT_FOOT, "Low Sweep", "Applies Slowness II to target (2.5s)",
-                entity.hasAbility("Low Sweep"), 8));
+        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(Material.RABBIT_FOOT, Skills.LOW_SWEEP.toString(), "Applies Slowness II to target (2.5s)",
+                entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, "Silent Paw", "Reduces movement sound radius",
-                (int) entity.getAbilityPerk("Silent Paw"), 3, 2));
+        menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, Skills.SILENT_PAW.toString(), "Reduces movement sound radius",
+                (int) entity.getAbilityPerk(Skills.SILENT_PAW), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, "Blood Hunter", "Higher chance for quality prey",
-                (int) entity.getAbilityPerk("Blood Hunter"), 4, 2));
+        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, Skills.BLOOD_HUNTER.toString(), "Higher chance for quality prey",
+                (int) entity.getAbilityPerk(Skills.BLOOD_HUNTER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, "Efficient Kill", "More XP/food on stealth kills",
-                (int) entity.getAbilityPerk("Efficient Kill"), 3, 2));
+        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, Skills.EFFICIENT_KILL.toString(), "More XP/food on stealth kills",
+                (int) entity.getAbilityPerk(Skills.EFFICIENT_KILL), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(Material.FILLED_MAP, "Location Awareness", "Cycle compass between known waypoints",
-                entity.hasAbility("Location Awareness"), 8));
+        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(Material.FILLED_MAP, Skills.LOCATION_AWARENESS.toString(), "Cycle compass between known waypoints",
+                entity.hasAbility(Skills.LOCATION_AWARENESS), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(Material.FEATHER, "Pathfinding Boost", "Grants Speed I and Jump I outside combat",
-                entity.hasAbility("Pathfinding Boost"), 8));
+        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(Material.FEATHER, Skills.PATHFINDING_BOOST.toString(), "Grants Speed I and Jump I outside combat",
+                entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, "Trail Memory", "Recall landmarks instantly",
-                (int) entity.getAbilityPerk("Trail Memory"), 3, 2));
+        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, Skills.TRAIL_MEMORY.toString(), "Recall landmarks instantly",
+                (int) entity.getAbilityPerk(Skills.TRAIL_MEMORY), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, "Endurance Traveler", "Reduce hunger loss out of combat",
-                (int) entity.getAbilityPerk("Endurance Traveler"), 4, 2));
+        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, Skills.ENDURANCE_TRAVELER.toString(), "Reduce hunger loss out of combat",
+                (int) entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, "Climber’s Grace", "Jump higher passively",
-                (int) entity.getAbilityPerk("Climber’s Grace"), 2, 2));
+        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, Skills.CLIMBERS_GRACE.toString(), "Jump higher passively",
+                (int) entity.getAbilityPerk(Skills.CLIMBERS_GRACE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HOLD_ON, createSkillItem(Material.TOTEM_OF_UNDYING, "Hold On!", "Avoids death and enters downed state",
-                entity.hasAbility("Hold On!"), 8));
+        menu.setItem(INDEX_HOLD_ON, createSkillItem(Material.TOTEM_OF_UNDYING, Skills.HOLD_ON.toString(), "Avoids death and enters downed state",
+                entity.hasAbility(Skills.HOLD_ON), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(Material.GOLDEN_APPLE, "On Your Paws!", "Revive downed ally after 8s",
-                entity.hasAbility("On Your Paws!"), 8));
+        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(Material.GOLDEN_APPLE, Skills.ON_YOUR_PAWS.toString(), "Revive downed ally after 8s",
+                entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, "Iron Hide", "+1 armor per tier",
-                (int) entity.getAbilityPerk("Iron Hide"), 3, 2));
+        menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, Skills.IRON_HIDE.toString(), "+1 armor per tier",
+                (int) entity.getAbilityPerk(Skills.IRON_HIDE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, "Immune System", "10% illness resistance per tier",
-                (int) entity.getAbilityPerk("Immune System"), 3, 2));
+        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, Skills.IMMUNE_SYSTEM.toString(), "10% illness resistance per tier",
+                (int) entity.getAbilityPerk(Skills.IMMUNE_SYSTEM), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, "Thick Coat", "Cold resistance, weak to fire",
-                (int) entity.getAbilityPerk("Thick Coat"), 2, 2));
+        menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, Skills.THICK_COAT.toString(), "Cold resistance, weak to fire",
+                (int) entity.getAbilityPerk(Skills.THICK_COAT), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(Material.FERN, "Herb Knowledge", "Highlights herbs within 15 blocks",
-                entity.hasAbility("Herb Knowledge"), 8));
+        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(Material.FERN, Skills.HERB_KNOWLEDGE.toString(), "Highlights herbs within 15 blocks",
+                entity.hasAbility(Skills.HERB_KNOWLEDGE), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(Material.BREWING_STAND, "Brew Remedy", "Brew cures using collected herbs",
-                entity.hasAbility("Brew Remedy"), 8));
+        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(Material.BREWING_STAND, Skills.BREW_REMEDY.toString(), "Brew cures using collected herbs",
+                entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
 
-        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, "Quick Gatherer", "Collect herbs faster",
-                (int) entity.getAbilityPerk("Quick Gatherer"), 3, 2));
+        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, Skills.QUICK_GATHERER.toString(), "Collect herbs faster",
+                (int) entity.getAbilityPerk(Skills.QUICK_GATHERER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, "Botanical Lore", "Unlock new recipes or uses",
-                (int) entity.getAbilityPerk("Botanical Lore"), 3, 2));
+        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, Skills.BOTANICAL_LORE.toString(), "Unlock new recipes or uses",
+                (int) entity.getAbilityPerk(Skills.BOTANICAL_LORE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
 
-        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, "Clean Paws", "Reduce self-infection risk",
-                (int) entity.getAbilityPerk("Clean Paws"), 2, 2));
+        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(), "Reduce self-infection risk",
+                (int) entity.getAbilityPerk(Skills.CLEAN_PAWS), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
     }
 
-    private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, int xpCost) {
+    private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(unlocked ? "§a" + name + " §7(✔)" : "§7" + name);
+        meta.setDisplayName(unlocked ? "§a" + name : "§e" + name);
         meta.setLore(List.of(
-                "§7" + desc,
+                COLOR_HIGHLIGHT + desc,
                 "",
                 unlocked ? "§aUnlocked" : "§6Cost: " + xpCost + " XP levels",
-                "§eClick to " + (unlocked ? "view" : "unlock")
+                unlocked ? "" : "§eClick to unlock"
         ));
         item.setItemMeta(meta);
 
@@ -161,14 +164,15 @@ public class MenuSkillTreePath {
         return item;
     }
 
-    private static ItemStack createTieredItem(Material material, String name, String desc, int currentTier, int maxTier, int xpPerTier) {
+    private static ItemStack createTieredItem(Material material, String name, String desc, double currentXp, int maxTier, double xpPerTier) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
+        int currentTier = (int) Math.round(currentXp / xpPerTier);
 
-        String display = (currentTier >= maxTier ? "§a" : "§e") + name + " §7(Tier " + currentTier + "/" + maxTier + ")";
+        String display = (currentTier >= maxTier ? "§a" : "§e") + name + COLOR_HIGHLIGHT + " (Tier " + currentTier + "/" + maxTier + ")";
         meta.setDisplayName(display);
         meta.setLore(List.of(
-                "§7" + desc,
+                COLOR_HIGHLIGHT + desc,
                 "",
                 currentTier >= maxTier
                         ? "§aMax Tier Reached"

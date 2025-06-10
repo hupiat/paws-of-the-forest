@@ -11,4 +11,8 @@ public enum SkillBranches {
     public String toString() {
         return StringUtils.capitalize(name().toLowerCase());
     }
+
+    static final double UNLOCK_SKILL = 8;
+    static final double UNLOCK_SKILL_TIER = 2;
+    static final int MAX_TIER = 4;
 }

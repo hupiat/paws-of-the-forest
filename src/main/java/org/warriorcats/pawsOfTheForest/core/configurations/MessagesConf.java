@@ -105,5 +105,11 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String MENU_SKILL_POINTS =
                 getPropertyOrDefault("skills.menu.skillPoints", "You have skill points :", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_NOT_ENOUGH_POINTS =
+                getPropertyOrDefault("skills.playerMessages.notEnoughPoints", "You have not enough points to buy this !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_ALREADY_UNLOCKED =
+                getPropertyOrDefault("skills.playerMessages.alreadyUnlocked", "You have already unlocked this ! (or you have reached max level)", CONFIG_FILE_NAME);
     }
 }

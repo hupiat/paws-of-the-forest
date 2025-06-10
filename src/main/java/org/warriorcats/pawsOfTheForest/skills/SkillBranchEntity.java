@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest.skills;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,8 +18,8 @@ public class SkillBranchEntity {
 
     @Column(name = "branch")
     @Enumerated(EnumType.STRING)
-    private SkillBranches branch;
+    private SkillBranches branche;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<SkillEntity> skills;
+    private List<SkillEntity> skills = new ArrayList<>();
 }

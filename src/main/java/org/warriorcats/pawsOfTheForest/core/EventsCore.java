@@ -12,6 +12,8 @@ import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
@@ -30,6 +32,11 @@ public class EventsCore implements Listener {
                 existing.setUuid(event.getPlayer().getUniqueId());
                 existing.setName(event.getPlayer().getName());
                 existing.setSettings(new SettingsEntity());
+                for (SkillBranches branche : SkillBranches.values()) {
+                    SkillBranchEntity brancheEntity = new SkillBranchEntity();
+                    brancheEntity.setBranche(branche);
+                    existing.getSkillBranches().add(brancheEntity);
+                }
                 session.persist(existing);
                 session.getTransaction().commit();
             }

@@ -5,9 +5,10 @@ import lombok.Data;
 import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,23 +47,39 @@ public class PlayerEntity {
     private SettingsEntity settings;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<SkillBranchEntity> skillBranchs;
+    private List<SkillBranchEntity> skillBranches = new ArrayList<>();
 
-    public boolean hasAbility(String skillName) {
-        return skillBranchs.stream().anyMatch(branche ->
-                branche.getSkills().stream().anyMatch(skill ->
-                        skill.getName().trim().equalsIgnoreCase(skillName.trim())));
+    public boolean hasAbility(Skills skill) {
+        return getAbilityInternal(skill).isPresent();
     }
 
-    public double getAbilityPerk(String skillName) {
-        for (SkillBranchEntity branche : skillBranchs) {
-            Optional<SkillEntity> skillEntity = branche.getSkills().stream()
-                    .filter(skill -> skill.getName().trim().equalsIgnoreCase(skillName.trim()))
-                    .findFirst();
-            if (skillEntity.isPresent()) {
-                return skillEntity.get().getProgress();
+    public double getAbilityPerk(Skills skill) {
+        return getAbilityInternal(skill).map(SkillEntity::getProgress).orElse(0d);
+    }
+
+    public SkillEntity getAbility(Skills skill) {
+        return getAbilityInternal(skill).orElse(null);
+    }
+
+    public SkillBranchEntity getAbilityBranch(Skills skill) {
+        for (SkillBranchEntity branche : skillBranches) {
+            if (branche.getBranche() == skill.getBranche()) {
+                return branche;
             }
         }
-        return 0;
+        throw new IllegalArgumentException("Could not find ability branch for skill : " + skill);
+    }
+
+    private Optional<SkillEntity> getAbilityInternal(Skills skill) {
+        Optional<SkillEntity> skillEntity = Optional.empty();
+        for (SkillBranchEntity branche : skillBranches) {
+            skillEntity = branche.getSkills().stream()
+                .filter(other -> other.getSkill() == skill)
+                .findFirst();
+            if (skillEntity.isPresent()) {
+                return skillEntity;
+            }
+        }
+        return skillEntity;
     }
 }

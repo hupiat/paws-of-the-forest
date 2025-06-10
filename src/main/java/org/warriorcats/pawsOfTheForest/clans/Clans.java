@@ -26,7 +26,7 @@ public enum Clans {
                 return clan;
             }
         }
-        throw new IllegalArgumentException("Clan " + clanStr + " could not be found");
+        return valueOf(clanStr);
     }
 
     @Override
