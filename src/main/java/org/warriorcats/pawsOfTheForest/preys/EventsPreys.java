@@ -58,7 +58,6 @@ public class EventsPreys implements Listener {
                     if (isTooFast && !FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) continue;
 
                     Vector fleeVector = event.getEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.35);
-                    fleeVector.setY(0.1);
 
                     event.getEntity().setVelocity(fleeVector);
 
