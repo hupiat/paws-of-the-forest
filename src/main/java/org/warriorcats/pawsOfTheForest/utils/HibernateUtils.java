@@ -9,6 +9,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -48,6 +50,8 @@ public abstract class HibernateUtils {
 
             sources.addAnnotatedClass(PlayerEntity.class);
             sources.addAnnotatedClass(SettingsEntity.class);
+            sources.addAnnotatedClass(SkillBranchEntity.class);
+            sources.addAnnotatedClass(SkillEntity.class);
 
             Metadata metadata = sources.getMetadataBuilder().build();
             return metadata.getSessionFactoryBuilder().build();

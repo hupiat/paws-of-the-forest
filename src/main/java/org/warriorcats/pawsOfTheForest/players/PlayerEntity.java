@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
+import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -26,6 +31,9 @@ public class PlayerEntity {
     @Column(name = "xp", nullable = false)
     private double xp;
 
+    @Column(name = "xp_perks", nullable = false)
+    private double xpPerks;
+
     @Column(name = "coins", nullable = false)
     private long coins;
 
@@ -36,4 +44,25 @@ public class PlayerEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "settings_uuid", nullable = false)
     private SettingsEntity settings;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<SkillBranchEntity> skillBranchs;
+
+    public boolean hasAbility(String skillName) {
+        return skillBranchs.stream().anyMatch(branche ->
+                branche.getSkills().stream().anyMatch(skill ->
+                        skill.getName().trim().equalsIgnoreCase(skillName.trim())));
+    }
+
+    public double getAbilityPerk(String skillName) {
+        for (SkillBranchEntity branche : skillBranchs) {
+            Optional<SkillEntity> skillEntity = branche.getSkills().stream()
+                    .filter(skill -> skill.getName().trim().equalsIgnoreCase(skillName.trim()))
+                    .findFirst();
+            if (skillEntity.isPresent()) {
+                return skillEntity.get().getProgress();
+            }
+        }
+        return 0;
+    }
 }

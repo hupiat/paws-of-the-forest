@@ -83,4 +83,27 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String CLAN_REMOVED =
                 getPropertyOrDefault("clans.clanRemoved", "You've been removed from Clan :", CONFIG_FILE_NAME);
     }
+
+    public static class Skills {
+        public static final ChatColor COLOR_DESCRIPTION =
+                getPropertyOrDefault("skills.colors.description", ChatColor.WHITE, CONFIG_FILE_NAME);
+
+        public static final String HUNTING_DESCRIPTION =
+                getPropertyOrDefault("skills.hunting.description", "Track your prey, unlock primal instincts.", CONFIG_FILE_NAME);
+
+        public static final String NAVIGATION_DESCRIPTION =
+                getPropertyOrDefault("skills.navigation.description", "Master movement and memory of paths.", CONFIG_FILE_NAME);
+
+        public static final String RESILIENCE_DESCRIPTION =
+                getPropertyOrDefault("skills.resilience.description", "Survive harder hits, help your clanmates.", CONFIG_FILE_NAME);
+
+        public static final String HERBALIST_DESCRIPTION =
+                getPropertyOrDefault("skills.herbalist.description", "Use herbs to heal, resist illness, and brew.", CONFIG_FILE_NAME);
+
+        public static final String MENU_EXIT =
+                getPropertyOrDefault("skills.menu.exit", "Exit this menu.", CONFIG_FILE_NAME);
+
+        public static final String MENU_SKILL_POINTS =
+                getPropertyOrDefault("skills.menu.skillPoints", "You have skill points :", CONFIG_FILE_NAME);
+    }
 }

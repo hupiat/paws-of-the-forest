@@ -111,6 +111,7 @@ public class EventsPreys implements Listener {
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
                 player.setXp(player.getXp() + prey.xp());
+                player.setXpPerks(player.getXpPerks() + prey.xp());
                 player.setCoins(player.getCoins() + prey.coins());
                 HUD.updateXpProgressBar(killer, player);
             }));

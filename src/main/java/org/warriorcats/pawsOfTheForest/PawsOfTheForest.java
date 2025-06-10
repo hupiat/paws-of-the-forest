@@ -8,7 +8,7 @@ import org.warriorcats.pawsOfTheForest.core.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandCoins;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
-import org.warriorcats.pawsOfTheForest.core.commands.CommandOpenShop;
+import org.warriorcats.pawsOfTheForest.shops.CommandOpenShop;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandXp;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
@@ -16,6 +16,8 @@ import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.settings.EventsSettings;
 import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
+import org.warriorcats.pawsOfTheForest.skills.CommandOpenSkills;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
@@ -60,12 +62,14 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("xp", new CommandXp());
         registerCommand("shop", new CommandOpenShop());
         registerCommand("clans", new CommandClans());
+        registerCommand("skills", new CommandOpenSkills());
 
         // Registering events
         this.getServer().getPluginManager().registerEvents(new EventsCore(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsSettings(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsShop(), INSTANCE);
         this.getServer().getPluginManager().registerEvents(new EventsPreys(), INSTANCE);
+        this.getServer().getPluginManager().registerEvents(new EventsSkills(), INSTANCE);
 
         // Zipping resources pack to be sent to all players, and serving in local
         Path resourcesPackZipPath = Paths.get(FileUtils.PLUGIN_DATA_FOLDER.getPath(), FileUtils.RESOURCES_PACK_PATH);

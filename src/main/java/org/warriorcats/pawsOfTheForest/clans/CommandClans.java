@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.hibernate.Session;
-import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
@@ -21,7 +20,7 @@ public class CommandClans extends AbstractCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final String usage = "/clans <clan> <add|remove> <player>";
         if (!checkForPermissionsAndArgs(sender, args, 3,
-                "warriorcats.chat.clans", usage)) {
+                "warriorcats.clans", usage)) {
             return true;
         }
 

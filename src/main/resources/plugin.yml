@@ -81,4 +81,10 @@ commands:
     description: Manage clans
     usage: /clans <clan> <add|remove> <player>
     aliases: [ cl ]
-    permission: warriorcats.chat.clans
+    permission: warriorcats.clans
+
+  skills:
+    description: Open the skills HUD
+    usage: /skills
+    aliases: [ sk ]
+    permission: warriorcats.skills
