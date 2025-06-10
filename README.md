@@ -57,8 +57,7 @@ cd ../Minecraft_server_paper_1.21.1
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar paper-1.21.1-231.jar nogui
 ```
 
-> 🛠️ Make sure to adjust the server folder path in the script if yours differs.
-
+> 🛠️ Make sure to adjust the server folder path in the script if yours differs. You also have the runServer command available in gradlew, working with debug mode.
 ---
 
 ## 🧭 Coming Soon
