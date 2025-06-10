@@ -41,6 +41,8 @@ public class MenuSkillTreePath {
     public static final int INDEX_IRON_HIDE = 20;
     public static final int INDEX_IMMUNE_SYSTEM = 22;
     public static final int INDEX_THICK_COAT = 24;
+    public static final int INDEX_HEARTY_APPETITE = 30;
+    public static final int INDEX_BEAST_OF_BURDEN = 32;
 
     public static final int INDEX_HERB_KNOWLEDGE = 12;
     public static final int INDEX_BREW_REMEDY = 14;
@@ -53,6 +55,46 @@ public class MenuSkillTreePath {
     public MenuSkillTreePath(SkillBranches branch) {
         this.branch = branch;
         title = branch.toString() + " " + title;
+    }
+
+    public static Skills getSkillByIndex(int index, SkillBranches branch) {
+        return switch (branch) {
+            case HUNTING -> switch (index) {
+                case INDEX_PREY_SENSE       -> Skills.PREY_SENSE;
+                case INDEX_HUNTERS_COMPASS  -> Skills.HUNTERS_COMPASS;
+                case INDEX_LOW_SWEEP        -> Skills.LOW_SWEEP;
+                case INDEX_SILENT_PAW       -> Skills.SILENT_PAW;
+                case INDEX_BLOOD_HUNTER     -> Skills.BLOOD_HUNTER;
+                case INDEX_EFFICIENT_KILL   -> Skills.EFFICIENT_KILL;
+                default                     -> null;
+            };
+            case NAVIGATION -> switch (index) {
+                case INDEX_LOCATION_AWARENESS -> Skills.LOCATION_AWARENESS;
+                case INDEX_PATHFINDING_BOOST  -> Skills.PATHFINDING_BOOST;
+                case INDEX_TRAIL_MEMORY       -> Skills.TRAIL_MEMORY;
+                case INDEX_ENDURANCE_TRAVELER -> Skills.ENDURANCE_TRAVELER;
+                case INDEX_CLIMBERS_GRACE     -> Skills.CLIMBERS_GRACE;
+                default                       -> null;
+            };
+            case RESILIENCE -> switch (index) {
+                case INDEX_HOLD_ON          -> Skills.HOLD_ON;
+                case INDEX_ON_YOUR_PAWS     -> Skills.ON_YOUR_PAWS;
+                case INDEX_IRON_HIDE        -> Skills.IRON_HIDE;
+                case INDEX_IMMUNE_SYSTEM    -> Skills.IMMUNE_SYSTEM;
+                case INDEX_THICK_COAT       -> Skills.THICK_COAT;
+                case INDEX_HEARTY_APPETITE  -> Skills.HEARTY_APPETITE;
+                case INDEX_BEAST_OF_BURDEN  -> Skills.BEAST_OF_BURDEN;
+                default                     -> null;
+            };
+            case HERBALIST -> switch (index) {
+                case INDEX_HERB_KNOWLEDGE  -> Skills.HERB_KNOWLEDGE;
+                case INDEX_BREW_REMEDY     -> Skills.BREW_REMEDY;
+                case INDEX_QUICK_GATHERER  -> Skills.QUICK_GATHERER;
+                case INDEX_BOTANICAL_LORE  -> Skills.BOTANICAL_LORE;
+                case INDEX_CLEAN_PAWS      -> Skills.CLEAN_PAWS;
+                default                    -> null;
+            };
+        };
     }
 
     public void open(Player player) {
@@ -69,8 +111,8 @@ public class MenuSkillTreePath {
             }
         }
 
-        menu.setItem(36, createSimpleItem(Material.BARRIER, "§cBack", List.of("§7Return to Skill Tree Menu")));
-        menu.setItem(44, MenuSkillTree.createSkillPointsItemStack(player));
+        menu.setItem(MenuSkillTree.INDEX_BACK, createSimpleItem(Material.BARRIER, "§cBack", List.of("§7Return to Skill Tree Menu")));
+        menu.setItem(MenuSkillTree.INDEX_SKILLS_POINTS, MenuSkillTree.createSkillPointsItemStack(player));
 
         player.openInventory(menu);
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.7f, 1.2f);
@@ -87,13 +129,13 @@ public class MenuSkillTreePath {
                 entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
 
         menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, Skills.SILENT_PAW.toString(), "Reduces movement sound radius",
-                (int) entity.getAbilityPerk(Skills.SILENT_PAW), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.SILENT_PAW), Skills.SILENT_PAW.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, Skills.BLOOD_HUNTER.toString(), "Higher chance for quality prey",
-                (int) entity.getAbilityPerk(Skills.BLOOD_HUNTER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.BLOOD_HUNTER), Skills.BLOOD_HUNTER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, Skills.EFFICIENT_KILL.toString(), "More XP/food on stealth kills",
-                (int) entity.getAbilityPerk(Skills.EFFICIENT_KILL), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.EFFICIENT_KILL), Skills.EFFICIENT_KILL.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
@@ -104,13 +146,13 @@ public class MenuSkillTreePath {
                 entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
 
         menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, Skills.TRAIL_MEMORY.toString(), "Recall landmarks instantly",
-                (int) entity.getAbilityPerk(Skills.TRAIL_MEMORY), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.TRAIL_MEMORY), Skills.TRAIL_MEMORY.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, Skills.ENDURANCE_TRAVELER.toString(), "Reduce hunger loss out of combat",
-                (int) entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER), Skills.ENDURANCE_TRAVELER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, Skills.CLIMBERS_GRACE.toString(), "Jump higher passively",
-                (int) entity.getAbilityPerk(Skills.CLIMBERS_GRACE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.CLIMBERS_GRACE), Skills.CLIMBERS_GRACE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
@@ -121,13 +163,31 @@ public class MenuSkillTreePath {
                 entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
 
         menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, Skills.IRON_HIDE.toString(), "+1 armor per tier",
-                (int) entity.getAbilityPerk(Skills.IRON_HIDE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.IRON_HIDE), Skills.IRON_HIDE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, Skills.IMMUNE_SYSTEM.toString(), "10% illness resistance per tier",
-                (int) entity.getAbilityPerk(Skills.IMMUNE_SYSTEM), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.IMMUNE_SYSTEM), Skills.IMMUNE_SYSTEM.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, Skills.THICK_COAT.toString(), "Cold resistance, weak to fire",
-                (int) entity.getAbilityPerk(Skills.THICK_COAT), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.THICK_COAT), Skills.THICK_COAT.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+
+        menu.setItem(INDEX_HEARTY_APPETITE, createTieredItem(
+                Material.COOKED_MUTTON,
+                Skills.HEARTY_APPETITE.toString(),
+                "Increases food saturation restoration per tier",
+                entity.getAbilityPerk(Skills.HEARTY_APPETITE),
+                Skills.HEARTY_APPETITE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_BEAST_OF_BURDEN, createTieredItem(
+                Material.CHEST,
+                Skills.BEAST_OF_BURDEN.toString(),
+                "Adds inventory capacity per tier",
+                entity.getAbilityPerk(Skills.BEAST_OF_BURDEN),
+                Skills.BEAST_OF_BURDEN.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
     private static void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
@@ -138,13 +198,13 @@ public class MenuSkillTreePath {
                 entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
 
         menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, Skills.QUICK_GATHERER.toString(), "Collect herbs faster",
-                (int) entity.getAbilityPerk(Skills.QUICK_GATHERER), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.QUICK_GATHERER), Skills.QUICK_GATHERER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, Skills.BOTANICAL_LORE.toString(), "Unlock new recipes or uses",
-                (int) entity.getAbilityPerk(Skills.BOTANICAL_LORE), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.BOTANICAL_LORE), Skills.BOTANICAL_LORE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
 
         menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(), "Reduce self-infection risk",
-                (int) entity.getAbilityPerk(Skills.CLEAN_PAWS), SkillBranches.MAX_TIER, SkillBranches.UNLOCK_SKILL_TIER));
+                entity.getAbilityPerk(Skills.CLEAN_PAWS), Skills.CLEAN_PAWS.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
@@ -160,7 +220,7 @@ public class MenuSkillTreePath {
         ));
         item.setItemMeta(meta);
 
-        if (unlocked) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 1);
+        if (unlocked) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 5);
         return item;
     }
 
@@ -177,11 +237,11 @@ public class MenuSkillTreePath {
                 currentTier >= maxTier
                         ? "§aMax Tier Reached"
                         : "§6Next Tier Cost: " + xpPerTier + " XP levels",
-                "§eClick to " + (currentTier >= maxTier ? "inspect" : "upgrade")
+                currentTier >= maxTier ? "" : "§eClick to upgrade"
         ));
 
         item.setItemMeta(meta);
-        if (currentTier > 0) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 1);
+        if (currentTier > 0) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, currentTier);
         return item;
     }
 

@@ -34,7 +34,7 @@ public class EventsCore implements Listener {
                 existing.setSettings(new SettingsEntity());
                 for (SkillBranches branche : SkillBranches.values()) {
                     SkillBranchEntity brancheEntity = new SkillBranchEntity();
-                    brancheEntity.setBranche(branche);
+                    brancheEntity.setBranch(branche);
                     existing.getSkillBranches().add(brancheEntity);
                 }
                 session.persist(existing);

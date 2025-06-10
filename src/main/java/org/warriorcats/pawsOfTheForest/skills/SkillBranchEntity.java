@@ -18,7 +18,7 @@ public class SkillBranchEntity {
 
     @Column(name = "branch")
     @Enumerated(EnumType.STRING)
-    private SkillBranches branche;
+    private SkillBranches branch;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<SkillEntity> skills = new ArrayList<>();

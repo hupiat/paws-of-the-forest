@@ -18,9 +18,6 @@ public class SkillEntity {
     @Column(name = "skill", nullable = false)
     private Skills skill;
 
-    @Column(name = "active", nullable = false)
-    private boolean active;
-
     @Column(name = "progress", nullable = false)
     private double progress;
 }

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
@@ -18,78 +18,87 @@ import java.util.function.Consumer;
 
 public class EventsSkills implements Listener {
 
-    public static final Map<UUID, MenuSkillTreePath> OPENED = new HashMap<>();
+    public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
+
+    // Handling passive events
+
+    @EventHandler
+    public void on(PlayerMoveEvent event) {
+
+    }
+
+    // Handling HUD clicks
 
     @EventHandler
     public void on(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || !clicked.hasItemMeta()) return;
-        String displayName = clicked.getItemMeta().getDisplayName();
+        int index = event.getSlot();
 
         if (event.getView().getTitle().equals(MenuSkillTree.TITLE)) {
             event.setCancelled(true);
-            handleMainMenuClick(displayName, player);
+            handleMainMenuClick(index, player);
         }
 
-        MenuSkillTreePath openedMenu = OPENED.get(player.getUniqueId());
+        MenuSkillTreePath openedMenu = MENUS_OPENED.get(player.getUniqueId());
         if (openedMenu != null && event.getView().getTitle().equals(openedMenu.getTitle())) {
             event.setCancelled(true);
-            handlePerksMenuClick(displayName, player);
+            handlePerksMenuClick(index, player);
         }
     }
 
-    private void handleMainMenuClick(String displayName, Player player) {
-        switch (ChatColor.stripColor(displayName)) {
-            case "Hunting":
+    private void handleMainMenuClick(int index, Player player) {
+        switch (index) {
+            case MenuSkillTree.INDEX_HUNTING:
                 player.closeInventory();
-                OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HUNTING));
-                OPENED.get(player.getUniqueId()).open(player);
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HUNTING));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
-            case "Navigation":
+            case MenuSkillTree.INDEX_NAVIGATION:
                 player.closeInventory();
-                OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.NAVIGATION));
-                OPENED.get(player.getUniqueId()).open(player);
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.NAVIGATION));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
-            case "Resilience":
+            case MenuSkillTree.INDEX_RESILIENCE:
                 player.closeInventory();
-                OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.RESILIENCE));
-                OPENED.get(player.getUniqueId()).open(player);
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.RESILIENCE));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
-            case "Herbalist":
+            case MenuSkillTree.INDEX_HERBALIST:
                 player.closeInventory();
-                OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HERBALIST));
-                OPENED.get(player.getUniqueId()).open(player);
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HERBALIST));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
-            case "Close":
+            case MenuSkillTree.INDEX_BACK:
                 player.closeInventory();
                 break;
         }
     }
 
-    private void handlePerksMenuClick(String displayName, Player player) {
-        String skillName = ChatColor.stripColor(displayName.split(MenuSkillTreePath.COLOR_HIGHLIGHT.toString())[0]);
+    private void handlePerksMenuClick(int index, Player player) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Runnable back = () -> {
+                MenuSkillTree.open(player);
+                MENUS_OPENED.remove(player.getUniqueId());
+            };
             Consumer<Double> consumer = (balance) -> {
                 PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-                Skills skill = Skills.from(skillName);
+                Skills skill = MenuSkillTreePath.getSkillByIndex(index, MENUS_OPENED.get(player.getUniqueId()).getBranch());
                 SkillEntity skillEntity = entity.getAbility(skill);
                 if (skillEntity == null) {
                     skillEntity = new SkillEntity();
                     skillEntity.setSkill(skill);
-                    skillEntity.setActive(skill.isActive());
                     entity.getAbilityBranch(skill).getSkills().add(skillEntity);
                 }
-                if (skillEntity.isActive() && skillEntity.getProgress() > 0) {
+                if (skill.isActive() && skillEntity.getProgress() > 0) {
                     player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_ALREADY_UNLOCKED);
                     return;
                 }
-                if (!skillEntity.isActive() && skillEntity.getProgress() >= SkillBranches.UNLOCK_SKILL_TIER * SkillBranches.MAX_TIER) {
+                if (!skill.isActive() && skillEntity.getProgress() >= SkillBranches.UNLOCK_SKILL_TIER * skill.getMaxTiers()) {
                     player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_ALREADY_UNLOCKED);
                     return;
                 }
@@ -102,51 +111,86 @@ public class EventsSkills implements Listener {
                 skillEntity.setProgress(skillEntity.getProgress() + balance);
                 session.persist(entity);
                 session.getTransaction().commit();
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
             };
-            switch (skillName) {
-                case "Back":
-                    MenuSkillTree.open(player);
-                    OPENED.remove(player.getUniqueId());
+            switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
+                case HUNTING:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+
+                        case MenuSkillTreePath.INDEX_PREY_SENSE:
+                        case MenuSkillTreePath.INDEX_HUNTERS_COMPASS:
+                        case MenuSkillTreePath.INDEX_LOW_SWEEP:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            break;
+
+                        case MenuSkillTreePath.INDEX_SILENT_PAW:
+                        case MenuSkillTreePath.INDEX_BLOOD_HUNTER:
+                        case MenuSkillTreePath.INDEX_EFFICIENT_KILL:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+
+                    }
                     break;
+                case NAVIGATION:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
 
-                // Actives
+                        case MenuSkillTreePath.INDEX_LOCATION_AWARENESS:
+                        case MenuSkillTreePath.INDEX_PATHFINDING_BOOST:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            break;
 
-                case "Prey Sense":
-                case "Hunter’s Compass":
-                case "Low Sweep":
-
-                case "Location Awareness":
-                case "Pathfinding Boost":
-
-                case "Hold On!":
-                case "On Your Paws!":
-
-                case "Herb Knowledge":
-                case "Brew Remedy":
-                    consumer.accept(SkillBranches.UNLOCK_SKILL);
+                        case MenuSkillTreePath.INDEX_TRAIL_MEMORY:
+                        case MenuSkillTreePath.INDEX_ENDURANCE_TRAVELER:
+                        case MenuSkillTreePath.INDEX_CLIMBERS_GRACE:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
                     break;
+                case RESILIENCE:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
 
-                // Passives
+                        case MenuSkillTreePath.INDEX_HOLD_ON:
+                        case MenuSkillTreePath.INDEX_ON_YOUR_PAWS:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            break;
 
-                case "Silent Paw":
-                case "Blood Hunter":
-                case "Efficient Kill":
+                        case MenuSkillTreePath.INDEX_IRON_HIDE:
+                        case MenuSkillTreePath.INDEX_IMMUNE_SYSTEM:
+                        case MenuSkillTreePath.INDEX_THICK_COAT:
+                        case MenuSkillTreePath.INDEX_HEARTY_APPETITE:
+                        case MenuSkillTreePath.INDEX_BEAST_OF_BURDEN:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+                case HERBALIST:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
 
-                case "Trail Memory":
-                case "Endurance Traveler":
-                case "Climber’s Grace":
+                        case MenuSkillTreePath.INDEX_HERB_KNOWLEDGE:
+                        case MenuSkillTreePath.INDEX_BREW_REMEDY:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            break;
 
-                case "Iron Hide":
-                case "Immune System":
-                case "Thick Coat":
-
-                case "Quick Gatherer":
-                case "Botanical Lore":
-                case "Clean Paws":
-                    consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                        case MenuSkillTreePath.INDEX_QUICK_GATHERER:
+                        case MenuSkillTreePath.INDEX_BOTANICAL_LORE:
+                        case MenuSkillTreePath.INDEX_CLEAN_PAWS:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
                     break;
             }
         }
-        OPENED.get(player.getUniqueId()).open(player);
     }
 }

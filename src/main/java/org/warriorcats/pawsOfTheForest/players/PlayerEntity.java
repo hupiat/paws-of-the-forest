@@ -63,7 +63,7 @@ public class PlayerEntity {
 
     public SkillBranchEntity getAbilityBranch(Skills skill) {
         for (SkillBranchEntity branche : skillBranches) {
-            if (branche.getBranche() == skill.getBranche()) {
+            if (branche.getBranch() == skill.getBranch()) {
                 return branche;
             }
         }
