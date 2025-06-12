@@ -2,12 +2,14 @@ package org.warriorcats.pawsOfTheForest;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.clans.CommandClans;
-import org.warriorcats.pawsOfTheForest.core.EventsCore;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandCoins;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
+import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.shops.CommandOpenShop;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandXp;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
@@ -65,16 +67,14 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("skills", new CommandOpenSkills());
 
         // Registering events
-        this.getServer().getPluginManager().registerEvents(new EventsCore(), INSTANCE);
-        this.getServer().getPluginManager().registerEvents(new EventsSettings(), INSTANCE);
-        this.getServer().getPluginManager().registerEvents(new EventsShop(), INSTANCE);
-        this.getServer().getPluginManager().registerEvents(new EventsPreys(), INSTANCE);
-        this.getServer().getPluginManager().registerEvents(new EventsSkills(), INSTANCE);
+        registerEvent(new EventsCore());
+        registerEvent(new EventsSettings());
+        registerEvent(new EventsShop());
+        registerEvent(new EventsPreys());
+        registerEvent(new EventsSkills());
 
         // Zipping resources pack to be sent to all players, and serving in local
-        Path resourcesPackZipPath = Paths.get(FileUtils.PLUGIN_DATA_FOLDER.getPath(), FileUtils.RESOURCES_PACK_PATH);
-        FileUtils.zipFolder(Paths.get("plugins", "ModelEngine", "resource pack"), resourcesPackZipPath);
-        HttpServerUtils.start(HttpServerUtils.RESOURCES_PACK_PORT, resourcesPackZipPath, "/" + FileUtils.RESOURCES_PACK_PATH);
+        prepareHttpServerForResourcesPack();
     }
 
     @Override
@@ -89,5 +89,33 @@ public final class PawsOfTheForest extends JavaPlugin {
         if (instance instanceof TabCompleter completer) {
             INSTANCE.getCommand(name).setTabCompleter(completer);
         }
+    }
+
+    private void registerEvent(Listener instance) {
+        INSTANCE.getServer().getPluginManager().registerEvents(instance, INSTANCE);
+        if (instance instanceof LoadingListener loadingListener) {
+            loadingListener.load();
+        }
+    }
+
+    private void prepareHttpServerForResourcesPack() {
+        Path pluginData = FileUtils.PLUGIN_DATA_FOLDER.toPath();
+        Path modelEngineFolder = Paths.get("plugins", "ModelEngine", "resource pack");
+        Path tmpUnzipFolder = pluginData.resolve("tmp_base_pack");
+        Path baseZip = pluginData.resolve("base_pack.zip");
+        Path mergedPackZip = pluginData.resolve(FileUtils.RESOURCES_PACK_PATH);
+
+        FileUtils.unzipFolder(baseZip, tmpUnzipFolder);
+        FileUtils.copyFolder(modelEngineFolder, tmpUnzipFolder);
+
+        FileUtils.zipFolder(tmpUnzipFolder, mergedPackZip);
+
+        FileUtils.deleteFolder(tmpUnzipFolder);
+
+        HttpServerUtils.start(
+                HttpServerUtils.RESOURCES_PACK_PORT,
+                mergedPackZip,
+                "/" + FileUtils.RESOURCES_PACK_PATH
+        );
     }
 }

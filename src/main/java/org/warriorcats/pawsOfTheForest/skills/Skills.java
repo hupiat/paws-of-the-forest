@@ -47,6 +47,13 @@ public enum Skills {
         this.maxTiers = maxTiers;
     }
 
+    public int getCurrentTier(double xp) {
+        if (isActive) {
+            return maxTiers;
+        }
+        return (int) Math.round(xp / SkillBranches.UNLOCK_SKILL_TIER);
+    }
+
     @Override
     public String toString() {
         return displayName;

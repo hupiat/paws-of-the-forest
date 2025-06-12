@@ -53,6 +53,10 @@ public class PlayerEntity {
         return getAbilityInternal(skill).isPresent();
     }
 
+    public int getAbilityTier(Skills skill) {
+        return skill.getCurrentTier(getAbilityPerk(skill));
+    }
+
     public double getAbilityPerk(Skills skill) {
         return getAbilityInternal(skill).map(SkillEntity::getProgress).orElse(0d);
     }

@@ -5,13 +5,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public abstract class FileUtils {
@@ -74,7 +75,32 @@ public abstract class FileUtils {
         }
     }
 
-    public static void deleteDirectory(Path path) {
+    public static void copyFolder(Path source, Path target) {
+        try {
+            Files.walkFileTree(source, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    Path rel = source.relativize(dir);
+                    Path destDir = target.resolve(rel);
+                    if (Files.notExists(destDir)) {
+                        Files.createDirectories(destDir);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Path rel = source.relativize(file);
+                    Path destFile = target.resolve(rel);
+                    Files.copy(file, destFile, StandardCopyOption.REPLACE_EXISTING);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to copy directory", e);
+        }
+    }
+
+    public static void deleteFolder(Path path) {
         try {
             if (Files.exists(path)) {
                 Files.walk(path)
@@ -89,6 +115,29 @@ public abstract class FileUtils {
             }
         } catch (IOException e) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to delete directory", e);
+        }
+    }
+
+    public static void unzipFolder(Path zipFile, Path targetDir) {
+        try (ZipFile zip = new ZipFile(zipFile.toFile())) {
+            if (Files.notExists(targetDir)) {
+                Files.createDirectories(targetDir);
+            }
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                Path outPath = targetDir.resolve(entry.getName());
+                if (entry.isDirectory()) {
+                    Files.createDirectories(outPath);
+                } else {
+                    Files.createDirectories(outPath.getParent());
+                    try (InputStream is = zip.getInputStream(entry)) {
+                        Files.copy(is, outPath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Error while unzipping", e);
         }
     }
 
@@ -129,7 +178,7 @@ public abstract class FileUtils {
         } catch (IOException e) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to create zipped file", e);
         } finally {
-            deleteDirectory(tempCopy);
+            deleteFolder(tempCopy);
         }
     }
 

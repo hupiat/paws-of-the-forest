@@ -50,7 +50,7 @@ public class MenuSkillTreePath {
     public static final int INDEX_BOTANICAL_LORE = 22;
     public static final int INDEX_CLEAN_PAWS = 24;
 
-    private SkillBranches branch;
+    private final SkillBranches branch;
 
     public MenuSkillTreePath(SkillBranches branch) {
         this.branch = branch;
@@ -220,7 +220,6 @@ public class MenuSkillTreePath {
         ));
         item.setItemMeta(meta);
 
-        if (unlocked) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 5);
         return item;
     }
 
@@ -241,7 +240,6 @@ public class MenuSkillTreePath {
         ));
 
         item.setItemMeta(meta);
-        if (currentTier > 0) item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, currentTier);
         return item;
     }
 
