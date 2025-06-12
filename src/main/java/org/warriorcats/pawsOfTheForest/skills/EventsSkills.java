@@ -28,7 +28,7 @@ public class EventsSkills implements LoadingListener {
 
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
 
-    public static final double SILENT_PAW_TIER_PERCENTAGE = 0.5;
+    public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
