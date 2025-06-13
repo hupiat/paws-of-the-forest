@@ -1,6 +1,5 @@
 package org.warriorcats.pawsOfTheForest.core.huds;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -9,8 +8,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,13 +23,10 @@ public abstract class HUD {
             BossBar b = it.next();
             b.removePlayer(player);
         }
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            updateXpProgressBar(player, entity);
-        });
+        updateInterface(player);
     }
 
-    public static void updateXpProgressBar(Player player, PlayerEntity entity) {
+    public static void updateInterface(Player player) {
         NamespacedKey oldKey = PROGRESS_BARS.remove(player.getUniqueId());
         if (oldKey != null) {
             BossBar oldBar = Bukkit.getBossBar(oldKey);
@@ -40,11 +34,11 @@ public abstract class HUD {
             Bukkit.removeBossBar(oldKey);
         }
         NamespacedKey key = NamespacedKey.minecraft(player.getUniqueId().toString().toLowerCase());
-        BossBar bar = Bukkit.createBossBar(key, entity.getName(), BarColor.BLUE, BarStyle.SEGMENTED_10);
+        BossBar bar = Bukkit.createBossBar(key,
+                player.getName() + " - " + player.getLevel(), BarColor.BLUE, BarStyle.SEGMENTED_10);
         PROGRESS_BARS.put(player.getUniqueId(), key);
         bar.addPlayer(player);
 
-        // TODO : levels progression
-        bar.setProgress(entity.getXp() / 100);
+        bar.setProgress(player.getExp());
     }
 }

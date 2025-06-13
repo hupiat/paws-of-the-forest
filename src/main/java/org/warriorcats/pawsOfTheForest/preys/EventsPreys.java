@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.preys;
 
+import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
 import io.papermc.paper.event.entity.EntityMoveEvent;
@@ -16,6 +17,7 @@ import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
@@ -102,19 +104,21 @@ public class EventsPreys implements Listener {
     public void on(EntityDeathEvent event) {
         if (event.getEntity().getKiller() == null) return;
         Player killer = event.getEntity().getKiller();
-
         Optional<Prey> existingPrey = Prey.fromEntity(event.getEntity());
 
         if (existingPrey.isPresent()) {
             Prey prey = existingPrey.get();
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
-                player.setXp(player.getXp() + prey.xp());
-                player.setXpPerks(player.getXpPerks() + prey.xp());
+                if (!player.hasAbility(Skills.EFFICIENT_KILL)) {
+                    event.setDroppedExp((int) prey.xp());
+                    player.setXpPerks(player.getXpPerks() + prey.xp());
+                } else {
+                    player.setXpPerks(player.getXpPerks() + event.getDroppedExp());
+                }
                 player.setCoins(player.getCoins() + prey.coins());
-                HUD.updateXpProgressBar(killer, player);
             }));
-            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + prey.xp());
+            killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + event.getDroppedExp());
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + prey.coins());
         }
     }

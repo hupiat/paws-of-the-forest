@@ -28,4 +28,8 @@ public record Prey(String entityType, double xp, long coins) {
 
         return existingPrey;
     }
+
+    public static boolean isPrey(Entity entity) {
+        return fromEntity(entity).isPresent();
+    }
 }

@@ -12,13 +12,16 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.preys.Prey;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,6 +32,7 @@ public class EventsSkills implements LoadingListener {
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
 
     public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
+    public static final double EFFICIENT_KILL_PERCENTAGE = 0.25;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -121,6 +125,43 @@ public class EventsSkills implements LoadingListener {
                 }
             }
         });
+    }
+
+    @EventHandler
+    public void on(EntityDeathEvent event) {
+        // Checking if a prey has been killed
+
+        Player killer = event.getEntity().getKiller();
+
+        if (killer == null) {
+            return;
+        }
+
+        Optional<Prey> prey = Prey.fromEntity(event.getEntity());
+
+        if (prey.isEmpty()) {
+            return;
+        }
+
+        // Then checking if the kill is stealth to apply EFFICIENT_KILL
+
+        if (!killer.isSneaking() || event.getEntity().hasLineOfSight(killer)) {
+            return;
+        }
+
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            PlayerEntity entity = session.get(PlayerEntity.class, killer.getUniqueId());
+
+            if (!entity.hasAbility(Skills.EFFICIENT_KILL)) {
+                event.setDroppedExp((int) prey.get().xp());
+                return;
+            }
+
+            int tier = entity.getAbilityTier(Skills.EFFICIENT_KILL);
+            double factor = tier * EFFICIENT_KILL_PERCENTAGE;
+            event.setDroppedExp((int) prey.get().xp() + (int) Math.round(event.getDroppedExp() * factor));
+            event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
+        }
     }
 
     // Handling HUD clicks

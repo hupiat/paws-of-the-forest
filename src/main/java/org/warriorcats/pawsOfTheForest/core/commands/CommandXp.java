@@ -20,10 +20,7 @@ public class CommandXp extends AbstractCommand {
             return true;
         }
 
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
-            sender.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_LEFT + " " + entity.getXp());
-        });
+        sender.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_LEFT + " " + ((Player) sender).getTotalExperience());
 
         return true;
     }

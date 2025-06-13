@@ -42,8 +42,8 @@ public abstract class HibernateUtils {
                     .applySetting("hibernate.connection.password", "mysql")
                     .applySetting("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                     .applySetting("hibernate.hbm2ddl.auto", "create-drop")
-                    .applySetting("hibernate.show_sql", "true")
-                    .applySetting("hibernate.format_sql", "true")
+                    .applySetting("hibernate.show_sql", "false")
+                    .applySetting("hibernate.format_sql", "false")
                     .build();
 
             MetadataSources sources = new MetadataSources(registry);

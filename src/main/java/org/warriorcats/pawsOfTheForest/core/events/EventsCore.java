@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.core.events;
 
+import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -63,5 +64,11 @@ public class EventsCore implements Listener {
         Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
             Bukkit.dispatchCommand(event.getPlayer(), chatToggled.name().toLowerCase() + " " + message);
         });
+    }
+
+    // Handling HUD progress bar updates
+    @EventHandler
+    public void on(PlayerPickupExperienceEvent event) {
+        HUD.updateInterface(event.getPlayer());
     }
 }

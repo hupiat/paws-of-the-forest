@@ -6,6 +6,12 @@ import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public abstract class MobsUtils {
 
@@ -21,5 +27,13 @@ public abstract class MobsUtils {
         }
 
         return mob.spawn(BukkitAdapter.adapt(location), level);
+    }
+
+    public static ItemStack getRandomDropFood(int minAmount, int maxAmount) {
+        final Random random = new Random();
+        List<Material> foods = MaterialsUtils.getAllFoods();
+        Material food = foods.get(random.nextInt(foods.size()));
+        int qty = minAmount + random.nextInt(maxAmount - minAmount + 1);
+        return new ItemStack(food, qty);
     }
 }

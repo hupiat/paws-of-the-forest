@@ -29,9 +29,6 @@ public class PlayerEntity {
     @Column(name = "biography", columnDefinition = "TEXT")
     private String biography;
 
-    @Column(name = "xp", nullable = false)
-    private double xp;
-
     @Column(name = "xp_perks", nullable = false)
     private double xpPerks;
 
