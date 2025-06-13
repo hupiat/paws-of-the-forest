@@ -32,7 +32,7 @@ public class EventsSkills implements LoadingListener {
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
 
     public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
-    public static final double EFFICIENT_KILL_PERCENTAGE = 0.25;
+    public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -158,7 +158,7 @@ public class EventsSkills implements LoadingListener {
             }
 
             int tier = entity.getAbilityTier(Skills.EFFICIENT_KILL);
-            double factor = tier * EFFICIENT_KILL_PERCENTAGE;
+            double factor = tier * EFFICIENT_KILL_TIER_PERCENTAGE;
             event.setDroppedExp((int) prey.get().xp() + (int) Math.round(prey.get().xp() * factor));
             event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
         }
