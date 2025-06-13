@@ -159,7 +159,7 @@ public class EventsSkills implements LoadingListener {
 
             int tier = entity.getAbilityTier(Skills.EFFICIENT_KILL);
             double factor = tier * EFFICIENT_KILL_PERCENTAGE;
-            event.setDroppedExp((int) prey.get().xp() + (int) Math.round(event.getDroppedExp() * factor));
+            event.setDroppedExp((int) prey.get().xp() + (int) Math.round(prey.get().xp() * factor));
             event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
         }
     }
