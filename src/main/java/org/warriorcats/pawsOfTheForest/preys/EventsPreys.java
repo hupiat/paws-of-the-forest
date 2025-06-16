@@ -32,6 +32,7 @@ public class EventsPreys implements LoadingListener {
     public static final float HIGHER_SPAWN_CHANCE = 0.05f;
 
     public static final int DEFAULT_FLEE_RADIUS = 6;
+    public static final int DEFAULT_SPAWN_SCAN_DELAY_S = 10;
 
     private static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
 
@@ -81,7 +82,7 @@ public class EventsPreys implements LoadingListener {
                     });
                 }
             }
-        }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20 * 10);
+        }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20 * DEFAULT_SPAWN_SCAN_DELAY_S);
     }
 
     // Handling flee behavior

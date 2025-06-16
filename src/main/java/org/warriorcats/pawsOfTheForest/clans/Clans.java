@@ -1,10 +1,7 @@
 package org.warriorcats.pawsOfTheForest.clans;
 
 import lombok.Getter;
-import org.warriorcats.pawsOfTheForest.utils.StringUtils;
-
-import java.util.Optional;
-import java.util.function.Function;
+import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 @Getter
 public enum Clans {
@@ -31,6 +28,6 @@ public enum Clans {
 
     @Override
     public String toString() {
-        return StringUtils.capitalize(name().toLowerCase()) + StringUtils.capitalize("clan");
+        return StringsUtils.capitalize(name().toLowerCase()) + StringsUtils.capitalize("clan");
     }
 }

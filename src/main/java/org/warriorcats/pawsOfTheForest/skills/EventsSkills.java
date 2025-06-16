@@ -12,7 +12,10 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
@@ -23,12 +26,18 @@ import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class EventsSkills implements LoadingListener {
 
     public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
     public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
     public static final double BLOOD_HUNTER_TIER_PERCENTAGE = 0.05;
+    public static final double ENDURANCE_TRAVELER_TIER_PERCENTAGE = 0.05;
+
+    public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
+
+    private final Set<Player> PLAYERS_FIGHTING = new HashSet<>();
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -157,6 +166,59 @@ public class EventsSkills implements LoadingListener {
             double factor = tier * EFFICIENT_KILL_TIER_PERCENTAGE;
             event.setDroppedExp((int) prey.get().xp() + (int) Math.round(prey.get().xp() * factor));
             event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
+        }
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        Consumer<Player> consumer = player -> new BukkitRunnable() {
+            @Override
+            public void run() {
+                PLAYERS_FIGHTING.remove(player);
+            }
+        }.runTaskLater(PawsOfTheForest.getInstance(), 20 * FIGHTING_PLAYERS_SCAN_DELAY_S);
+
+        if (event.getDamager() instanceof Player damager && !PLAYERS_FIGHTING.contains(damager)) {
+            PLAYERS_FIGHTING.add(damager);
+            consumer.accept(damager);
+        }
+
+        if (event.getEntity() instanceof Player victim && !PLAYERS_FIGHTING.contains(victim)) {
+            PLAYERS_FIGHTING.add(victim);
+            consumer.accept(victim);
+        }
+    }
+
+    @EventHandler
+    public void on(FoodLevelChangeEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        if (PLAYERS_FIGHTING.contains(player)) {
+            return;
+        }
+
+        int currentLevel = player.getFoodLevel();
+        int newLevel = event.getFoodLevel();
+
+        if (newLevel >= currentLevel) {
+            return;
+        }
+
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.ENDURANCE_TRAVELER)) {
+                return;
+            }
+
+            int tier = entity.getAbilityTier(Skills.ENDURANCE_TRAVELER);
+
+            double factor = tier * ENDURANCE_TRAVELER_TIER_PERCENTAGE;
+
+            int diff = currentLevel - newLevel;
+            double reducedDiff = diff * (1.0 - factor);
+
+            event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
         }
     }
 }

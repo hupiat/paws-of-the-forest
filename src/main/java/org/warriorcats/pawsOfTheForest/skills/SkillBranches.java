@@ -1,13 +1,13 @@
 package org.warriorcats.pawsOfTheForest.skills;
 
-import org.warriorcats.pawsOfTheForest.utils.StringUtils;
+import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 public enum SkillBranches {
     HUNTING, NAVIGATION, RESILIENCE, HERBALIST;
 
     @Override
     public String toString() {
-        return StringUtils.capitalize(name().toLowerCase());
+        return StringsUtils.capitalize(name().toLowerCase());
     }
 
     public static final double UNLOCK_SKILL = 8;
