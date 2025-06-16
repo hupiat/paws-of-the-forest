@@ -33,6 +33,7 @@ public class EventsSkills implements LoadingListener {
 
     public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
     public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
+    public static final double BLOOD_HUNTER_TIER_PERCENTAGE = 0.05;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 

@@ -2,14 +2,14 @@ package org.warriorcats.pawsOfTheForest.preys;
 
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
+import java.util.List;
 import java.util.Optional;
 
-public record Prey(String entityType, double xp, long coins) {
+public record Prey(String entityType, double xp, long coins, float fleeDurationSeconds, boolean isHigher, boolean isAquatic) {
 
     public static Optional<Prey> fromEntity(LivingEntity entity) {
         String entityType = entity.getType().name().toUpperCase();
@@ -32,5 +32,17 @@ public record Prey(String entityType, double xp, long coins) {
 
     public static boolean isPrey(LivingEntity entity) {
         return fromEntity(entity).isPresent();
+    }
+
+    public static List<Prey> getAllCommons() {
+        return PreysConf.Preys.PREYS.stream()
+                .filter(prey -> !prey.isHigher)
+                .toList();
+    }
+
+    public static List<Prey> getAllHighers() {
+        return PreysConf.Preys.PREYS.stream()
+                .filter(prey -> prey.isHigher)
+                .toList();
     }
 }

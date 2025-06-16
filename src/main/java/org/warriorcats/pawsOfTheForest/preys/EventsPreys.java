@@ -2,7 +2,6 @@ package org.warriorcats.pawsOfTheForest.preys;
 
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
-import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -18,20 +17,21 @@ import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class EventsPreys implements LoadingListener {
 
-    public static final float COMMON_SPAWN_CHANCE = 0.1f;
+    public static final float COMMON_SPAWN_CHANCE = 0.15f;
+    public static final float HIGHER_SPAWN_CHANCE = 0.05f;
 
     public static final int DEFAULT_FLEE_RADIUS = 6;
-    public static final int DEFAULT_FLEE_DURATION_S = 8;
 
     private static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
 
@@ -41,20 +41,44 @@ public class EventsPreys implements LoadingListener {
         new BukkitRunnable() {
             @Override
             public void run() {
+                Function<Player, Location> getLocation = (player) -> {
+                    Location loc = player.getLocation().clone().add(
+                            (Math.random() - 0.5) * 20,
+                            0,
+                            (Math.random() - 0.5) * 20
+                    );
+                    loc.setY(player.getWorld().getHighestBlockYAt(loc) + 1);
+                    return loc;
+                };
+                BiFunction<Location, Prey, Boolean> isSuitable = (location, prey) -> {
+                    if (location.getBlock().isLiquid()) return prey.isAquatic();
+                    if (location.clone().subtract(0, 1, 0).getBlock().isLiquid()) return prey.isAquatic();
+                    return !prey.isAquatic();
+                };
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (Math.random() < COMMON_SPAWN_CHANCE) {
-                        Location loc = player.getLocation().clone().add(
-                                (Math.random() - 0.5) * 20,
-                                0,
-                                (Math.random() - 0.5) * 20
-                        );
-                        loc.setY(player.getWorld().getHighestBlockYAt(loc) + 1);
-
-                        if (loc.getBlock().isLiquid()) continue;
-                        if (loc.clone().subtract(0, 1, 0).getBlock().isLiquid()) continue;
-
-                        MobsUtils.spawn(loc, "mouse", Math.random());
-                    }
+                    HibernateUtils.withSession(session -> {
+                        PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+                        List<Prey> preys = new ArrayList<>();
+                        double higherSpawnChance = !playerEntity.hasAbility(Skills.BLOOD_HUNTER) ?
+                                HIGHER_SPAWN_CHANCE :
+                                HIGHER_SPAWN_CHANCE * (1 + playerEntity.getAbilityTier(Skills.BLOOD_HUNTER) * EventsSkills.BLOOD_HUNTER_TIER_PERCENTAGE);
+                        if (Math.random() < higherSpawnChance) {
+                            preys = Prey.getAllHighers();
+                        } else if (Math.random() < COMMON_SPAWN_CHANCE) {
+                            preys = Prey.getAllCommons();
+                        }
+                        if (!preys.isEmpty()) {
+                            Prey toSpawn = preys.get(new Random().nextInt(preys.size()));
+                            Location locationToSpawn = getLocation.apply(player);
+                            if (isSuitable.apply(locationToSpawn, toSpawn)) {
+                                try {
+                                    MobsUtils.spawn(locationToSpawn, toSpawn.entityType().toLowerCase(), Math.random());
+                                } catch (IllegalArgumentException ignored) {
+                                    // We let vanilla spawn working as well so no fallback here
+                                }
+                            }
+                        }
+                    });
                 }
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20 * 10);
@@ -98,7 +122,7 @@ public class EventsPreys implements LoadingListener {
 
                             if (FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId())) {
                                 ticks += 20;
-                                if (ticks >= DEFAULT_FLEE_DURATION_S * 20) {
+                                if (ticks >= Prey.fromEntity(nearbyLiving).get().fleeDurationSeconds() * 20) {
                                     FLEEING_PREYS.remove(nearbyLiving.getUniqueId());
                                     this.cancel();
                                     return;

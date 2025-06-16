@@ -19,7 +19,10 @@ public abstract class PreysConf extends AbstractConfiguration {
                 Prey prey = new Prey(
                         entry.toUpperCase(),
                         preysSource.getDouble(entry + ".xp"),
-                        preysSource.getLong(entry + ".coins")
+                        preysSource.getLong(entry + ".coins"),
+                        (float) preysSource.getDouble(entry + ".flee_duration_seconds"),
+                        preysSource.getBoolean(entry + ".higher"),
+                        preysSource.getBoolean(entry + ".aquatic")
                 );
                 PREYS.add(prey);
             }
