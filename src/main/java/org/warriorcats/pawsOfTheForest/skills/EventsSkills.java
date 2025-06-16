@@ -12,12 +12,11 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
@@ -34,10 +33,6 @@ public class EventsSkills implements LoadingListener {
     public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
     public static final double BLOOD_HUNTER_TIER_PERCENTAGE = 0.05;
     public static final double ENDURANCE_TRAVELER_TIER_PERCENTAGE = 0.05;
-
-    public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
-
-    private final Set<Player> PLAYERS_FIGHTING = new HashSet<>();
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -170,31 +165,11 @@ public class EventsSkills implements LoadingListener {
     }
 
     @EventHandler
-    public void on(EntityDamageByEntityEvent event) {
-        Consumer<Player> consumer = player -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                PLAYERS_FIGHTING.remove(player);
-            }
-        }.runTaskLater(PawsOfTheForest.getInstance(), 20 * FIGHTING_PLAYERS_SCAN_DELAY_S);
-
-        if (event.getDamager() instanceof Player damager && !PLAYERS_FIGHTING.contains(damager)) {
-            PLAYERS_FIGHTING.add(damager);
-            consumer.accept(damager);
-        }
-
-        if (event.getEntity() instanceof Player victim && !PLAYERS_FIGHTING.contains(victim)) {
-            PLAYERS_FIGHTING.add(victim);
-            consumer.accept(victim);
-        }
-    }
-
-    @EventHandler
     public void on(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        if (PLAYERS_FIGHTING.contains(player)) {
+        if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
             return;
         }
 

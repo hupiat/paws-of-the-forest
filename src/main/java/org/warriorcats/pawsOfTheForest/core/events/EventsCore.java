@@ -4,9 +4,12 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
@@ -19,7 +22,15 @@ import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Consumer;
+
 public class EventsCore implements Listener {
+
+    public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
+
+    public static final Set<Player> PLAYERS_FIGHTING = new HashSet<>();
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
@@ -70,5 +81,30 @@ public class EventsCore implements Listener {
     @EventHandler
     public void on(PlayerPickupExperienceEvent event) {
         HUD.updateInterface(event.getPlayer());
+    }
+
+    // Handling custom events
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        Consumer<Player> consumer = player -> {
+            Bukkit.getPluginManager().callEvent(new PlayerInCombatEvent(player));
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    PLAYERS_FIGHTING.remove(player);
+                    Bukkit.getPluginManager().callEvent(new PlayerOutCombatEvent(player));
+                }
+            }.runTaskLater(PawsOfTheForest.getInstance(), 20 * FIGHTING_PLAYERS_SCAN_DELAY_S);
+        };
+
+        if (event.getDamager() instanceof Player damager && !PLAYERS_FIGHTING.contains(damager)) {
+            PLAYERS_FIGHTING.add(damager);
+            consumer.accept(damager);
+        }
+
+        if (event.getEntity() instanceof Player victim && !PLAYERS_FIGHTING.contains(victim)) {
+            PLAYERS_FIGHTING.add(victim);
+            consumer.accept(victim);
+        }
     }
 }
