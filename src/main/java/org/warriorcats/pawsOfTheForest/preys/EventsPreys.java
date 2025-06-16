@@ -6,9 +6,11 @@ import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -29,8 +31,9 @@ public class EventsPreys implements LoadingListener {
     public static final float COMMON_SPAWN_CHANCE = 0.1f;
 
     public static final int DEFAULT_FLEE_RADIUS = 6;
+    public static final int DEFAULT_FLEE_DURATION_S = 8;
 
-    public static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
+    private static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
 
     // Handling spawn
     @Override
@@ -59,54 +62,51 @@ public class EventsPreys implements LoadingListener {
 
     // Handling flee behavior
     @EventHandler
-    public void on(EntityMoveEvent event) {
-        Optional<Prey> existingPrey = Prey.fromEntity(event.getEntity());
+    public void on(PlayerMoveEvent event) {
+        for (Entity nearby : event.getPlayer().getNearbyEntities(DEFAULT_FLEE_RADIUS, DEFAULT_FLEE_RADIUS, DEFAULT_FLEE_RADIUS)) {
+            if (nearby instanceof LivingEntity nearbyLiving && Prey.isPrey(nearbyLiving) &&
+                    (!MobsUtils.isStealthFrom(event.getPlayer(), nearbyLiving) || FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId()))) {
+                Vector fleeVector = nearbyLiving.getLocation().toVector()
+                        .subtract(event.getPlayer().getLocation().toVector()).normalize().multiply(0.35);
 
-        if (existingPrey.isPresent()) {
-            for (Entity nearby : event.getEntity().getNearbyEntities(DEFAULT_FLEE_RADIUS, DEFAULT_FLEE_RADIUS, DEFAULT_FLEE_RADIUS)) {
-                if (nearby instanceof Player player && !player.isSneaking() && !player.isInvisible()) {
+                nearbyLiving.setVelocity(fleeVector);
 
-                    double speed = player.getVelocity().length();
-                    boolean isTooFast = speed > 0.25 || player.isSprinting() || player.isFlying();
+                Location loc = nearbyLiving.getLocation();
+                Vector dir = fleeVector.clone().normalize();
+                float yaw = (float) Math.toDegrees(Math.atan2(-dir.getX(), dir.getZ()));
+                loc.setYaw(yaw);
 
-                    if (isTooFast && !FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) continue;
+                nearbyLiving.teleport(loc);
 
-                    Vector fleeVector = event.getEntity().getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.35);
-
-                    event.getEntity().setVelocity(fleeVector);
-
-                    ModeledEntity modeled = ModelEngine.getModeledEntity(event.getEntity());
-                    if (modeled != null) {
-                        modeled.getModels().values().forEach(model -> {
-                            model.getAnimationHandler().playAnimation("run", 0, 0, 0, false);
-                        });
-                    }
-
-                    break;
+                ModeledEntity modeled = ModelEngine.getModeledEntity(nearbyLiving);
+                if (modeled != null) {
+                    modeled.getModels().values().forEach(model -> {
+                        model.getAnimationHandler().playAnimation("run", 0, 0, 0, false);
+                    });
                 }
-            }
-            if (!FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) {
-                FLEEING_PREYS.put(event.getEntity().getUniqueId(), new BukkitRunnable() {
-                    int ticks = 0;
+                if (!FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId())) {
+                    FLEEING_PREYS.put(nearbyLiving.getUniqueId(), new BukkitRunnable() {
+                        int ticks = 0;
 
-                    @Override
-                    public void run() {
-                        if (!event.getEntity().isValid()) {
-                            FLEEING_PREYS.remove(event.getEntity().getUniqueId());
-                            this.cancel();
-                            return;
-                        }
-
-                        if (FLEEING_PREYS.containsKey(event.getEntity().getUniqueId())) {
-                            ticks += 20;
-                            if (ticks >= 160) {
-                                FLEEING_PREYS.remove(event.getEntity().getUniqueId());
+                        @Override
+                        public void run() {
+                            if (!nearbyLiving.isValid()) {
+                                FLEEING_PREYS.remove(nearbyLiving.getUniqueId());
                                 this.cancel();
                                 return;
                             }
+
+                            if (FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId())) {
+                                ticks += 20;
+                                if (ticks >= DEFAULT_FLEE_DURATION_S * 20) {
+                                    FLEEING_PREYS.remove(nearbyLiving.getUniqueId());
+                                    this.cancel();
+                                    return;
+                                }
+                            }
                         }
-                    }
-                }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20));
+                    }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20));
+                }
             }
         }
     }

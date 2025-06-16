@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest.preys;
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public record Prey(String entityType, double xp, long coins) {
 
-    public static Optional<Prey> fromEntity(Entity entity) {
+    public static Optional<Prey> fromEntity(LivingEntity entity) {
         String entityType = entity.getType().name().toUpperCase();
 
         ModeledEntity modeledEntity = ModelEngine.getModeledEntity(entity);
@@ -29,7 +30,7 @@ public record Prey(String entityType, double xp, long coins) {
         return existingPrey;
     }
 
-    public static boolean isPrey(Entity entity) {
+    public static boolean isPrey(LivingEntity entity) {
         return fromEntity(entity).isPresent();
     }
 }

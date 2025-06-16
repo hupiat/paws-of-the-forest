@@ -7,6 +7,9 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -34,5 +37,9 @@ public abstract class MobsUtils {
         Material food = foods.get(random.nextInt(foods.size()));
         int qty = minAmount + random.nextInt(maxAmount - minAmount + 1);
         return new ItemStack(food, qty);
+    }
+
+    public static boolean isStealthFrom(Player player, LivingEntity entity) {
+        return player.isSneaking() || player.isInvisible() || !entity.hasLineOfSight(player);
     }
 }

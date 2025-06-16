@@ -145,7 +145,7 @@ public class EventsSkills implements LoadingListener {
 
         // Then checking if the kill is stealth to apply EFFICIENT_KILL
 
-        if (!killer.isSneaking() || event.getEntity().hasLineOfSight(killer)) {
+        if (!MobsUtils.isStealthFrom(killer, event.getEntity())) {
             return;
         }
 
