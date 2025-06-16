@@ -1,10 +1,6 @@
 package org.warriorcats.pawsOfTheForest.core.configurations;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.hibernate.Session;
-import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 public abstract class MessagesConf extends AbstractConfiguration {
 
@@ -48,8 +44,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final ChatColor COLOR_FEEDBACK =
                 getPropertyOrDefault("preys.colors.feedback", ChatColor.GREEN, CONFIG_FILE_NAME);
 
-        public static final String XP_EARNED =
-                getPropertyOrDefault("preys.xpEarned", "XP : +", CONFIG_FILE_NAME);
+        public static final String SKILL_POINTS_EARNED =
+                getPropertyOrDefault("preys.skillPointsEarned", "Skill points : +", CONFIG_FILE_NAME);
 
         public static final String XP_LEFT =
                 getPropertyOrDefault("preys.xpLeft", "Your total xp is :", CONFIG_FILE_NAME);
