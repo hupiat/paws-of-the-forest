@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 @RequiredArgsConstructor
-public class PlayerOutCombatEvent extends Event {
+public class PlayerJumpEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     private final Player player;
 

@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
@@ -22,15 +23,18 @@ import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class EventsCore implements Listener {
 
     public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
+    public static final int JUMPING_PLAYERS_SCAN_DELAY_TICKS = 15;
 
-    public static final Set<Player> PLAYERS_FIGHTING = new HashSet<>();
+    public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
@@ -84,6 +88,28 @@ public class EventsCore implements Listener {
     }
 
     // Handling custom events
+
+    @EventHandler
+    public void on(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+
+        if (PLAYERS_JUMPING.contains(player)) {
+            return;
+        }
+
+        if (!player.isOnGround() && event.getFrom().getY() < event.getTo().getY()) {
+            Bukkit.getPluginManager().callEvent(new PlayerJumpEvent(player));
+            PLAYERS_JUMPING.add(player);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    PLAYERS_JUMPING.remove(player);
+                }
+            }.runTaskLater(PawsOfTheForest.getInstance(), JUMPING_PLAYERS_SCAN_DELAY_TICKS);
+        }
+    }
+
+
     @EventHandler
     public void on(EntityDamageByEntityEvent event) {
         Consumer<Player> consumer = player -> {

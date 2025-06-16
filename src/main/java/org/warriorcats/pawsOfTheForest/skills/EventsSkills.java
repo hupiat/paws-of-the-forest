@@ -14,10 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.util.Vector;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
+import org.warriorcats.pawsOfTheForest.core.events.PlayerJumpEvent;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
@@ -25,7 +27,6 @@ import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class EventsSkills implements LoadingListener {
 
@@ -33,6 +34,7 @@ public class EventsSkills implements LoadingListener {
     public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
     public static final double BLOOD_HUNTER_TIER_PERCENTAGE = 0.05;
     public static final double ENDURANCE_TRAVELER_TIER_PERCENTAGE = 0.05;
+    public static final double CLIMBERS_GRACE_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -195,5 +197,21 @@ public class EventsSkills implements LoadingListener {
 
             event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
         }
+    }
+
+    @EventHandler
+    public void on(PlayerJumpEvent event) {
+        Player player = event.getPlayer();
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.CLIMBERS_GRACE)) {
+                return;
+            }
+
+            int tier = entity.getAbilityTier(Skills.CLIMBERS_GRACE);
+            double factor = tier * CLIMBERS_GRACE_TIER_PERCENTAGE;
+
+            player.setVelocity(player.getVelocity().add(new Vector(0d, factor, 0d)));
+        });
     }
 }
