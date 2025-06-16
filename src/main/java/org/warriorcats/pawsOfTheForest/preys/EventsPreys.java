@@ -110,12 +110,8 @@ public class EventsPreys implements Listener {
             Prey prey = existingPrey.get();
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
-                if (!player.hasAbility(Skills.EFFICIENT_KILL)) {
-                    event.setDroppedExp((int) prey.xp());
-                    player.setXpPerks(player.getXpPerks() + prey.xp());
-                } else {
-                    player.setXpPerks(player.getXpPerks() + event.getDroppedExp());
-                }
+                event.setDroppedExp((int) prey.xp());
+                player.setXpPerks(player.getXpPerks() + prey.xp());
                 player.setCoins(player.getCoins() + prey.coins());
             }));
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.XP_EARNED + event.getDroppedExp());
