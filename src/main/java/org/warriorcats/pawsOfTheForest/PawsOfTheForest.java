@@ -20,6 +20,7 @@ import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
 import org.warriorcats.pawsOfTheForest.skills.CommandOpenSkills;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
@@ -72,6 +73,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerEvent(new EventsShop());
         registerEvent(new EventsPreys());
         registerEvent(new EventsSkills());
+        registerEvent(new EventsSkillsMenu());
 
         // Zipping resources pack to be sent to all players, and serving in local
         prepareHttpServerForResourcesPack();
