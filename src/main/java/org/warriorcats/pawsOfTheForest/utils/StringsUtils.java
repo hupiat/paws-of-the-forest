@@ -1,6 +1,6 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
-public abstract class StringUtils {
+public abstract class StringsUtils {
 
     public static String capitalize(String input) {
         if (input == null || input.isEmpty()) {
