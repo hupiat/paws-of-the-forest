@@ -10,8 +10,10 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
@@ -19,9 +21,11 @@ import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
+import org.warriorcats.pawsOfTheForest.core.events.PlayerFreezeEvent;
 import org.warriorcats.pawsOfTheForest.core.events.PlayerJumpEvent;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
+import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
@@ -31,14 +35,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventsSkills implements LoadingListener {
 
     public static final double SILENT_PAW_TIER_PERCENTAGE = 0.1;
-    public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.25;
+    public static final double EFFICIENT_KILL_TIER_PERCENTAGE = 0.1;
     public static final double BLOOD_HUNTER_TIER_PERCENTAGE = 0.05;
     public static final double ENDURANCE_TRAVELER_TIER_PERCENTAGE = 0.05;
     public static final double CLIMBERS_GRACE_TIER_PERCENTAGE = 0.1;
+    public static final double THICK_COAT_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
-
-    // Handling passive events
 
     @Override
     public void load() {
@@ -166,6 +169,8 @@ public class EventsSkills implements LoadingListener {
         }
     }
 
+    // ENDURANCE_TRAVELER
+
     @EventHandler
     public void on(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
@@ -199,6 +204,8 @@ public class EventsSkills implements LoadingListener {
         }
     }
 
+    // CLIMBERS_GRACE
+
     @EventHandler
     public void on(PlayerJumpEvent event) {
         Player player = event.getPlayer();
@@ -212,6 +219,39 @@ public class EventsSkills implements LoadingListener {
             double factor = tier * CLIMBERS_GRACE_TIER_PERCENTAGE;
 
             player.setVelocity(player.getVelocity().add(new Vector(0d, factor, 0d)));
+        });
+    }
+
+    // THICK COAT
+
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.THICK_COAT)) {
+                return;
+            }
+            Biome biome = player.getWorld().getBiome(player.getLocation());
+            if (BiomesUtils.isHot(biome) && BiomesUtils.isDamageFromFire(event.getDamageSource().getDamageType())) {
+                event.setDamage(event.getDamage() + 1);
+            }
+            if (BiomesUtils.isCold(biome) && BiomesUtils.isDamageFromFreeze(event.getDamageSource().getDamageType())) {
+                int tier = entity.getAbilityTier(Skills.THICK_COAT);
+                event.setDamage(event.getDamage() * (1 - THICK_COAT_TIER_PERCENTAGE * tier));
+            }
+        });
+    }
+
+    @EventHandler
+    public void on(PlayerFreezeEvent event) {
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
+            if (!entity.hasAbility(Skills.THICK_COAT)) {
+                return;
+            }
+            event.getPlayer().setFreezeTicks(0);
         });
     }
 }

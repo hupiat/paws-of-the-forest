@@ -4,6 +4,8 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -99,19 +101,22 @@ public class EventsCore implements Listener {
     public void on(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (PLAYERS_JUMPING.contains(player)) {
-            return;
+        if (!PLAYERS_JUMPING.contains(player)) {
+            if (!player.isOnGround() && event.getFrom().getY() < event.getTo().getY()) {
+                Bukkit.getPluginManager().callEvent(new PlayerJumpEvent(player));
+                PLAYERS_JUMPING.add(player);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        PLAYERS_JUMPING.remove(player);
+                    }
+                }.runTaskLater(PawsOfTheForest.getInstance(), JUMPING_PLAYERS_SCAN_DELAY_TICKS);
+            }
         }
 
-        if (!player.isOnGround() && event.getFrom().getY() < event.getTo().getY()) {
-            Bukkit.getPluginManager().callEvent(new PlayerJumpEvent(player));
-            PLAYERS_JUMPING.add(player);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    PLAYERS_JUMPING.remove(player);
-                }
-            }.runTaskLater(PawsOfTheForest.getInstance(), JUMPING_PLAYERS_SCAN_DELAY_TICKS);
+        Block block = player.getLocation().getBlock();
+        if (block.getType() == Material.POWDER_SNOW) {
+            Bukkit.getPluginManager().callEvent(new PlayerFreezeEvent(player));
         }
     }
 
