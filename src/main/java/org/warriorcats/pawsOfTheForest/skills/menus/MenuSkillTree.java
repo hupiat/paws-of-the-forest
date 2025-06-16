@@ -1,4 +1,4 @@
-package org.warriorcats.pawsOfTheForest.skills;
+package org.warriorcats.pawsOfTheForest.skills.menus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.List;

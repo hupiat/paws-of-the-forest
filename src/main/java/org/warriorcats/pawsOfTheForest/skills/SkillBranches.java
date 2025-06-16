@@ -12,6 +12,6 @@ public enum SkillBranches {
         return StringUtils.capitalize(name().toLowerCase());
     }
 
-    static final double UNLOCK_SKILL = 8;
-    static final double UNLOCK_SKILL_TIER = 2;
+    public static final double UNLOCK_SKILL = 8;
+    public static final double UNLOCK_SKILL_TIER = 2;
 }

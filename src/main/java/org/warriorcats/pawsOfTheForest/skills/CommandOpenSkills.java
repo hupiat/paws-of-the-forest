@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
+import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTree;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
 import org.warriorcats.pawsOfTheForest.skills.CommandOpenSkills;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
-import org.warriorcats.pawsOfTheForest.skills.EventsSkillsMenu;
+import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;

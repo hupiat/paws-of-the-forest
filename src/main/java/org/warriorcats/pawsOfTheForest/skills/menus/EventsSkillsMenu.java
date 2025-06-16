@@ -1,4 +1,4 @@
-package org.warriorcats.pawsOfTheForest.skills;
+package org.warriorcats.pawsOfTheForest.skills.menus;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -8,6 +8,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
+import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.HashMap;
@@ -104,7 +107,7 @@ public class EventsSkillsMenu implements Listener {
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
-                case HUNTING:
+                case SkillBranches.HUNTING:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
                             back.run();
@@ -124,7 +127,7 @@ public class EventsSkillsMenu implements Listener {
 
                     }
                     break;
-                case NAVIGATION:
+                case SkillBranches.NAVIGATION:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
                             back.run();
@@ -142,7 +145,7 @@ public class EventsSkillsMenu implements Listener {
                             break;
                     }
                     break;
-                case RESILIENCE:
+                case SkillBranches.RESILIENCE:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
                             back.run();
@@ -162,7 +165,7 @@ public class EventsSkillsMenu implements Listener {
                             break;
                     }
                     break;
-                case HERBALIST:
+                case SkillBranches.HERBALIST:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
                             back.run();
