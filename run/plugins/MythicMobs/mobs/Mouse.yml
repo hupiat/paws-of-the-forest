@@ -1,11 +1,9 @@
 mouse:
-  Type: ZOMBIE
+  Type: SHEEP
   Display: "Mouse"
   Health: 5
   Damage: 1
   Armor: 0
-  Options:
-    PreventSunburn: true
   Traits:
     - modelengine: mouse
   Skills:
