@@ -19,9 +19,11 @@ import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
+import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
 import java.util.Collections;
 import java.util.Set;
@@ -55,6 +57,10 @@ public class EventsCore implements Listener {
                 }
                 session.persist(existing);
                 session.getTransaction().commit();
+            } else {
+                if (existing.hasAbility(Skills.IRON_HIDE)) {
+                    SkillsUtils.updateIronHideArmor(event.getPlayer(), existing.getAbilityTier(Skills.IRON_HIDE));
+                }
             }
         });
 

@@ -12,6 +12,7 @@ import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +105,9 @@ public class EventsSkillsMenu implements Listener {
                 skillEntity.setProgress(skillEntity.getProgress() + balance);
                 session.persist(entity);
                 session.getTransaction().commit();
+                if (skill == Skills.IRON_HIDE) {
+                    SkillsUtils.updateIronHideArmor(player, entity.getAbilityTier(Skills.IRON_HIDE));
+                }
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
