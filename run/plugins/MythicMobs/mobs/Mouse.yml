@@ -1,10 +1,12 @@
 mouse:
   Type: ZOMBIE
-  Display: "§fMouse"
+  Display: "Mouse"
   Health: 5
   Damage: 1
   Armor: 0
   Options:
     PreventSunburn: true
+  Traits:
+    - modelengine: mouse
   Skills:
-    - model{mid=mouse} @self
+    - model{mid=mouse} @self ~onSpawn

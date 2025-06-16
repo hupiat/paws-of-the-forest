@@ -1,23 +1,21 @@
 package org.warriorcats.pawsOfTheForest.preys;
 
-import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
 import io.papermc.paper.event.entity.EntityMoveEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
-import org.warriorcats.pawsOfTheForest.core.huds.HUD;
+import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
@@ -26,23 +24,37 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EventsPreys implements Listener {
+public class EventsPreys implements LoadingListener {
 
-    public static final float COMMON_SPAWN_CHANCE = 0.5f;
+    public static final float COMMON_SPAWN_CHANCE = 0.1f;
 
     public static final int DEFAULT_FLEE_RADIUS = 6;
 
     public static final Map<UUID, BukkitTask> FLEEING_PREYS = new HashMap<>();
 
     // Handling spawn
-    @EventHandler
-    public void on(CreatureSpawnEvent event) {
-        if (event.isCancelled()) return;
+    @Override
+    public void load() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (Math.random() < COMMON_SPAWN_CHANCE) {
+                        Location loc = player.getLocation().clone().add(
+                                (Math.random() - 0.5) * 20,
+                                0,
+                                (Math.random() - 0.5) * 20
+                        );
+                        loc.setY(player.getWorld().getHighestBlockYAt(loc) + 1);
 
-        if (Math.random() < COMMON_SPAWN_CHANCE && !event.getLocation().getBlock().isLiquid()) {
-            event.setCancelled(true);
-            MobsUtils.spawn(event.getLocation(), "mouse", Math.random());
-        }
+                        if (loc.getBlock().isLiquid()) continue;
+                        if (loc.clone().subtract(0, 1, 0).getBlock().isLiquid()) continue;
+
+                        MobsUtils.spawn(loc, "mouse", Math.random());
+                    }
+                }
+            }
+        }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20 * 10);
     }
 
     // Handling flee behavior
