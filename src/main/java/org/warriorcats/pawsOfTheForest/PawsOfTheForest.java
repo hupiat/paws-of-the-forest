@@ -18,7 +18,8 @@ import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.settings.EventsSettings;
 import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
-import org.warriorcats.pawsOfTheForest.skills.CommandOpenSkills;
+import org.warriorcats.pawsOfTheForest.skills.commands.CommandOpenBackpack;
+import org.warriorcats.pawsOfTheForest.skills.commands.CommandOpenSkills;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
 import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
@@ -66,6 +67,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("shop", new CommandOpenShop());
         registerCommand("clans", new CommandClans());
         registerCommand("skills", new CommandOpenSkills());
+        registerCommand("backpack", new CommandOpenBackpack());
 
         // Registering events
         registerEvent(new EventsCore());

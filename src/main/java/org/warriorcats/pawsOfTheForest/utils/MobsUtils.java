@@ -7,7 +7,6 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +32,7 @@ public abstract class MobsUtils {
 
     public static ItemStack getRandomDropFood(int minAmount, int maxAmount) {
         final Random random = new Random();
-        List<Material> foods = MaterialsUtils.getAllFoods();
+        List<Material> foods = ItemsUtils.getAllFoods();
         Material food = foods.get(random.nextInt(foods.size()));
         int qty = minAmount + random.nextInt(maxAmount - minAmount + 1);
         return new ItemStack(food, qty);

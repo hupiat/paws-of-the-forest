@@ -27,6 +27,7 @@ public class CommandToggleChat extends AbstractCommand {
         HibernateUtils.withTransaction(((transaction, session) -> {
             PlayerEntity senderEntity = session.get(PlayerEntity.class, player.getUniqueId());
             senderEntity.getSettings().setToggledChat(chatToggled);
+            return senderEntity;
         }));
     }
 

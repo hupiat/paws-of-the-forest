@@ -150,6 +150,7 @@ public class EventsPreys implements LoadingListener {
                 event.setDroppedExp((int) prey.xp());
                 player.setXpPerks(player.getXpPerks() + prey.xp());
                 player.setCoins(player.getCoins() + prey.coins());
+                return player;
             }));
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.SKILL_POINTS_EARNED + event.getDroppedExp());
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + prey.coins());

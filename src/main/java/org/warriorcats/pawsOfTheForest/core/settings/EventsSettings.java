@@ -35,6 +35,7 @@ public class EventsSettings implements Listener {
                         // Resetting the chat toggled if user disabled RP, and it was RP channel
                         entity.getSettings().setToggledChat(ChatChannels.DEFAULT_TOGGLED);
                     }
+                    return entity;
                 }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
                     player.openInventory(MenuSettings.create(player));
@@ -49,6 +50,7 @@ public class EventsSettings implements Listener {
                     ChatChannels current = entity.getSettings().getToggledChat();
                     ChatChannels next = MenuSettings.getNextChat(player, current);
                     entity.getSettings().setToggledChat(next);
+                    return entity;
                 }));
                 Bukkit.getScheduler().runTask(PawsOfTheForest.getInstance(), () -> {
                     player.openInventory(MenuSettings.create(player));

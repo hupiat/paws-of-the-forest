@@ -9,10 +9,11 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public abstract class HibernateUtils {
@@ -23,10 +24,11 @@ public abstract class HibernateUtils {
         }
     }
 
-    public static void withTransaction(BiConsumer<Transaction, Session> callback) {
+    public static <T> void withTransaction(BiFunction<Transaction, Session, T> callback) {
         withSession(session -> {
             var transaction = session.beginTransaction();
-            callback.accept(transaction, session);
+            T obj = callback.apply(transaction, session);
+            session.persist(obj);
             transaction.commit();
         });
     }

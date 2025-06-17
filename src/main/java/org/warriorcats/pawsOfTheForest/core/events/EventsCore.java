@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
@@ -19,7 +20,7 @@ import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
 import org.warriorcats.pawsOfTheForest.core.huds.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
@@ -39,6 +40,7 @@ public class EventsCore implements Listener {
 
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    public static final Set<Player> PLAYERS_LEAVING = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
@@ -143,5 +145,17 @@ public class EventsCore implements Listener {
             PLAYERS_FIGHTING.add(victim);
             consumer.accept(victim);
         }
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent event) {
+        PLAYERS_LEAVING.add(event.getPlayer());
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                PLAYERS_LEAVING.remove(event.getPlayer());
+            }
+        }.runTaskLater(PawsOfTheForest.getInstance(), 5 * 20);
     }
 }

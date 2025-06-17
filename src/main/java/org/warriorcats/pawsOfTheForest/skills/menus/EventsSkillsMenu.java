@@ -5,13 +5,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
-import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
 import java.util.HashMap;
@@ -24,6 +28,33 @@ public class EventsSkillsMenu implements Listener {
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
 
     @EventHandler
+    public void on(InventoryCloseEvent event) {
+        if (!(event.getPlayer() instanceof Player player)) return;
+
+        if (EventsCore.PLAYERS_LEAVING.contains(player)) return;
+
+        HibernateUtils.withTransaction(((transaction, session) -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+
+            ItemStack[] contents = event.getInventory().getContents();
+            boolean empty = true;
+            for (ItemStack item : contents) {
+                if (item != null && !item.getType().isAir()) {
+                    empty = false;
+                    break;
+                }
+            }
+
+            if (empty) {
+                entity.setBackpackData(null);
+            } else {
+                entity.setBackpackData(ItemsUtils.serializeItemStackArray(contents));
+            }
+            return entity;
+        }));
+    }
+
+    @EventHandler
     public void on(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
@@ -32,6 +63,7 @@ public class EventsSkillsMenu implements Listener {
         if (event.getView().getTitle().equals(MenuSkillTree.TITLE)) {
             event.setCancelled(true);
             handleMainMenuClick(index, player);
+            return;
         }
 
         MenuSkillTreePath openedMenu = MENUS_OPENED.get(player.getUniqueId());

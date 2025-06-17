@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillBranchEntity;
-import org.warriorcats.pawsOfTheForest.skills.SkillEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
+import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 
 import java.util.ArrayList;
@@ -45,6 +45,9 @@ public class PlayerEntity {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<SkillBranchEntity> skillBranches = new ArrayList<>();
+
+    @Column(length = 65535)
+    private String backpackData;
 
     public boolean hasAbility(Skills skill) {
         return getAbilityInternal(skill).isPresent();

@@ -107,5 +107,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_ALREADY_UNLOCKED =
                 getPropertyOrDefault("skills.playerMessages.alreadyUnlocked", "You have already unlocked this ! (or you have reached max level)", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_BEAST_OF_BURDEN_NOT_UNLOCKED =
+                getPropertyOrDefault("skills.playerMessages.beastOfBurdenNotUnlocked", "You don't have the Beast of Burden skill.", CONFIG_FILE_NAME);
     }
 }

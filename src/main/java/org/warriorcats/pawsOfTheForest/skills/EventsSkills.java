@@ -42,6 +42,7 @@ public class EventsSkills implements LoadingListener {
     public static final double CLIMBERS_GRACE_TIER_PERCENTAGE = 0.1;
     public static final double THICK_COAT_TIER_PERCENTAGE = 0.1;
     public static final double HEARTY_APPETITE_TIER_PERCENTAGE = 0.1;
+    public static final int BEAST_OF_BURDEN_TIER_VALUE = 9;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 

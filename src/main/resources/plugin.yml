@@ -88,3 +88,9 @@ commands:
     usage: /skills
     aliases: [ sk ]
     permission: warriorcats.skills
+
+  backpack:
+    description: Open your Beast of Burden backpack
+    usage: /backpack
+    aliases: [ bp ]
+    permission: warriorcats.backpack
