@@ -10,9 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
@@ -33,6 +35,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+import static org.bukkit.potion.PotionEffectType.*;
+
 public class EventsCore implements Listener {
 
     public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
@@ -41,6 +45,12 @@ public class EventsCore implements Listener {
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_LEAVING = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+    public static final Set<PotionEffectType> FEAR_EFFECTS = Set.of(
+            BLINDNESS,
+            NAUSEA,
+            SLOWNESS
+    );
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
@@ -157,5 +167,15 @@ public class EventsCore implements Listener {
                 PLAYERS_LEAVING.remove(event.getPlayer());
             }
         }.runTaskLater(PawsOfTheForest.getInstance(), 5 * 20);
+    }
+
+    @EventHandler
+    public void on(EntityPotionEffectEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (event.getNewEffect() == null) return;
+
+        if (FEAR_EFFECTS.contains(event.getNewEffect().getType())) {
+            Bukkit.getPluginManager().callEvent(new PlayerFearEvent(player));
+        }
     }
 }

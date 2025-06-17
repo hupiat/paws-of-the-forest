@@ -21,10 +21,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
-import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
-import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
-import org.warriorcats.pawsOfTheForest.core.events.PlayerFreezeEvent;
-import org.warriorcats.pawsOfTheForest.core.events.PlayerJumpEvent;
+import org.warriorcats.pawsOfTheForest.core.events.*;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
@@ -299,6 +296,19 @@ public class EventsSkills implements LoadingListener {
             double factor = WELL_FED_TIER_PERCENTAGE * tier;
 
             event.setAmount(event.getAmount() * (1 + factor));
+        });
+    }
+
+    // SHELTERED_MIND
+
+    @EventHandler
+    public void on(PlayerFearEvent event) {
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
+            if (!entity.hasAbility(Skills.SHELTERED_MIND)) {
+                return;
+            }
+            EventsCore.FEAR_EFFECTS.forEach(event.getPlayer()::removePotionEffect);
         });
     }
 }
