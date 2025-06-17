@@ -34,8 +34,6 @@ public class CommandOpenBackpack extends AbstractCommand {
             int tier = entity.getAbilityTier(Skills.BEAST_OF_BURDEN);
 
             MenuBackpack.open((Player) sender, tier);
-
-            // TODO: optionnel: charger/sauvegarder le contenu persistant avec Hibernate
         });
 
         return true;
