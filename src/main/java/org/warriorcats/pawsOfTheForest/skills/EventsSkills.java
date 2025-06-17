@@ -18,6 +18,8 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
@@ -44,9 +46,11 @@ public class EventsSkills implements LoadingListener {
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
+        // SILENT_PAW
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
         manager.addPacketListener(new PacketAdapter(
                 PawsOfTheForest.getInstance(),
@@ -59,8 +63,6 @@ public class EventsSkills implements LoadingListener {
                 if (soundPacketsIgnored.remove(receiver)) {
                     return;
                 }
-
-                // First, getting the sound name
 
                 StructureModifier<Holder> holderMod =
                         event.getPacket().getSpecificModifier(Holder.class);
@@ -79,9 +81,6 @@ public class EventsSkills implements LoadingListener {
                 if (!lower.contains("step")) {
                     return;
                 }
-
-                // Then if it is a step, parsing walker and receiver
-                // to apply SILENT_PAW logic by cancelling event
 
                 World world = event.getPlayer().getWorld();
                 int rawX = event.getPacket().getIntegers().read(0);
@@ -132,12 +131,42 @@ public class EventsSkills implements LoadingListener {
                 }
             }
         });
+
+        // TRACKER
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                footsteps.values().forEach(list -> list.removeIf(fs -> now - fs.timestamp() >= 5000));
+
+                for (Player tracker : Bukkit.getOnlinePlayers()) {
+                    HibernateUtils.withSession(session -> {
+                        PlayerEntity entity = session.get(PlayerEntity.class, tracker.getUniqueId());
+                        if (!entity.hasAbility(Skills.TRACKER)) {
+                            return;
+                        }
+                        for (FootStep fs : footsteps.values().stream().flatMap(List::stream).toList()) {
+                            if (fs.location().getWorld().equals(tracker.getWorld())
+                                    && fs.location().distanceSquared(tracker.getLocation()) < 25) {
+                                tracker.playEffect(fs.location(), Effect.SHOOT_WHITE_SMOKE, 0);
+                            }
+                        }
+                    });
+                }
+            }
+        }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 10);
     }
 
     @EventHandler
-    public void on(EntityDeathEvent event) {
-        // Checking if a prey has been killed
+    public void on(PlayerMoveEvent event) {
+        footsteps.computeIfAbsent(event.getPlayer().getUniqueId(), k -> new ArrayList<>())
+                .add(new FootStep(event.getPlayer().getLocation(), System.currentTimeMillis()));
+    }
 
+    // EFFICIENT_KILL
+
+    @EventHandler
+    public void on(EntityDeathEvent event) {
         Player killer = event.getEntity().getKiller();
 
         if (killer == null) {
@@ -149,8 +178,6 @@ public class EventsSkills implements LoadingListener {
         if (prey.isEmpty()) {
             return;
         }
-
-        // Then checking if the kill is stealth to apply EFFICIENT_KILL
 
         if (!MobsUtils.isStealthFrom(killer, event.getEntity())) {
             return;
