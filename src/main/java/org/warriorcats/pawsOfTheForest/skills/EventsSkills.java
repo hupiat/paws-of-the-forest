@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.util.Vector;
@@ -43,6 +44,7 @@ public class EventsSkills implements LoadingListener {
     public static final double THICK_COAT_TIER_PERCENTAGE = 0.1;
     public static final double HEARTY_APPETITE_TIER_PERCENTAGE = 0.1;
     public static final int BEAST_OF_BURDEN_TIER_VALUE = 9;
+    public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -276,6 +278,27 @@ public class EventsSkills implements LoadingListener {
             float bonus = (float) (event.getPlayer().getFoodLevel() * factor);
 
             event.getPlayer().setSaturation(currentSaturation + bonus);
+        });
+    }
+
+    // WELL-FED
+
+    @EventHandler
+    public void on(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        if (event.getRegainReason() != EntityRegainHealthEvent.RegainReason.SATIATED) return;
+
+        if (player.getFoodLevel() < 20) return;
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.WELL_FED)) return;
+
+            int tier = entity.getAbilityTier(Skills.WELL_FED);
+            double factor = WELL_FED_TIER_PERCENTAGE * tier;
+
+            event.setAmount(event.getAmount() * (1 + factor));
         });
     }
 }
