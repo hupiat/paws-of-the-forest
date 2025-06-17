@@ -51,6 +51,22 @@ public class MenuSkillTreePath {
     public static final int INDEX_BOTANICAL_LORE = 22;
     public static final int INDEX_CLEAN_PAWS = 24;
 
+    public static final int INDEX_WELL_FED = 11;
+    public static final int INDEX_PAMPERED = 13;
+    public static final int INDEX_SHELTERED_MIND = 15;
+
+    public static final int INDEX_TRACKER = 11;
+    public static final int INDEX_CRAFTY = 13;
+    public static final int INDEX_FLEXIBLE_MORALS = 15;
+
+    public static final int INDEX_AMBUSHER = 11;
+    public static final int INDEX_SCAVENGE = 13;
+    public static final int INDEX_HARD_KNOCK_LIFE = 15;
+
+    public static final int INDEX_URBAN_NAVIGATION = 11;
+    public static final int INDEX_RAT_CATCHER = 13;
+    public static final int INDEX_DISEASE_RESISTANCE = 15;
+
     private final SkillBranches branch;
 
     public MenuSkillTreePath(SkillBranches branch) {
@@ -95,6 +111,30 @@ public class MenuSkillTreePath {
                 case INDEX_CLEAN_PAWS      -> Skills.CLEAN_PAWS;
                 default                    -> null;
             };
+            case KITTYPET -> switch (index) {
+                case INDEX_WELL_FED         -> Skills.WELL_FED;
+                case INDEX_PAMPERED         -> Skills.PAMPERED;
+                case INDEX_SHELTERED_MIND   -> Skills.SHELTERED_MIND;
+                default                     -> null;
+            };
+            case LONER -> switch (index) {
+                case INDEX_TRACKER          -> Skills.TRACKER;
+                case INDEX_CRAFTY           -> Skills.CRAFTY;
+                case INDEX_FLEXIBLE_MORALS  -> Skills.FLEXIBLE_MORALS;
+                default                     -> null;
+            };
+            case ROGUE -> switch (index) {
+                case INDEX_AMBUSHER         -> Skills.AMBUSHER;
+                case INDEX_SCAVENGE         -> Skills.SCAVENGE;
+                case INDEX_HARD_KNOCK_LIFE  -> Skills.HARD_KNOCK_LIFE;
+                default                     -> null;
+            };
+            case CITY_CAT -> switch (index) {
+                case INDEX_URBAN_NAVIGATION -> Skills.URBAN_NAVIGATION;
+                case INDEX_RAT_CATCHER      -> Skills.RAT_CATCHER;
+                case INDEX_DISEASE_RESISTANCE -> Skills.DISEASE_RESISTANCE;
+                default                      -> null;
+            };
         };
     }
 
@@ -109,6 +149,10 @@ public class MenuSkillTreePath {
                 case NAVIGATION -> drawNavigationBranch(menu, entity);
                 case RESILIENCE -> drawResilienceBranch(menu, entity);
                 case HERBALIST -> drawHerbalistBranch(menu, entity);
+                case KITTYPET -> drawKittypetBranch(menu, entity);
+                case LONER -> drawLonerBranch(menu, entity);
+                case ROGUE -> drawRogueBranch(menu, entity);
+                case CITY_CAT -> drawCityCatBranch(menu, entity);
             }
         }
 
@@ -206,6 +250,122 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(), "Reduce self-infection risk",
                 entity.getAbilityPerk(Skills.CLEAN_PAWS), Skills.CLEAN_PAWS.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+    }
+
+    private static void drawKittypetBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_WELL_FED, createTieredItem(
+                Material.COOKED_SALMON,
+                "Well-Fed",
+                "Heals faster when full.",
+                entity.getAbilityPerk(Skills.WELL_FED),
+                Skills.WELL_FED.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_PAMPERED, createTieredItem(
+                Material.MILK_BUCKET,
+                "Pampered",
+                "Less likely to fall ill.",
+                entity.getAbilityPerk(Skills.PAMPERED),
+                Skills.PAMPERED.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_SHELTERED_MIND, createTieredItem(
+                Material.BOOK,
+                "Sheltered Mind",
+                "Immune to fear effects.",
+                entity.getAbilityPerk(Skills.SHELTERED_MIND),
+                Skills.SHELTERED_MIND.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawLonerBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_TRACKER, createTieredItem(
+                Material.COMPASS,
+                "Tracker",
+                "Detect recent footsteps.",
+                entity.getAbilityPerk(Skills.TRACKER),
+                Skills.TRACKER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_CRAFTY, createTieredItem(
+                Material.FERN,
+                "Crafty",
+                "Use herbs more efficiently.",
+                entity.getAbilityPerk(Skills.CRAFTY),
+                Skills.CRAFTY.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_FLEXIBLE_MORALS, createTieredItem(
+                Material.EMERALD,
+                "Flexible Morals",
+                "Can trade/steal from NPCs.",
+                entity.getAbilityPerk(Skills.FLEXIBLE_MORALS),
+                Skills.FLEXIBLE_MORALS.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawRogueBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_AMBUSHER, createTieredItem(
+                Material.IRON_SWORD,
+                "Ambusher",
+                "+Sneak attack damage.",
+                entity.getAbilityPerk(Skills.AMBUSHER),
+                Skills.AMBUSHER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_SCAVENGE, createTieredItem(
+                Material.ROTTEN_FLESH,
+                "Scavenge",
+                "Loot items from trash piles.",
+                entity.getAbilityPerk(Skills.SCAVENGE),
+                Skills.SCAVENGE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_HARD_KNOCK_LIFE, createTieredItem(
+                Material.LEATHER_CHESTPLATE,
+                "Hard Knock Life",
+                "+1 natural armor.",
+                entity.getAbilityPerk(Skills.HARD_KNOCK_LIFE),
+                Skills.HARD_KNOCK_LIFE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawCityCatBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_URBAN_NAVIGATION, createTieredItem(
+                Material.STONE,
+                "Urban Navigation",
+                "Speed boost on concrete/stone.",
+                entity.getAbilityPerk(Skills.URBAN_NAVIGATION),
+                Skills.URBAN_NAVIGATION.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_RAT_CATCHER, createTieredItem(
+                Material.RABBIT,
+                "Rat Catcher",
+                "Track and catch rats.",
+                entity.getAbilityPerk(Skills.RAT_CATCHER),
+                Skills.RAT_CATCHER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_DISEASE_RESISTANCE, createTieredItem(
+                Material.SPIDER_EYE,
+                "Disease Resistance",
+                "Reduced illness severity.",
+                entity.getAbilityPerk(Skills.DISEASE_RESISTANCE),
+                Skills.DISEASE_RESISTANCE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
     private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {

@@ -3,7 +3,7 @@ package org.warriorcats.pawsOfTheForest.skills;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 public enum SkillBranches {
-    HUNTING, NAVIGATION, RESILIENCE, HERBALIST;
+    HUNTING, NAVIGATION, RESILIENCE, HERBALIST, KITTYPET, LONER, ROGUE, CITY_CAT;
 
     @Override
     public String toString() {

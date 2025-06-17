@@ -21,10 +21,16 @@ public abstract class MenuSkillTree {
     public static final int INDEX_BACK = 36;
     public static final int INDEX_SKILLS_POINTS = 44;
 
-    public static final int INDEX_HUNTING = 10;
-    public static final int INDEX_NAVIGATION = 12;
-    public static final int INDEX_RESILIENCE = 14;
-    public static final int INDEX_HERBALIST = 16;
+    public static final int INDEX_HUNTING = 1;
+    public static final int INDEX_NAVIGATION = 3;
+    public static final int INDEX_RESILIENCE = 5;
+    public static final int INDEX_HERBALIST = 7;
+
+    public static final int INDEX_KITTYPET = 10;
+    public static final int INDEX_LONER = 12;
+    public static final int INDEX_ROGUE = 14;
+    public static final int INDEX_CITY_CAT = 16;
+
 
     public static final String TEXT_CLICK_TO_OPEN = MessagesConf.Skills.COLOR_DESCRIPTION + "Click to open";
     public static final String TEXT_CLOSE = MessagesConf.Skills.COLOR_DESCRIPTION + "Close";
@@ -57,6 +63,34 @@ public abstract class MenuSkillTree {
         menu.setItem(INDEX_HERBALIST, createMenuItem(Material.FERN, SkillBranches.HERBALIST.toString(), List.of(
                 MessagesConf.Skills.COLOR_DESCRIPTION +
                 MessagesConf.Skills.HERBALIST_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_KITTYPET, createMenuItem(Material.MILK_BUCKET, SkillBranches.KITTYPET.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                MessagesConf.Skills.KITTYPET_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_LONER, createMenuItem(Material.LEATHER, SkillBranches.LONER.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                MessagesConf.Skills.LONER_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_ROGUE, createMenuItem(Material.IRON_SWORD, SkillBranches.ROGUE.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                MessagesConf.Skills.ROGUE_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_CITY_CAT, createMenuItem(Material.STONE_BRICKS, SkillBranches.CITY_CAT.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                MessagesConf.Skills.CITY_CAT_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));

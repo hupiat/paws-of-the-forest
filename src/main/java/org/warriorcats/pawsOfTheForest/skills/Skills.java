@@ -29,7 +29,23 @@ public enum Skills {
     BREW_REMEDY("Brew Remedy", true, SkillBranches.HERBALIST, 1),
     QUICK_GATHERER("Quick Gatherer", false, SkillBranches.HERBALIST, 3),
     BOTANICAL_LORE("Botanical Lore", false, SkillBranches.HERBALIST, 3),
-    CLEAN_PAWS("Clean Paws", false, SkillBranches.HERBALIST, 2);
+    CLEAN_PAWS("Clean Paws", false, SkillBranches.HERBALIST, 2),
+
+    WELL_FED("Well-Fed", false, SkillBranches.KITTYPET, 1),
+    PAMPERED("Pampered", false, SkillBranches.KITTYPET, 1),
+    SHELTERED_MIND("Sheltered Mind", false, SkillBranches.KITTYPET, 1),
+
+    TRACKER("Tracker", false, SkillBranches.LONER, 1),
+    CRAFTY("Crafty", false, SkillBranches.LONER, 1),
+    FLEXIBLE_MORALS("Flexible Morals", false, SkillBranches.LONER, 1),
+
+    AMBUSHER("Ambusher", false, SkillBranches.ROGUE, 1),
+    SCAVENGE("Scavenge", false, SkillBranches.ROGUE, 1),
+    HARD_KNOCK_LIFE("Hard Knock Life", false, SkillBranches.ROGUE, 1),
+
+    URBAN_NAVIGATION("Urban Navigation", false, SkillBranches.CITY_CAT, 1),
+    RAT_CATCHER("Rat Catcher", false, SkillBranches.CITY_CAT, 1),
+    DISEASE_RESISTANCE("Disease Resistance", false, SkillBranches.CITY_CAT, 1);
 
     private final String displayName;
     private final boolean isActive;

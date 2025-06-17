@@ -96,6 +96,18 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String HERBALIST_DESCRIPTION =
                 getPropertyOrDefault("skills.herbalist.description", "Use herbs to heal, resist illness, and brew.", CONFIG_FILE_NAME);
 
+        public static final String KITTYPET_DESCRIPTION =
+                getPropertyOrDefault("skills.kittypet.description", "A cat raised in the warmth and comfort of Twoleg dens. Well-fed, pampered, and protected, but distant from the wild ways of the forest.", CONFIG_FILE_NAME);
+
+        public static final String LONER_DESCRIPTION =
+                getPropertyOrDefault("skills.loner.description", "A solitary wanderer who shuns Clans and Twolegs alike. Living by their own rules, trusting no one but themselves.", CONFIG_FILE_NAME);
+
+        public static final String ROGUE_DESCRIPTION =
+                getPropertyOrDefault("skills.rogue.description", "A fierce outcast, untamed and unpredictable. Rogues survive by tooth and claw, often causing trouble near Clan borders.", CONFIG_FILE_NAME);
+
+        public static final String CITY_CAT_DESCRIPTION =
+                getPropertyOrDefault("skills.cityCat.description", "A streetwise feline, navigating alleyways and rooftops. Cunning and adaptable, they thrive in the bustling chaos of the Twolegplace.", CONFIG_FILE_NAME);
+
         public static final String MENU_EXIT =
                 getPropertyOrDefault("skills.menu.exit", "Exit this menu.", CONFIG_FILE_NAME);
 

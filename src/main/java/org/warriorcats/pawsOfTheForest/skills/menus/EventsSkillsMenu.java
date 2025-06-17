@@ -99,6 +99,30 @@ public class EventsSkillsMenu implements Listener {
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
+            case MenuSkillTree.INDEX_KITTYPET:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.KITTYPET));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_LONER:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.LONER));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_ROGUE:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.ROGUE));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_CITY_CAT:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.CITY_CAT));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
             case MenuSkillTree.INDEX_BACK:
                 player.closeInventory();
                 break;
@@ -163,6 +187,7 @@ public class EventsSkillsMenu implements Listener {
 
                     }
                     break;
+
                 case SkillBranches.NAVIGATION:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
@@ -181,6 +206,7 @@ public class EventsSkillsMenu implements Listener {
                             break;
                     }
                     break;
+
                 case SkillBranches.RESILIENCE:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
@@ -201,6 +227,7 @@ public class EventsSkillsMenu implements Listener {
                             break;
                     }
                     break;
+
                 case SkillBranches.HERBALIST:
                     switch (index) {
                         case MenuSkillTree.INDEX_BACK:
@@ -215,6 +242,57 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_QUICK_GATHERER:
                         case MenuSkillTreePath.INDEX_BOTANICAL_LORE:
                         case MenuSkillTreePath.INDEX_CLEAN_PAWS:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+                case SkillBranches.KITTYPET:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_WELL_FED:
+                        case MenuSkillTreePath.INDEX_PAMPERED:
+                        case MenuSkillTreePath.INDEX_SHELTERED_MIND:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.LONER:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_TRACKER:
+                        case MenuSkillTreePath.INDEX_CRAFTY:
+                        case MenuSkillTreePath.INDEX_FLEXIBLE_MORALS:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.ROGUE:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_AMBUSHER:
+                        case MenuSkillTreePath.INDEX_SCAVENGE:
+                        case MenuSkillTreePath.INDEX_HARD_KNOCK_LIFE:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.CITY_CAT:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_URBAN_NAVIGATION:
+                        case MenuSkillTreePath.INDEX_RAT_CATCHER:
+                        case MenuSkillTreePath.INDEX_DISEASE_RESISTANCE:
                             consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
