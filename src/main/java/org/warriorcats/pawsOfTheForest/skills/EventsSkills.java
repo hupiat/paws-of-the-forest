@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
@@ -40,6 +41,7 @@ public class EventsSkills implements LoadingListener {
     public static final double ENDURANCE_TRAVELER_TIER_PERCENTAGE = 0.05;
     public static final double CLIMBERS_GRACE_TIER_PERCENTAGE = 0.1;
     public static final double THICK_COAT_TIER_PERCENTAGE = 0.1;
+    public static final double HEARTY_APPETITE_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -252,6 +254,27 @@ public class EventsSkills implements LoadingListener {
                 return;
             }
             event.getPlayer().setFreezeTicks(0);
+        });
+    }
+
+    // HEARTY_APPETITE
+
+    @EventHandler
+    public void on(PlayerItemConsumeEvent event) {
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
+            if (!entity.hasAbility(Skills.HEARTY_APPETITE)) {
+                return;
+            }
+
+            int tier = entity.getAbilityTier(Skills.HEARTY_APPETITE);
+            double factor = tier * HEARTY_APPETITE_TIER_PERCENTAGE;
+
+            float currentSaturation = event.getPlayer().getSaturation();
+
+            float bonus = (float) (event.getPlayer().getFoodLevel() * factor);
+
+            event.getPlayer().setSaturation(currentSaturation + bonus);
         });
     }
 }
