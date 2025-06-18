@@ -12,13 +12,11 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -50,6 +48,7 @@ public class EventsSkills implements LoadingListener {
     public static final int BEAST_OF_BURDEN_TIER_VALUE = 9;
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
     public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
+    public static final double AMBUSHER_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -274,7 +273,8 @@ public class EventsSkills implements LoadingListener {
             }
             if (BiomesUtils.isCold(biome) && BiomesUtils.isDamageFromFreeze(event.getDamageSource().getDamageType())) {
                 int tier = entity.getAbilityTier(Skills.THICK_COAT);
-                event.setDamage(event.getDamage() * (1 - THICK_COAT_TIER_PERCENTAGE * tier));
+                double factor = THICK_COAT_TIER_PERCENTAGE * tier;
+                event.setDamage(event.getDamage() * (1 - factor));
             }
         });
     }
@@ -366,6 +366,27 @@ public class EventsSkills implements LoadingListener {
                     player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_STOLE_FROM_NPC);
                 }
             }
+        });
+    }
+
+    // AMBUSHER
+
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player player)) return;
+        if (!(event.getEntity() instanceof LivingEntity entity)) return;
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.AMBUSHER)) {
+                return;
+            }
+            if (!MobsUtils.isStealthFrom(player, entity)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.AMBUSHER);
+            double factor = tier * AMBUSHER_TIER_PERCENTAGE;
+            event.setDamage(event.getDamage() * (1 + factor));
         });
     }
 }
