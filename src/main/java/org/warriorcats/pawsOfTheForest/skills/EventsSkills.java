@@ -53,6 +53,7 @@ public class EventsSkills implements LoadingListener {
     public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
     public static final double AMBUSHER_TIER_PERCENTAGE = 0.1;
     public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.25;
+    public static final double RAT_CATCHER_TIER_RANGE = 25;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -344,13 +345,13 @@ public class EventsSkills implements LoadingListener {
         });
     }
 
-    // FLEXIBLE_MORALS
 
     @EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+    public void on(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
 
+        // FLEXIBLE_MORALS
         HibernateUtils.withSession(session -> {
             PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!playerEntity.hasAbility(Skills.FLEXIBLE_MORALS)) {
@@ -365,6 +366,18 @@ public class EventsSkills implements LoadingListener {
                     player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_STOLE_FROM_NPC);
                 }
             }
+        });
+
+        // RAT_CATCHER
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.RAT_CATCHER)) {
+                return;
+            }
+            entity.remove();
+            player.getInventory().addItem(MobsUtils.getRandomLootFromRat());
+            player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_CAUGHT_RAT);
+            event.setCancelled(true);
         });
     }
 
@@ -418,14 +431,13 @@ public class EventsSkills implements LoadingListener {
         });
     }
 
-    // URBAN_NAVIGATION
-
     @EventHandler
     public void on(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
                 .add(new FootStep(player.getLocation(), System.currentTimeMillis()));
 
+        // URBAN_NAVIGATION
         HibernateUtils.withSession(session -> {
             PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!playerEntity.hasAbility(Skills.URBAN_NAVIGATION)) {
@@ -443,6 +455,33 @@ public class EventsSkills implements LoadingListener {
                     player.setWalkSpeed(def);
                 }
             }
+        });
+
+        // RAT_CATCHER tracking
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.RAT_CATCHER)) {
+                return;
+            }
+
+            int tier = playerEntity.getAbilityTier(Skills.RAT_CATCHER);
+            double radius = tier * RAT_CATCHER_TIER_RANGE;
+
+            player.getWorld().getNearbyLivingEntities(player.getLocation(), radius, radius, radius)
+                    .stream()
+                    .filter(entity -> {
+                        Optional<Prey> prey = Prey.fromEntity(entity);
+                        return prey.filter(MobsUtils::isRat).isPresent();
+                    })
+                    .forEach(rat -> {
+                        player.spawnParticle(
+                                Particle.WITCH,
+                                rat.getLocation().add(0, 0.3, 0),
+                                10,
+                                0.2, 0.5, 0.2,
+                                0
+                        );
+                    });
         });
     }
 }

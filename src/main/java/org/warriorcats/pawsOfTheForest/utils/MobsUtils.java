@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.warriorcats.pawsOfTheForest.preys.Prey;
 
 import java.util.List;
 import java.util.Random;
@@ -51,6 +52,20 @@ public abstract class MobsUtils {
             case GOLD_NUGGET, IRON_NUGGET -> 1 + random.nextInt(3);
             default -> 1;
         };
+
+        return new ItemStack(loot, amount);
+    }
+
+    public static boolean isRat(Prey prey) {
+        return prey.entityType().equalsIgnoreCase("mouse");
+    }
+
+    public static ItemStack getRandomLootFromRat() {
+        final Random random = new Random();
+
+        Material loot = ItemsUtils.RAT_LOOTS.get(random.nextInt(ItemsUtils.RAT_LOOTS.size()));
+
+        int amount = 1 + random.nextInt(2);
 
         return new ItemStack(loot, amount);
     }

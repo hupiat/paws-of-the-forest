@@ -104,6 +104,13 @@ public abstract class ItemsUtils {
             Material.QUARTZ
     );
 
+    public static List<Material> RAT_LOOTS = List.of(
+            Material.ROTTEN_FLESH,
+            Material.BONE,
+            Material.LEATHER,
+            Material.STRING
+    );
+
     public static boolean isUrbanBlock(Material material) {
         return URBAN_BLOCKS.contains(material);
     }

@@ -131,5 +131,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_FOUND_TRASH_LOOT =
                 getPropertyOrDefault("skills.playerMessages.foundTrashLoot", "You scavenged some trash and found a loot !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_CAUGHT_RAT =
+                getPropertyOrDefault("skills.playerMessages.caughtRat", "You have caught a rat !", CONFIG_FILE_NAME);
     }
 }
