@@ -128,5 +128,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_STOLE_FROM_NPC =
                 getPropertyOrDefault("skills.playerMessages.stoleFromNPC", "You discreetly stole from NPC !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_FOUND_TRASH_LOOT =
+                getPropertyOrDefault("skills.playerMessages.foundTrashLoot", "You scavenged some trash and found a loot !", CONFIG_FILE_NAME);
     }
 }

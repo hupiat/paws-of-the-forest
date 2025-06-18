@@ -12,25 +12,55 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public abstract class ItemsUtils {
 
-    public static final List<Material> LOOTS_FROM_NPC = List.of(
-            Material.EMERALD,
+    public static final List<Material> COMMON_LOOTS = List.of(
+            Material.IRON_NUGGET,
             Material.GOLD_NUGGET,
-            Material.IRON_INGOT,
+            Material.COPPER_INGOT,
+            Material.COAL,
+            Material.FLINT,
+            Material.BONE,
+
+            Material.STRING,
+            Material.LEATHER,
+            Material.FEATHER,
+            Material.GUNPOWDER,
+
             Material.BREAD,
             Material.APPLE,
-            Material.LEATHER,
-            Material.STRING
+            Material.CARROT,
+            Material.POTATO,
+
+            Material.EMERALD,
+            Material.LAPIS_LAZULI,
+            Material.REDSTONE,
+            Material.QUARTZ
     );
+
+    public static boolean isTrashBlock(Material material) {
+        return switch (material) {
+            case COARSE_DIRT, PODZOL, GRAVEL, MUD, COMPOSTER -> true;
+            default -> false;
+        };
+    }
 
     public static List<Material> getAllFoods() {
         return Arrays.stream(Material.values())
                 .filter(Material::isEdible)
                 .collect(Collectors.toList());
+    }
+
+    public static ItemStack getRandomLootFromTrash() {
+        final Random random = new Random();
+
+        Material loot = ItemsUtils.COMMON_LOOTS.get(random.nextInt(ItemsUtils.COMMON_LOOTS.size()));
+
+        return new ItemStack(loot, 1);
     }
 
     public static String serializeItemStackArray(ItemStack[] items) {

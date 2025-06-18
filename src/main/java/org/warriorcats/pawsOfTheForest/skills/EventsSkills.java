@@ -11,13 +11,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +34,7 @@ import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.*;
@@ -376,17 +380,46 @@ public class EventsSkills implements LoadingListener {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
+        if (!MobsUtils.isStealthFrom(player, entity)) {
+            return;
+        }
+
         HibernateUtils.withSession(session -> {
             PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!playerEntity.hasAbility(Skills.AMBUSHER)) {
                 return;
             }
-            if (!MobsUtils.isStealthFrom(player, entity)) {
-                return;
-            }
             int tier = playerEntity.getAbilityTier(Skills.AMBUSHER);
             double factor = tier * AMBUSHER_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 + factor));
+        });
+    }
+
+    // SCAVENGE
+
+    @EventHandler
+    public void on(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock() == null) return;
+
+        Block block = event.getClickedBlock();
+
+        if (!ItemsUtils.isTrashBlock(block.getType())) {
+            return;
+        }
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.SCAVENGE)) {
+                return;
+            }
+            player.getInventory().addItem(ItemsUtils.getRandomLootFromTrash());
+            player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_FOUND_TRASH_LOOT);
+            block.setType(Material.DIRT);
+            player.playSound(block.getLocation(), Sound.BLOCK_COMPOSTER_EMPTY, 1.0f, 1.0f);
+            event.setCancelled(true);
         });
     }
 }
