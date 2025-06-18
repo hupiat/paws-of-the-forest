@@ -133,7 +133,7 @@ public abstract class ItemsUtils {
         return new ItemStack(loot, 1);
     }
 
-    public static String serializeItemStackArray(ItemStack[] items) {
+    public static byte[] serializeItemStackArray(ItemStack[] items) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
@@ -145,16 +145,16 @@ public abstract class ItemsUtils {
             }
 
             dataOutput.close();
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+            return outputStream.toByteArray();
         } catch (IOException e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not serialize item stacks array", e);
         }
-        return "";
+        return new byte[0];
     }
 
-    public static ItemStack[] deserializeItemStackArray(String data) {
+    public static ItemStack[] deserializeItemStackArray(byte[] data) {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
             int length = dataInput.readInt();

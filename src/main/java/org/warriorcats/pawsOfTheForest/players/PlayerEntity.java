@@ -46,8 +46,8 @@ public class PlayerEntity {
     @OneToMany(cascade = CascadeType.ALL)
     private List<SkillBranchEntity> skillBranches = new ArrayList<>();
 
-    @Column(length = 65535)
-    private String backpackData;
+    @Lob
+    private byte[] backpackData;
 
     public boolean hasAbility(Skills skill) {
         return getAbilityInternal(skill).isPresent();
