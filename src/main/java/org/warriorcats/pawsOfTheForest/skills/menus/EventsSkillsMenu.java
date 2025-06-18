@@ -164,6 +164,9 @@ public class EventsSkillsMenu implements Listener {
                 if (skill == Skills.IRON_HIDE) {
                     SkillsUtils.updateIronHideArmor(player, entity.getAbilityTier(Skills.IRON_HIDE));
                 }
+                if (skill == Skills.HARD_KNOCK_LIFE) {
+                    SkillsUtils.updateHardKnockLife(player);
+                }
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {

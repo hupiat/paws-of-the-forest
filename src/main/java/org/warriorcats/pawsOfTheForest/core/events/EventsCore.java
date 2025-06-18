@@ -75,6 +75,9 @@ public class EventsCore implements Listener {
                 if (existing.hasAbility(Skills.IRON_HIDE)) {
                     SkillsUtils.updateIronHideArmor(event.getPlayer(), existing.getAbilityTier(Skills.IRON_HIDE));
                 }
+                if (existing.hasAbility(Skills.HARD_KNOCK_LIFE)) {
+                    SkillsUtils.updateHardKnockLife(event.getPlayer());
+                }
             }
         });
 
