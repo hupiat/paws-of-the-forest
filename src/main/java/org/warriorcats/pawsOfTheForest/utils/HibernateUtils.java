@@ -39,9 +39,9 @@ public abstract class HibernateUtils {
         try {
             StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                     .applySetting("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver")
-                    .applySetting("hibernate.connection.url", "jdbc:mysql://customer_1024623_pawsoftheforest_dev:l.1rPb6%3Dq98muy%2BAQbEfubJ6@na01-sql.pebblehost.com:3306/customer_1024623_pawsoftheforest_dev?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true")
-                    .applySetting("hibernate.connection.username", "customer_1024623_pawsoftheforest_dev")
-                    .applySetting("hibernate.connection.password", "l.1rPb6=q98muy+AQbEfubJ6")
+                    .applySetting("hibernate.connection.url", "jdbc:mysql://localhost:3306/pawsoftheforest_dev?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true")
+                    .applySetting("hibernate.connection.username", "root")
+                    .applySetting("hibernate.connection.password", "mysql")
                     .applySetting("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                     .applySetting("hibernate.hbm2ddl.auto", "create-drop")
                     .applySetting("hibernate.show_sql", "false")

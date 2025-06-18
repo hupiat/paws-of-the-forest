@@ -14,7 +14,7 @@ import java.util.logging.Level;
 
 public abstract class HttpServerUtils {
 
-    public static final int RESOURCES_PACK_PORT = 8080;
+    public static final int RESOURCES_PACK_PORT = 8027;
 
     private static HttpServer httpServer;
 
@@ -24,7 +24,7 @@ public abstract class HttpServerUtils {
                 stop();
             }
 
-            httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+            httpServer = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
             httpServer.createContext(route, new FileHandler(file));
             httpServer.setExecutor(null);
             httpServer.start();
