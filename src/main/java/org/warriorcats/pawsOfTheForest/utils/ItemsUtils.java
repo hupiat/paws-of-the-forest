@@ -17,6 +17,16 @@ import java.util.stream.Collectors;
 
 public abstract class ItemsUtils {
 
+    public static final List<Material> LOOTS_FROM_NPC = List.of(
+            Material.EMERALD,
+            Material.GOLD_NUGGET,
+            Material.IRON_INGOT,
+            Material.BREAD,
+            Material.APPLE,
+            Material.LEATHER,
+            Material.STRING
+    );
+
     public static List<Material> getAllFoods() {
         return Arrays.stream(Material.values())
                 .filter(Material::isEdible)

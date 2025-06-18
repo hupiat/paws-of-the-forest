@@ -41,4 +41,18 @@ public abstract class MobsUtils {
     public static boolean isStealthFrom(Player player, LivingEntity entity) {
         return player.isSneaking() || player.isInvisible() || !entity.hasLineOfSight(player);
     }
+
+    public static ItemStack getRandomLootFromStealing() {
+        final Random random = new Random();
+
+        Material loot = ItemsUtils.LOOTS_FROM_NPC.get(random.nextInt(ItemsUtils.LOOTS_FROM_NPC.size()));
+
+        int amount = switch (loot) {
+            case EMERALD, IRON_INGOT -> 1;
+            case GOLD_NUGGET -> 1 + random.nextInt(3);
+            default -> 1;
+        };
+
+        return new ItemStack(loot, amount);
+    }
 }

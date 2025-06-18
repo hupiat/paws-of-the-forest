@@ -81,6 +81,9 @@ public abstract class MessagesConf extends AbstractConfiguration {
     }
 
     public static class Skills {
+        public static final ChatColor COLOR_FEEDBACK =
+                getPropertyOrDefault("skills.colors.feedback", ChatColor.GREEN, CONFIG_FILE_NAME);
+
         public static final ChatColor COLOR_DESCRIPTION =
                 getPropertyOrDefault("skills.colors.description", ChatColor.WHITE, CONFIG_FILE_NAME);
 
@@ -122,5 +125,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_BEAST_OF_BURDEN_NOT_UNLOCKED =
                 getPropertyOrDefault("skills.playerMessages.beastOfBurdenNotUnlocked", "You don't have the Beast of Burden skill.", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_STOLE_FROM_NPC =
+                getPropertyOrDefault("skills.playerMessages.stoleFromNPC", "You discreetly stole from NPC !", CONFIG_FILE_NAME);
     }
 }

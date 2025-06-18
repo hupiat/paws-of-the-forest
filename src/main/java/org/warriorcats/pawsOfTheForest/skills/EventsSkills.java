@@ -11,18 +11,23 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
+import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.*;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
@@ -44,6 +49,7 @@ public class EventsSkills implements LoadingListener {
     public static final double HEARTY_APPETITE_TIER_PERCENTAGE = 0.1;
     public static final int BEAST_OF_BURDEN_TIER_VALUE = 9;
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
+    public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -336,6 +342,30 @@ public class EventsSkills implements LoadingListener {
                 return;
             }
             EventsCore.FEAR_EFFECTS.forEach(event.getPlayer()::removePotionEffect);
+        });
+    }
+
+    // FLEXIBLE_MORALS
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        Entity entity = event.getRightClicked();
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.FLEXIBLE_MORALS)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.FLEXIBLE_MORALS);
+            if (entity instanceof Villager villager) {
+                player.openMerchant(villager, true);
+                event.setCancelled(true);
+                if (Math.random() < FLEXIBLE_MORALS_TIER_PERCENTAGE * tier) {
+                    player.getInventory().addItem(MobsUtils.getRandomLootFromStealing());
+                    player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_STOLE_FROM_NPC);
+                }
+            }
         });
     }
 }
