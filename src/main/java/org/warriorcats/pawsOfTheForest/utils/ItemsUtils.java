@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -9,14 +10,75 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public abstract class ItemsUtils {
+
+    public static final Set<Material> URBAN_BLOCKS = Set.of(
+            Material.STONE,
+            Material.COBBLESTONE,
+            Material.STONE_BRICKS,
+            Material.MOSSY_STONE_BRICKS,
+            Material.CRACKED_STONE_BRICKS,
+            Material.CHISELED_STONE_BRICKS,
+            Material.ANDESITE,
+            Material.POLISHED_ANDESITE,
+            Material.DIORITE,
+            Material.POLISHED_DIORITE,
+            Material.GRANITE,
+            Material.POLISHED_GRANITE,
+            Material.DEEPSLATE,
+            Material.COBBLED_DEEPSLATE,
+            Material.POLISHED_DEEPSLATE,
+            Material.DEEPSLATE_BRICKS,
+            Material.DEEPSLATE_TILES,
+            Material.GRAVEL,
+            Material.SMOOTH_STONE,
+
+            Material.WHITE_CONCRETE,
+            Material.ORANGE_CONCRETE,
+            Material.MAGENTA_CONCRETE,
+            Material.LIGHT_BLUE_CONCRETE,
+            Material.YELLOW_CONCRETE,
+            Material.LIME_CONCRETE,
+            Material.PINK_CONCRETE,
+            Material.GRAY_CONCRETE,
+            Material.LIGHT_GRAY_CONCRETE,
+            Material.CYAN_CONCRETE,
+            Material.PURPLE_CONCRETE,
+            Material.BLUE_CONCRETE,
+            Material.BROWN_CONCRETE,
+            Material.GREEN_CONCRETE,
+            Material.RED_CONCRETE,
+            Material.BLACK_CONCRETE,
+
+            Material.WHITE_CONCRETE_POWDER,
+            Material.ORANGE_CONCRETE_POWDER,
+            Material.MAGENTA_CONCRETE_POWDER,
+            Material.LIGHT_BLUE_CONCRETE_POWDER,
+            Material.YELLOW_CONCRETE_POWDER,
+            Material.LIME_CONCRETE_POWDER,
+            Material.PINK_CONCRETE_POWDER,
+            Material.GRAY_CONCRETE_POWDER,
+            Material.LIGHT_GRAY_CONCRETE_POWDER,
+            Material.CYAN_CONCRETE_POWDER,
+            Material.PURPLE_CONCRETE_POWDER,
+            Material.BLUE_CONCRETE_POWDER,
+            Material.BROWN_CONCRETE_POWDER,
+            Material.GREEN_CONCRETE_POWDER,
+            Material.RED_CONCRETE_POWDER,
+            Material.BLACK_CONCRETE_POWDER
+    );
+
+    public static final Set<Material> TRASH_BLOCKS = Set.of(
+            Material.COARSE_DIRT,
+            Material.PODZOL,
+            Material.GRAVEL,
+            Material.MUD,
+            Material.COMPOSTER
+    );
 
     public static final List<Material> COMMON_LOOTS = List.of(
             Material.IRON_NUGGET,
@@ -42,11 +104,12 @@ public abstract class ItemsUtils {
             Material.QUARTZ
     );
 
+    public static boolean isUrbanBlock(Material material) {
+        return URBAN_BLOCKS.contains(material);
+    }
+
     public static boolean isTrashBlock(Material material) {
-        return switch (material) {
-            case COARSE_DIRT, PODZOL, GRAVEL, MUD, COMPOSTER -> true;
-            default -> false;
-        };
+        return TRASH_BLOCKS.contains(material);
     }
 
     public static List<Material> getAllFoods() {

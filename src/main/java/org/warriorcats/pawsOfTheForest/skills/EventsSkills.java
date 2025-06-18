@@ -23,7 +23,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
@@ -53,9 +52,11 @@ public class EventsSkills implements LoadingListener {
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
     public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
     public static final double AMBUSHER_TIER_PERCENTAGE = 0.1;
+    public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.25;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
+    private final Map<UUID, Float> defaultSpeeds = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -164,12 +165,6 @@ public class EventsSkills implements LoadingListener {
                 }
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 10);
-    }
-
-    @EventHandler
-    public void on(PlayerMoveEvent event) {
-        footsteps.computeIfAbsent(event.getPlayer().getUniqueId(), k -> new ArrayList<>())
-                .add(new FootStep(event.getPlayer().getLocation(), System.currentTimeMillis()));
     }
 
     // EFFICIENT_KILL
@@ -422,4 +417,33 @@ public class EventsSkills implements LoadingListener {
             event.setCancelled(true);
         });
     }
+
+    // URBAN_NAVIGATION
+
+    @EventHandler
+    public void on(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
+                .add(new FootStep(player.getLocation(), System.currentTimeMillis()));
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.URBAN_NAVIGATION)) {
+                return;
+            }
+            Material blockBelow = player.getLocation().subtract(0, 1, 0).getBlock().getType();
+            defaultSpeeds.putIfAbsent(player.getUniqueId(), player.getWalkSpeed());
+            if (ItemsUtils.isUrbanBlock(blockBelow)) {
+                int tier = playerEntity.getAbilityTier(Skills.URBAN_NAVIGATION);
+                double factor = tier * URBAN_NAVIGATION_TIER_PERCENTAGE;
+                player.setWalkSpeed((float) (defaultSpeeds.get(player.getUniqueId()) * (1 + factor)));
+            } else {
+                Float def = defaultSpeeds.get(player.getUniqueId());
+                if (def != null && player.getWalkSpeed() != def) {
+                    player.setWalkSpeed(def);
+                }
+            }
+        });
+    }
 }
+
