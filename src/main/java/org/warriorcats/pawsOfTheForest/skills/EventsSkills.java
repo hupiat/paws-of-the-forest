@@ -476,6 +476,7 @@ public class EventsSkills implements LoadingListener {
             double factor = tier * SHARP_WIND_TIER_PERCENTAGE;
             if (Math.random() < factor) {
                 entitiesBleeding.put(entity.getUniqueId(), SHARP_WIND_TIER_DURATION_S * 20);
+                player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_BLEEDING);
                 if (entity instanceof Player damaged) {
                     damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_BLEEDING);
                 }

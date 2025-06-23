@@ -149,5 +149,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_BLEEDING =
                 getPropertyOrDefault("skills.playerMessages.bleeding", "You are bleeding !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_BLEEDING =
+                getPropertyOrDefault("skills.playerMessages.appliedBleeding", "Sharp Wind ! You have applied bleeding !", CONFIG_FILE_NAME);
     }
 }
