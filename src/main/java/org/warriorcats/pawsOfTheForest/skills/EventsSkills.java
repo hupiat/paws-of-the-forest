@@ -56,6 +56,7 @@ public class EventsSkills implements LoadingListener {
     public static final double LIGHTSTEP_TIER_PERCENTAGE = 0.5;
     public static final double SHARP_WIND_TIER_PERCENTAGE = 0.1;
     public static final double SHARP_WIND_TIER_DURATION_S = 10;
+    public static final double THICK_PELT_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -319,6 +320,21 @@ public class EventsSkills implements LoadingListener {
             }
             int tier = entity.getAbilityTier(Skills.LIGHTSTEP);
             double factor = tier * LIGHTSTEP_TIER_PERCENTAGE;
+            event.setDamage(event.getDamage() * (1 - factor));
+        });
+
+        // THICK_PELT
+        HibernateUtils.withSession(session -> {
+            if (event.getDamageSource().getDamageType() != DamageType.PLAYER_ATTACK &&
+                    event.getDamageSource().getDamageType() != DamageType.MOB_ATTACK) {
+                return;
+            }
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.THICK_PELT)) {
+                return;
+            }
+            int tier = entity.getAbilityTier(Skills.THICK_PELT);
+            double factor = tier * THICK_PELT_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 - factor));
         });
     }
