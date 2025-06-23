@@ -7,6 +7,15 @@ import java.util.Set;
 
 public abstract class BiomesUtils {
 
+    private static final Set<Biome> PLAINS_BIOMES = Set.of(
+            Biome.PLAINS,
+            Biome.SUNFLOWER_PLAINS,
+            Biome.SAVANNA,
+            Biome.SAVANNA_PLATEAU,
+            Biome.WINDSWEPT_SAVANNA,
+            Biome.MEADOW
+    );
+
     private static final Set<Biome> COLD_BIOMES = Set.of(
             Biome.FROZEN_OCEAN,
             Biome.FROZEN_RIVER,
@@ -58,6 +67,10 @@ public abstract class BiomesUtils {
     private static final Set<DamageType> FREEZE_DAMAGE_TYPES = Set.of(
             DamageType.FREEZE
     );
+
+    public static boolean isPlain(Biome biome) {
+        return PLAINS_BIOMES.contains(biome);
+    }
 
     public static boolean isCold(Biome biome) {
         return COLD_BIOMES.contains(biome);

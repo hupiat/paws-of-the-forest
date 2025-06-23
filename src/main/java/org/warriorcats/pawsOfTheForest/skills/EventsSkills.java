@@ -31,10 +31,7 @@ import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.*;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
-import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
-import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
-import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
+import org.warriorcats.pawsOfTheForest.utils.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,8 +49,9 @@ public class EventsSkills implements LoadingListener {
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
     public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
     public static final double AMBUSHER_TIER_PERCENTAGE = 0.1;
-    public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.25;
+    public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.15;
     public static final double RAT_CATCHER_TIER_RANGE = 25;
+    public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.15;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -445,16 +443,25 @@ public class EventsSkills implements LoadingListener {
             }
             Material blockBelow = player.getLocation().subtract(0, 1, 0).getBlock().getType();
             defaultSpeeds.putIfAbsent(player.getUniqueId(), player.getWalkSpeed());
-            if (ItemsUtils.isUrbanBlock(blockBelow)) {
-                int tier = playerEntity.getAbilityTier(Skills.URBAN_NAVIGATION);
-                double factor = tier * URBAN_NAVIGATION_TIER_PERCENTAGE;
-                player.setWalkSpeed((float) (defaultSpeeds.get(player.getUniqueId()) * (1 + factor)));
-            } else {
-                Float def = defaultSpeeds.get(player.getUniqueId());
-                if (def != null && player.getWalkSpeed() != def) {
-                    player.setWalkSpeed(def);
-                }
+            int tier = playerEntity.getAbilityTier(Skills.URBAN_NAVIGATION);
+            double factor = tier * URBAN_NAVIGATION_TIER_PERCENTAGE;
+            PlayersUtils.increaseMovementSpeed(player,
+                    () -> ItemsUtils.isUrbanBlock(blockBelow), factor, defaultSpeeds.get(player.getUniqueId()));
+        });
+
+        // SPEED OF THE MOOR
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.SPEED_OF_THE_MOOR)) {
+                return;
             }
+            defaultSpeeds.putIfAbsent(player.getUniqueId(), player.getWalkSpeed());
+            int tier = playerEntity.getAbilityTier(Skills.SPEED_OF_THE_MOOR);
+            double factor = tier * SPEED_OF_THE_MOOR_TIER_PERCENTAGE;
+            PlayersUtils.increaseMovementSpeed(player,
+                    () -> BiomesUtils.isPlain(player.getLocation().getBlock().getBiome()),
+                    factor,
+                    defaultSpeeds.get(player.getUniqueId()));
         });
 
         // RAT_CATCHER tracking
