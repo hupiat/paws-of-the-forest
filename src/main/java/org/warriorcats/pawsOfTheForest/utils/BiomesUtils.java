@@ -8,7 +8,7 @@ import java.util.Set;
 
 public abstract class BiomesUtils {
 
-    private static final Set<Biome> FOREST_BIOMES = Set.of(
+    public static final Set<Biome> FOREST_BIOMES = Set.of(
             Biome.FOREST,
             Biome.BIRCH_FOREST,
             Biome.OLD_GROWTH_BIRCH_FOREST,
@@ -23,7 +23,7 @@ public abstract class BiomesUtils {
             Biome.WOODED_BADLANDS
     );
 
-    private static final Set<Biome> PLAINS_BIOMES = Set.of(
+    public static final Set<Biome> PLAINS_BIOMES = Set.of(
             Biome.PLAINS,
             Biome.SUNFLOWER_PLAINS,
             Biome.SAVANNA,
@@ -32,7 +32,7 @@ public abstract class BiomesUtils {
             Biome.MEADOW
     );
 
-    private static final Set<Biome> COLD_BIOMES = Set.of(
+    public static final Set<Biome> COLD_BIOMES = Set.of(
             Biome.FROZEN_OCEAN,
             Biome.FROZEN_RIVER,
             Biome.SNOWY_PLAINS,
@@ -51,7 +51,7 @@ public abstract class BiomesUtils {
             Biome.OLD_GROWTH_SPRUCE_TAIGA
     );
 
-    private static final Set<Biome> HOT_BIOMES = Set.of(
+    public static final Set<Biome> HOT_BIOMES = Set.of(
             Biome.DESERT,
             Biome.BADLANDS,
             Biome.ERODED_BADLANDS,
@@ -70,7 +70,7 @@ public abstract class BiomesUtils {
             Biome.BASALT_DELTAS
     );
 
-    private static final Set<DamageType> FIRE_DAMAGE_TYPES = Set.of(
+    public static final Set<DamageType> FIRE_DAMAGE_TYPES = Set.of(
             DamageType.IN_FIRE,
             DamageType.ON_FIRE,
             DamageType.CAMPFIRE,
@@ -80,7 +80,7 @@ public abstract class BiomesUtils {
             DamageType.UNATTRIBUTED_FIREBALL
     );
 
-    private static final Set<DamageType> FREEZE_DAMAGE_TYPES = Set.of(
+    public static final Set<DamageType> FREEZE_DAMAGE_TYPES = Set.of(
             DamageType.FREEZE
     );
 

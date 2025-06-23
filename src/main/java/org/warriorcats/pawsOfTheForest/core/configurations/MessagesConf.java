@@ -158,5 +158,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_APPLIED_STAGGERED =
                 getPropertyOrDefault("skills.playerMessages.appliedStaggered", "Stunning Blow ! You have applied staggered !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_AQUA_BALANCE =
+                getPropertyOrDefault("skills.playerMessages.appliedAquaBalance", "Aqua Balance ! You have caught some fresh fish !", CONFIG_FILE_NAME);
     }
 }

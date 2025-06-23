@@ -20,10 +20,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -61,6 +58,7 @@ public class EventsSkills implements LoadingListener {
     public static final double THICK_PELT_TIER_PERCENTAGE = 0.1;
     public static final double STUNNING_BLOW_TIER_PERCENTAGE = 0.1;
     public static final int STUNNING_BLOW_DURATION_S = 10;
+    public static final double AQUA_BALANCE_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -648,5 +646,27 @@ public class EventsSkills implements LoadingListener {
                     });
         });
     }
-}
 
+    // AQUA_BALANCE
+    @EventHandler
+    public void on(PlayerFishEvent event) {
+        Player player = event.getPlayer();
+
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            event.setCancelled(true);
+            if (event.getCaught() != null) {
+                event.getCaught().remove();
+            }
+            if (!playerEntity.hasAbility(Skills.AQUA_BALANCE)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.AQUA_BALANCE);
+            if (Math.random() < tier * AQUA_BALANCE_TIER_PERCENTAGE) {
+                player.getInventory().addItem(ItemsUtils.getRandomLootFromFish());
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.4f);
+                player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_AQUA_BALANCE);
+            }
+        });
+    }
+}

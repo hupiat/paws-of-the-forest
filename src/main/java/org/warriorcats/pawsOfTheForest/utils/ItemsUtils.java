@@ -104,11 +104,20 @@ public abstract class ItemsUtils {
             Material.QUARTZ
     );
 
-    public static List<Material> RAT_LOOTS = List.of(
+    public static final List<Material> RAT_LOOTS = List.of(
             Material.ROTTEN_FLESH,
             Material.BONE,
             Material.LEATHER,
             Material.STRING
+    );
+
+    public static final List<Material> FISH_LOOTS = List.of(
+            Material.COD,
+            Material.SALMON,
+            Material.PUFFERFISH,
+            Material.TROPICAL_FISH,
+            Material.KELP,
+            Material.SEAGRASS
     );
 
     public static boolean isUrbanBlock(Material material) {
@@ -131,6 +140,14 @@ public abstract class ItemsUtils {
         Material loot = ItemsUtils.COMMON_LOOTS.get(random.nextInt(ItemsUtils.COMMON_LOOTS.size()));
 
         return new ItemStack(loot, 1);
+    }
+
+    public static ItemStack getRandomLootFromFish() {
+        final Random random = new Random();
+
+        Material loot = FISH_LOOTS.get(random.nextInt(FISH_LOOTS.size()));
+
+        return new ItemStack(loot, 1 + random.nextInt(3));
     }
 
     public static byte[] serializeItemStackArray(ItemStack[] items) {
