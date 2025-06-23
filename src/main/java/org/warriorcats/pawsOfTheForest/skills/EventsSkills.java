@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -52,6 +53,7 @@ public class EventsSkills implements LoadingListener {
     public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.15;
     public static final double RAT_CATCHER_TIER_RANGE = 25;
     public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.15;
+    public static final double LIGHTSTEP_TIER_PERCENTAGE = 0.5;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -254,12 +256,12 @@ public class EventsSkills implements LoadingListener {
         });
     }
 
-    // THICK COAT
 
     @EventHandler
     public void on(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
+        // THICK COAT
         HibernateUtils.withSession(session -> {
             PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!entity.hasAbility(Skills.THICK_COAT)) {
@@ -274,6 +276,20 @@ public class EventsSkills implements LoadingListener {
                 double factor = THICK_COAT_TIER_PERCENTAGE * tier;
                 event.setDamage(event.getDamage() * (1 - factor));
             }
+        });
+
+        // LIGHTSTEP
+        HibernateUtils.withSession(session -> {
+            if (event.getDamageSource().getDamageType() != DamageType.FALL) {
+                return;
+            }
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.LIGHTSTEP)) {
+                return;
+            }
+            int tier = entity.getAbilityTier(Skills.LIGHTSTEP);
+            double factor = tier * LIGHTSTEP_TIER_PERCENTAGE;
+            event.setDamage(event.getDamage() * (1 - factor));
         });
     }
 
