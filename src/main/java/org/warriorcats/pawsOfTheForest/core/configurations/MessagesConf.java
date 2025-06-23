@@ -161,5 +161,147 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_APPLIED_AQUA_BALANCE =
                 getPropertyOrDefault("skills.playerMessages.appliedAquaBalance", "Aqua Balance ! You have caught some fresh fish !", CONFIG_FILE_NAME);
+
+        public static final String PREY_SENSE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.preySense", "Reveal nearby prey (5s glowing, 25 blocks)", CONFIG_FILE_NAME);
+
+        public static final String HUNTERS_COMPASS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.huntersCompass", "Points to closest huntable target (updates every 60s)", CONFIG_FILE_NAME);
+
+        public static final String LOW_SWEEP_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.lowSweep", "Applies Slowness II to target (2.5s)", CONFIG_FILE_NAME);
+
+        public static final String SILENT_PAW_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.silentPaw", "Reduces movement sound radius", CONFIG_FILE_NAME);
+
+        public static final String BLOOD_HUNTER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.bloodHunter", "Higher chance for quality prey", CONFIG_FILE_NAME);
+
+        public static final String EFFICIENT_KILL_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.efficientKill", "More XP/food on stealth kills", CONFIG_FILE_NAME);
+
+        public static final String LOCATION_AWARENESS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.locationAwareness", "Cycle compass between known waypoints", CONFIG_FILE_NAME);
+
+        public static final String PATHFINDING_BOOST_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.pathfindingBoost", "Grants Speed I and Jump I outside combat", CONFIG_FILE_NAME);
+
+        public static final String TRAIL_MEMORY_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.trailMemory", "Recall landmarks instantly", CONFIG_FILE_NAME);
+
+        public static final String ENDURANCE_TRAVELER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.enduranceTraveler", "Reduce hunger loss out of combat", CONFIG_FILE_NAME);
+
+        public static final String CLIMBERS_GRACE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.climbersGrace", "Jump higher passively", CONFIG_FILE_NAME);
+
+        public static final String HOLD_ON_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.holdOn", "Avoids death and enters downed state", CONFIG_FILE_NAME);
+
+        public static final String ON_YOUR_PAWS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.onYourPaws", "Revive downed ally after 8s", CONFIG_FILE_NAME);
+
+        public static final String IRON_HIDE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.ironHide", "+1 armor per tier", CONFIG_FILE_NAME);
+
+        public static final String IMMUNE_SYSTEM_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.immuneSystem", "10% illness resistance per tier", CONFIG_FILE_NAME);
+
+        public static final String THICK_COAT_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.thickCoat", "Cold resistance, weak to fire", CONFIG_FILE_NAME);
+
+        public static final String HEARTY_APPETITE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.heartyAppetite", "Increases food saturation restoration per tier", CONFIG_FILE_NAME);
+
+        public static final String BEAST_OF_BURDEN_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.beastOfBurden", "Adds inventory capacity per tier", CONFIG_FILE_NAME);
+
+        public static final String HERB_KNOWLEDGE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.herbKnowledge", "Highlights herbs within 15 blocks", CONFIG_FILE_NAME);
+
+        public static final String BREW_REMEDY_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.brewRemedy", "Brew cures using collected herbs", CONFIG_FILE_NAME);
+
+        public static final String QUICK_GATHERER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.quickGatherer", "Collect herbs faster", CONFIG_FILE_NAME);
+
+        public static final String BOTANICAL_LORE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.botanicalLore", "Unlock new recipes or uses", CONFIG_FILE_NAME);
+
+        public static final String CLEAN_PAWS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.cleanPaws", "Reduce self-infection risk", CONFIG_FILE_NAME);
+
+        public static final String WELL_FED_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.wellFed", "Heals faster when full.", CONFIG_FILE_NAME);
+
+        public static final String PAMPERED_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.pampered", "Less likely to fall ill.", CONFIG_FILE_NAME);
+
+        public static final String SHELTERED_MIND_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.shelteredMind", "Immune to fear effects.", CONFIG_FILE_NAME);
+
+        public static final String TRACKER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.tracker", "Detect recent footsteps.", CONFIG_FILE_NAME);
+
+        public static final String CRAFTY_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.crafty", "Use herbs more efficiently.", CONFIG_FILE_NAME);
+
+        public static final String FLEXIBLE_MORALS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.flexibleMorals", "Can trade/steal from NPCs.", CONFIG_FILE_NAME);
+
+        public static final String AMBUSHER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.ambusher", "+Sneak attack damage.", CONFIG_FILE_NAME);
+
+        public static final String SCAVENGE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.scavenge", "Loot items from trash piles.", CONFIG_FILE_NAME);
+
+        public static final String HARD_KNOCK_LIFE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.hardKnockLife", "+1 natural armor.", CONFIG_FILE_NAME);
+
+        public static final String URBAN_NAVIGATION_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.urbanNavigation", "Speed boost on concrete/stone.", CONFIG_FILE_NAME);
+
+        public static final String RAT_CATCHER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.ratCatcher", "Track and catch rats.", CONFIG_FILE_NAME);
+
+        public static final String DISEASE_RESISTANCE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.diseaseResistance", "Reduced illness severity.", CONFIG_FILE_NAME);
+
+        public static final String SPEED_OF_THE_MOOR_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.speedOfTheMoor", "+15% plains movement speed.", CONFIG_FILE_NAME);
+
+        public static final String LIGHTSTEP_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.lightstep", "Reduced fall damage.", CONFIG_FILE_NAME);
+
+        public static final String SHARP_WIND_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.sharpWind", "10% chance to bleed in open spaces.", CONFIG_FILE_NAME);
+
+        public static final String THICK_PELT_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.thickPelt", "Reduces melee damage.", CONFIG_FILE_NAME);
+
+        public static final String FOREST_COVER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.forestCover", "Camouflage in wooded biomes.", CONFIG_FILE_NAME);
+
+        public static final String STUNNING_BLOW_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.stunningBlow", "Bonus stagger chance from elevated attacks.", CONFIG_FILE_NAME);
+
+        public static final String STRONG_SWIMMER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.strongSwimmer", "Faster water movement.", CONFIG_FILE_NAME);
+
+        public static final String AQUA_BALANCE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.aquaBalance", "Can fish for food.", CONFIG_FILE_NAME);
+
+        public static final String WATERS_RESILIENCE_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.watersResilience", "Hunger decays slower in wet zones.", CONFIG_FILE_NAME);
+
+        public static final String NIGHTSTALKER_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.nightstalker", "No night blindness.", CONFIG_FILE_NAME);
+
+        public static final String TOXIC_CLAWS_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.toxicClaws", "Poison on low-light hits.", CONFIG_FILE_NAME);
+
+        public static final String SILENT_KILL_DESCRIPTION =
+                getPropertyOrDefault("skills.descriptions.silentKill", "Bonus damage on sneak attacks.", CONFIG_FILE_NAME);
+
     }
 }

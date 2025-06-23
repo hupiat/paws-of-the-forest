@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.hibernate.Session;
+import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
@@ -208,99 +209,82 @@ public class MenuSkillTreePath {
     }
 
     private static void drawHuntingBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_PREY_SENSE, createSkillItem(Material.GHAST_TEAR, Skills.PREY_SENSE.toString(), "Reveal nearby prey (5s glowing, 25 blocks)",
-                entity.hasAbility(Skills.PREY_SENSE), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(Material.COMPASS, Skills.HUNTERS_COMPASS.toString(), "Points to closest huntable target (updates every 60s)",
-                entity.hasAbility(Skills.HUNTERS_COMPASS), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(Material.RABBIT_FOOT, Skills.LOW_SWEEP.toString(), "Applies Slowness II to target (2.5s)",
-                entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, Skills.SILENT_PAW.toString(), "Reduces movement sound radius",
-                entity.getAbilityPerk(Skills.SILENT_PAW), Skills.SILENT_PAW.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, Skills.BLOOD_HUNTER.toString(), "Higher chance for quality prey",
-                entity.getAbilityPerk(Skills.BLOOD_HUNTER), Skills.BLOOD_HUNTER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, Skills.EFFICIENT_KILL.toString(), "More XP/food on stealth kills",
-                entity.getAbilityPerk(Skills.EFFICIENT_KILL), Skills.EFFICIENT_KILL.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_PREY_SENSE, createSkillItem(Material.GHAST_TEAR, Skills.PREY_SENSE.toString(),
+                MessagesConf.Skills.PREY_SENSE_DESCRIPTION, entity.hasAbility(Skills.PREY_SENSE), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(Material.COMPASS, Skills.HUNTERS_COMPASS.toString(),
+                MessagesConf.Skills.HUNTERS_COMPASS_DESCRIPTION, entity.hasAbility(Skills.HUNTERS_COMPASS), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(Material.RABBIT_FOOT, Skills.LOW_SWEEP.toString(),
+                MessagesConf.Skills.LOW_SWEEP_DESCRIPTION, entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, Skills.SILENT_PAW.toString(),
+                MessagesConf.Skills.SILENT_PAW_DESCRIPTION, entity.getAbilityPerk(Skills.SILENT_PAW),
+                Skills.SILENT_PAW.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, Skills.BLOOD_HUNTER.toString(),
+                MessagesConf.Skills.BLOOD_HUNTER_DESCRIPTION, entity.getAbilityPerk(Skills.BLOOD_HUNTER),
+                Skills.BLOOD_HUNTER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, Skills.EFFICIENT_KILL.toString(),
+                MessagesConf.Skills.EFFICIENT_KILL_DESCRIPTION, entity.getAbilityPerk(Skills.EFFICIENT_KILL),
+                Skills.EFFICIENT_KILL.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(Material.FILLED_MAP, Skills.LOCATION_AWARENESS.toString(), "Cycle compass between known waypoints",
-                entity.hasAbility(Skills.LOCATION_AWARENESS), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(Material.FEATHER, Skills.PATHFINDING_BOOST.toString(), "Grants Speed I and Jump I outside combat",
-                entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, Skills.TRAIL_MEMORY.toString(), "Recall landmarks instantly",
-                entity.getAbilityPerk(Skills.TRAIL_MEMORY), Skills.TRAIL_MEMORY.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, Skills.ENDURANCE_TRAVELER.toString(), "Reduce hunger loss out of combat",
-                entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER), Skills.ENDURANCE_TRAVELER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, Skills.CLIMBERS_GRACE.toString(), "Jump higher passively",
-                entity.getAbilityPerk(Skills.CLIMBERS_GRACE), Skills.CLIMBERS_GRACE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(Material.FILLED_MAP, Skills.LOCATION_AWARENESS.toString(),
+                MessagesConf.Skills.LOCATION_AWARENESS_DESCRIPTION, entity.hasAbility(Skills.LOCATION_AWARENESS), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(Material.FEATHER, Skills.PATHFINDING_BOOST.toString(),
+                MessagesConf.Skills.PATHFINDING_BOOST_DESCRIPTION, entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, Skills.TRAIL_MEMORY.toString(),
+                MessagesConf.Skills.TRAIL_MEMORY_DESCRIPTION, entity.getAbilityPerk(Skills.TRAIL_MEMORY),
+                Skills.TRAIL_MEMORY.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, Skills.ENDURANCE_TRAVELER.toString(),
+                MessagesConf.Skills.ENDURANCE_TRAVELER_DESCRIPTION, entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER),
+                Skills.ENDURANCE_TRAVELER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, Skills.CLIMBERS_GRACE.toString(),
+                MessagesConf.Skills.CLIMBERS_GRACE_DESCRIPTION, entity.getAbilityPerk(Skills.CLIMBERS_GRACE),
+                Skills.CLIMBERS_GRACE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HOLD_ON, createSkillItem(Material.TOTEM_OF_UNDYING, Skills.HOLD_ON.toString(), "Avoids death and enters downed state",
-                entity.hasAbility(Skills.HOLD_ON), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(Material.GOLDEN_APPLE, Skills.ON_YOUR_PAWS.toString(), "Revive downed ally after 8s",
-                entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, Skills.IRON_HIDE.toString(), "+1 armor per tier",
-                entity.getAbilityPerk(Skills.IRON_HIDE), Skills.IRON_HIDE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, Skills.IMMUNE_SYSTEM.toString(), "10% illness resistance per tier",
-                entity.getAbilityPerk(Skills.IMMUNE_SYSTEM), Skills.IMMUNE_SYSTEM.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, Skills.THICK_COAT.toString(), "Cold resistance, weak to fire",
-                entity.getAbilityPerk(Skills.THICK_COAT), Skills.THICK_COAT.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_HEARTY_APPETITE, createTieredItem(
-                Material.COOKED_MUTTON,
-                Skills.HEARTY_APPETITE.toString(),
-                "Increases food saturation restoration per tier",
-                entity.getAbilityPerk(Skills.HEARTY_APPETITE),
-                Skills.HEARTY_APPETITE.getMaxTiers(),
-                SkillBranches.UNLOCK_SKILL_TIER
-        ));
-
-        menu.setItem(INDEX_BEAST_OF_BURDEN, createTieredItem(
-                Material.CHEST,
-                Skills.BEAST_OF_BURDEN.toString(),
-                "Adds inventory capacity per tier",
-                entity.getAbilityPerk(Skills.BEAST_OF_BURDEN),
-                Skills.BEAST_OF_BURDEN.getMaxTiers(),
-                SkillBranches.UNLOCK_SKILL_TIER
-        ));
+        menu.setItem(INDEX_HOLD_ON, createSkillItem(Material.TOTEM_OF_UNDYING, Skills.HOLD_ON.toString(),
+                MessagesConf.Skills.HOLD_ON_DESCRIPTION, entity.hasAbility(Skills.HOLD_ON), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(Material.GOLDEN_APPLE, Skills.ON_YOUR_PAWS.toString(),
+                MessagesConf.Skills.ON_YOUR_PAWS_DESCRIPTION, entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, Skills.IRON_HIDE.toString(),
+                MessagesConf.Skills.IRON_HIDE_DESCRIPTION, entity.getAbilityPerk(Skills.IRON_HIDE),
+                Skills.IRON_HIDE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, Skills.IMMUNE_SYSTEM.toString(),
+                MessagesConf.Skills.IMMUNE_SYSTEM_DESCRIPTION, entity.getAbilityPerk(Skills.IMMUNE_SYSTEM),
+                Skills.IMMUNE_SYSTEM.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, Skills.THICK_COAT.toString(),
+                MessagesConf.Skills.THICK_COAT_DESCRIPTION, entity.getAbilityPerk(Skills.THICK_COAT),
+                Skills.THICK_COAT.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_HEARTY_APPETITE, createTieredItem(Material.COOKED_MUTTON, Skills.HEARTY_APPETITE.toString(),
+                MessagesConf.Skills.HEARTY_APPETITE_DESCRIPTION, entity.getAbilityPerk(Skills.HEARTY_APPETITE),
+                Skills.HEARTY_APPETITE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_BEAST_OF_BURDEN, createTieredItem(Material.CHEST, Skills.BEAST_OF_BURDEN.toString(),
+                MessagesConf.Skills.BEAST_OF_BURDEN_DESCRIPTION, entity.getAbilityPerk(Skills.BEAST_OF_BURDEN),
+                Skills.BEAST_OF_BURDEN.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(Material.FERN, Skills.HERB_KNOWLEDGE.toString(), "Highlights herbs within 15 blocks",
-                entity.hasAbility(Skills.HERB_KNOWLEDGE), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(Material.BREWING_STAND, Skills.BREW_REMEDY.toString(), "Brew cures using collected herbs",
-                entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
-
-        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, Skills.QUICK_GATHERER.toString(), "Collect herbs faster",
-                entity.getAbilityPerk(Skills.QUICK_GATHERER), Skills.QUICK_GATHERER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, Skills.BOTANICAL_LORE.toString(), "Unlock new recipes or uses",
-                entity.getAbilityPerk(Skills.BOTANICAL_LORE), Skills.BOTANICAL_LORE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-
-        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(), "Reduce self-infection risk",
-                entity.getAbilityPerk(Skills.CLEAN_PAWS), Skills.CLEAN_PAWS.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(Material.FERN, Skills.HERB_KNOWLEDGE.toString(),
+                MessagesConf.Skills.HERB_KNOWLEDGE_DESCRIPTION, entity.hasAbility(Skills.HERB_KNOWLEDGE), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(Material.BREWING_STAND, Skills.BREW_REMEDY.toString(),
+                MessagesConf.Skills.BREW_REMEDY_DESCRIPTION, entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
+        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, Skills.QUICK_GATHERER.toString(),
+                MessagesConf.Skills.QUICK_GATHERER_DESCRIPTION, entity.getAbilityPerk(Skills.QUICK_GATHERER),
+                Skills.QUICK_GATHERER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, Skills.BOTANICAL_LORE.toString(),
+                MessagesConf.Skills.BOTANICAL_LORE_DESCRIPTION, entity.getAbilityPerk(Skills.BOTANICAL_LORE),
+                Skills.BOTANICAL_LORE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(),
+                MessagesConf.Skills.CLEAN_PAWS_DESCRIPTION, entity.getAbilityPerk(Skills.CLEAN_PAWS),
+                Skills.CLEAN_PAWS.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
     }
 
     private static void drawKittypetBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_WELL_FED, createTieredItem(
                 Material.COOKED_SALMON,
                 Skills.WELL_FED.toString(),
-                "Heals faster when full.",
+                MessagesConf.Skills.WELL_FED_DESCRIPTION,
                 entity.getAbilityPerk(Skills.WELL_FED),
                 Skills.WELL_FED.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -309,7 +293,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_PAMPERED, createTieredItem(
                 Material.MILK_BUCKET,
                 Skills.PAMPERED.toString(),
-                "Less likely to fall ill.",
+                MessagesConf.Skills.PAMPERED_DESCRIPTION,
                 entity.getAbilityPerk(Skills.PAMPERED),
                 Skills.PAMPERED.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -318,7 +302,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_SHELTERED_MIND, createTieredItem(
                 Material.BOOK,
                 Skills.SHELTERED_MIND.toString(),
-                "Immune to fear effects.",
+                MessagesConf.Skills.SHELTERED_MIND_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SHELTERED_MIND),
                 Skills.SHELTERED_MIND.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -329,7 +313,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_TRACKER, createTieredItem(
                 Material.COMPASS,
                 Skills.TRACKER.toString(),
-                "Detect recent footsteps.",
+                MessagesConf.Skills.TRACKER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.TRACKER),
                 Skills.TRACKER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -338,7 +322,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_CRAFTY, createTieredItem(
                 Material.FERN,
                 Skills.CRAFTY.toString(),
-                "Use herbs more efficiently.",
+                MessagesConf.Skills.CRAFTY_DESCRIPTION,
                 entity.getAbilityPerk(Skills.CRAFTY),
                 Skills.CRAFTY.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -347,7 +331,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_FLEXIBLE_MORALS, createTieredItem(
                 Material.EMERALD,
                 Skills.FLEXIBLE_MORALS.toString(),
-                "Can trade/steal from NPCs.",
+                MessagesConf.Skills.FLEXIBLE_MORALS_DESCRIPTION,
                 entity.getAbilityPerk(Skills.FLEXIBLE_MORALS),
                 Skills.FLEXIBLE_MORALS.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -358,7 +342,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_AMBUSHER, createTieredItem(
                 Material.IRON_SWORD,
                 Skills.AMBUSHER.toString(),
-                "+Sneak attack damage.",
+                MessagesConf.Skills.AMBUSHER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.AMBUSHER),
                 Skills.AMBUSHER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -367,7 +351,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_SCAVENGE, createTieredItem(
                 Material.ROTTEN_FLESH,
                 Skills.SCAVENGE.toString(),
-                "Loot items from trash piles.",
+                MessagesConf.Skills.SCAVENGE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SCAVENGE),
                 Skills.SCAVENGE.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -376,7 +360,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_HARD_KNOCK_LIFE, createTieredItem(
                 Material.LEATHER_CHESTPLATE,
                 Skills.HARD_KNOCK_LIFE.toString(),
-                "+1 natural armor.",
+                MessagesConf.Skills.HARD_KNOCK_LIFE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.HARD_KNOCK_LIFE),
                 Skills.HARD_KNOCK_LIFE.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -387,7 +371,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_URBAN_NAVIGATION, createTieredItem(
                 Material.STONE,
                 Skills.URBAN_NAVIGATION.toString(),
-                "Speed boost on concrete/stone.",
+                MessagesConf.Skills.URBAN_NAVIGATION_DESCRIPTION,
                 entity.getAbilityPerk(Skills.URBAN_NAVIGATION),
                 Skills.URBAN_NAVIGATION.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -396,7 +380,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_RAT_CATCHER, createTieredItem(
                 Material.RABBIT,
                 Skills.RAT_CATCHER.toString(),
-                "Track and catch rats.",
+                MessagesConf.Skills.RAT_CATCHER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.RAT_CATCHER),
                 Skills.RAT_CATCHER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -405,7 +389,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_DISEASE_RESISTANCE, createTieredItem(
                 Material.SPIDER_EYE,
                 Skills.DISEASE_RESISTANCE.toString(),
-                "Reduced illness severity.",
+                MessagesConf.Skills.DISEASE_RESISTANCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.DISEASE_RESISTANCE),
                 Skills.DISEASE_RESISTANCE.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -416,7 +400,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_SPEED_OF_THE_MOOR, createTieredItem(
                 Material.SUGAR,
                 Skills.SPEED_OF_THE_MOOR.toString(),
-                "+15% plains movement speed.",
+                MessagesConf.Skills.SPEED_OF_THE_MOOR_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SPEED_OF_THE_MOOR),
                 Skills.SPEED_OF_THE_MOOR.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -425,7 +409,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_LIGHTSTEP, createTieredItem(
                 Material.FEATHER,
                 Skills.LIGHTSTEP.toString(),
-                "Reduced fall damage.",
+                MessagesConf.Skills.LIGHTSTEP_DESCRIPTION,
                 entity.getAbilityPerk(Skills.LIGHTSTEP),
                 Skills.LIGHTSTEP.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -434,7 +418,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_SHARP_WIND, createTieredItem(
                 Material.PAPER,
                 Skills.SHARP_WIND.toString(),
-                "10% chance to bleed in open spaces.",
+                MessagesConf.Skills.SHARP_WIND_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SHARP_WIND),
                 Skills.SHARP_WIND.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -445,7 +429,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_THICK_PELT, createTieredItem(
                 Material.LEATHER,
                 Skills.THICK_PELT.toString(),
-                "Reduces melee damage.",
+                MessagesConf.Skills.THICK_PELT_DESCRIPTION,
                 entity.getAbilityPerk(Skills.THICK_PELT),
                 Skills.THICK_PELT.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -454,7 +438,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_FOREST_COVER, createTieredItem(
                 Material.OAK_LEAVES,
                 Skills.FOREST_COVER.toString(),
-                "Camouflage in wooded biomes.",
+                MessagesConf.Skills.FOREST_COVER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.FOREST_COVER),
                 Skills.FOREST_COVER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -463,7 +447,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_STUNNING_BLOW, createTieredItem(
                 Material.STONE_AXE,
                 Skills.STUNNING_BLOW.toString(),
-                "Bonus stagger chance from elevated attacks.",
+                MessagesConf.Skills.STUNNING_BLOW_DESCRIPTION,
                 entity.getAbilityPerk(Skills.STUNNING_BLOW),
                 Skills.STUNNING_BLOW.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -474,7 +458,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_STRONG_SWIMMER, createTieredItem(
                 Material.KELP,
                 Skills.STRONG_SWIMMER.toString(),
-                "Faster water movement.",
+                MessagesConf.Skills.STRONG_SWIMMER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.STRONG_SWIMMER),
                 Skills.STRONG_SWIMMER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -483,7 +467,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_AQUA_BALANCE, createTieredItem(
                 Material.FISHING_ROD,
                 Skills.AQUA_BALANCE.toString(),
-                "Can fish for food.",
+                MessagesConf.Skills.AQUA_BALANCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.AQUA_BALANCE),
                 Skills.AQUA_BALANCE.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -492,7 +476,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_WATERS_RESILIENCE, createTieredItem(
                 Material.TURTLE_HELMET,
                 Skills.WATERS_RESILIENCE.toString(),
-                "Hunger decays slower in wet zones.",
+                MessagesConf.Skills.WATERS_RESILIENCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.WATERS_RESILIENCE),
                 Skills.WATERS_RESILIENCE.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -503,7 +487,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_NIGHTSTALKER, createTieredItem(
                 Material.ENDER_PEARL,
                 Skills.NIGHTSTALKER.toString(),
-                "No night blindness.",
+                MessagesConf.Skills.NIGHTSTALKER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.NIGHTSTALKER),
                 Skills.NIGHTSTALKER.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -512,7 +496,7 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_TOXIC_CLAWS, createTieredItem(
                 Material.POISONOUS_POTATO,
                 Skills.TOXIC_CLAWS.toString(),
-                "Poison on low-light hits.",
+                MessagesConf.Skills.TOXIC_CLAWS_DESCRIPTION,
                 entity.getAbilityPerk(Skills.TOXIC_CLAWS),
                 Skills.TOXIC_CLAWS.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
@@ -521,13 +505,12 @@ public class MenuSkillTreePath {
         menu.setItem(INDEX_SILENT_KILL, createTieredItem(
                 Material.IRON_SWORD,
                 Skills.SILENT_KILL.toString(),
-                "Bonus damage on sneak attacks.",
+                MessagesConf.Skills.SILENT_KILL_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SILENT_KILL),
                 Skills.SILENT_KILL.getMaxTiers(),
                 SkillBranches.UNLOCK_SKILL_TIER
         ));
     }
-
 
     private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
         ItemStack item = new ItemStack(material);
