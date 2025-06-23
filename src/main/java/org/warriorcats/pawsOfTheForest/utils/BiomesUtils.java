@@ -8,6 +8,20 @@ import java.util.Set;
 
 public abstract class BiomesUtils {
 
+    public static final Set<Biome> WATER_BIOMES = Set.of(
+            Biome.OCEAN,
+            Biome.DEEP_OCEAN,
+            Biome.COLD_OCEAN,
+            Biome.DEEP_COLD_OCEAN,
+            Biome.FROZEN_OCEAN,
+            Biome.DEEP_FROZEN_OCEAN,
+            Biome.LUKEWARM_OCEAN,
+            Biome.DEEP_LUKEWARM_OCEAN,
+            Biome.WARM_OCEAN,
+            Biome.RIVER,
+            Biome.FROZEN_RIVER
+    );
+
     public static final Set<Biome> FOREST_BIOMES = Set.of(
             Biome.FOREST,
             Biome.BIRCH_FOREST,
@@ -91,6 +105,10 @@ public abstract class BiomesUtils {
             }
         }
         return loc.getBlock().getLightFromSky() >= 14;
+    }
+
+    public static boolean isWater(Biome biome) {
+        return WATER_BIOMES.contains(biome);
     }
 
     public static boolean isForest(Biome biome) {

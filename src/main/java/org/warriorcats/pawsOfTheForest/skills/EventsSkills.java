@@ -59,6 +59,7 @@ public class EventsSkills implements LoadingListener {
     public static final double STUNNING_BLOW_TIER_PERCENTAGE = 0.1;
     public static final int STUNNING_BLOW_DURATION_S = 10;
     public static final double AQUA_BALANCE_TIER_PERCENTAGE = 0.1;
+    public static final double WATERS_RESILIENCE_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -236,14 +237,9 @@ public class EventsSkills implements LoadingListener {
         }
     }
 
-    // ENDURANCE_TRAVELER
-
     @EventHandler
     public void on(FoodLevelChangeEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
-            return;
-        }
-        if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
             return;
         }
 
@@ -254,7 +250,11 @@ public class EventsSkills implements LoadingListener {
             return;
         }
 
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+        // ENDURANCE_TRAVELER
+        HibernateUtils.withSession(session -> {
+            if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
+                return;
+            }
             PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!entity.hasAbility(Skills.ENDURANCE_TRAVELER)) {
                 return;
@@ -268,7 +268,25 @@ public class EventsSkills implements LoadingListener {
             double reducedDiff = diff * (1.0 - factor);
 
             event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
-        }
+        });
+
+        // WATERS_RESILIENCE
+        HibernateUtils.withSession(session -> {
+            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!entity.hasAbility(Skills.WATERS_RESILIENCE)) {
+                return;
+            }
+            if (BiomesUtils.isWater(player.getLocation().getBlock().getBiome())) {
+                int tier = entity.getAbilityTier(Skills.WATERS_RESILIENCE);
+
+                double factor = tier * WATERS_RESILIENCE_TIER_PERCENTAGE;
+
+                int diff = currentLevel - newLevel;
+                double reducedDiff = diff * (1.0 - factor);
+
+                event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
+            }
+        });
     }
 
     // CLIMBERS_GRACE
