@@ -52,14 +52,14 @@ public class EventsSkills implements LoadingListener {
     public static final double WELL_FED_TIER_PERCENTAGE = 0.5;
     public static final double FLEXIBLE_MORALS_TIER_PERCENTAGE = 0.1;
     public static final double AMBUSHER_TIER_PERCENTAGE = 0.1;
-    public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.15;
+    public static final double URBAN_NAVIGATION_TIER_PERCENTAGE = 0.25;
     public static final double RAT_CATCHER_TIER_RANGE = 25;
-    public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.15;
+    public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.25;
     public static final double LIGHTSTEP_TIER_PERCENTAGE = 0.5;
     public static final double SHARP_WIND_TIER_PERCENTAGE = 0.1;
     public static final int SHARP_WIND_TIER_DURATION_S = 10;
     public static final double THICK_PELT_TIER_PERCENTAGE = 0.1;
-    public static final double STUNNING_BLOW_TIER_PERCENTAGE = 0.15;
+    public static final double STUNNING_BLOW_TIER_PERCENTAGE = 0.1;
     public static final int STUNNING_BLOW_DURATION_S = 10;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -596,6 +596,29 @@ public class EventsSkills implements LoadingListener {
                     () -> BiomesUtils.isPlain(player.getLocation().getBlock().getBiome()),
                     factor,
                     defaultSpeeds.get(player.getUniqueId()));
+        });
+
+        // STRONG_SWIMMER
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.STRONG_SWIMMER)) {
+                return;
+            }
+
+            int tier = playerEntity.getAbilityTier(Skills.STRONG_SWIMMER);
+
+            if (player.isInWater() || player.isSwimming()) {
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.DOLPHINS_GRACE,
+                        Integer.MAX_VALUE,
+                        tier - 1,
+                        true,
+                        false,
+                        false
+                ));
+            } else {
+                player.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
+            }
         });
 
         // RAT_CATCHER tracking
