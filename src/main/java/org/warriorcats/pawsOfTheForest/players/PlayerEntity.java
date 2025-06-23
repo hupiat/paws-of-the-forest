@@ -47,6 +47,7 @@ public class PlayerEntity {
     private List<SkillBranchEntity> skillBranches = new ArrayList<>();
 
     @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
     private byte[] backpackData;
 
     public boolean hasAbility(Skills skill) {

@@ -31,7 +31,7 @@ public abstract class SkillsUtils {
         }
     }
 
-    public static void updateHardKnockLife(Player player) {
+    public static void updateHardKnockLifeArmor(Player player) {
         var attr = player.getAttribute(Attribute.GENERIC_ARMOR);
 
         removeModifiers(UUID_HARD_KNOCK_LIFE_BONUS, NAME_HARD_KNOCK_LIFE_BONUS, attr);

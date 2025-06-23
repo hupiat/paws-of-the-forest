@@ -111,6 +111,18 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String CITY_CAT_DESCRIPTION =
                 getPropertyOrDefault("skills.cityCat.description", "A streetwise feline, navigating alleyways and rooftops. Cunning and adaptable, they thrive in the bustling chaos of the Twolegplace.", CONFIG_FILE_NAME);
 
+        public static final String BREEZE_CLAN_DESCRIPTION =
+                getPropertyOrDefault("skills.breezeClan.description", "Skills from the fast BreezeClan.", CONFIG_FILE_NAME);
+
+        public static final String ECHO_CLAN_DESCRIPTION =
+                getPropertyOrDefault("skills.echoClan.description", "Skills from the stealthy EchoClan.", CONFIG_FILE_NAME);
+
+        public static final String CREEK_CLAN_DESCRIPTION =
+                getPropertyOrDefault("skills.creekClan.description", "Skills from the water-wise CreekClan.", CONFIG_FILE_NAME);
+
+        public static final String SHADE_CLAN_DESCRIPTION =
+                getPropertyOrDefault("skills.shadeClan.description", "Skills from the elusive ShadeClan.", CONFIG_FILE_NAME);
+
         public static final String MENU_EXIT =
                 getPropertyOrDefault("skills.menu.exit", "Exit this menu.", CONFIG_FILE_NAME);
 

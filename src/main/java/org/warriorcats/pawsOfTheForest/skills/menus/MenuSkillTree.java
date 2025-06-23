@@ -31,6 +31,10 @@ public abstract class MenuSkillTree {
     public static final int INDEX_ROGUE = 14;
     public static final int INDEX_CITY_CAT = 16;
 
+    public static final int INDEX_BREEZE_CLAN = 19;
+    public static final int INDEX_ECHO_CLAN = 21;
+    public static final int INDEX_CREEK_CLAN = 23;
+    public static final int INDEX_SHADE_CLAN = 25;
 
     public static final String TEXT_CLICK_TO_OPEN = MessagesConf.Skills.COLOR_DESCRIPTION + "Click to open";
     public static final String TEXT_CLOSE = MessagesConf.Skills.COLOR_DESCRIPTION + "Close";
@@ -91,6 +95,34 @@ public abstract class MenuSkillTree {
         menu.setItem(INDEX_CITY_CAT, createMenuItem(Material.STONE_BRICKS, SkillBranches.CITY_CAT.toString(), List.of(
                 MessagesConf.Skills.COLOR_DESCRIPTION +
                 MessagesConf.Skills.CITY_CAT_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_BREEZE_CLAN, createMenuItem(Material.RABBIT, SkillBranches.BREEZE_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                        MessagesConf.Skills.BREEZE_CLAN_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_ECHO_CLAN, createMenuItem(Material.OAK_LEAVES, SkillBranches.ECHO_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                        MessagesConf.Skills.ECHO_CLAN_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_CREEK_CLAN, createMenuItem(Material.SALMON, SkillBranches.CREEK_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                        MessagesConf.Skills.CREEK_CLAN_DESCRIPTION,
+                "",
+                TEXT_CLICK_TO_OPEN
+        )));
+
+        menu.setItem(INDEX_SHADE_CLAN, createMenuItem(Material.ENDER_EYE, SkillBranches.SHADE_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION +
+                        MessagesConf.Skills.SHADE_CLAN_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));

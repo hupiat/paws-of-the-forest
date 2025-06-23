@@ -123,6 +123,30 @@ public class EventsSkillsMenu implements Listener {
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
                 break;
 
+            case MenuSkillTree.INDEX_BREEZE_CLAN:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.BREEZE_CLAN));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_ECHO_CLAN:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.ECHO_CLAN));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_CREEK_CLAN:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.CREEK_CLAN));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
+            case MenuSkillTree.INDEX_SHADE_CLAN:
+                player.closeInventory();
+                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.SHADE_CLAN));
+                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                break;
+
             case MenuSkillTree.INDEX_BACK:
                 player.closeInventory();
                 break;
@@ -165,7 +189,7 @@ public class EventsSkillsMenu implements Listener {
                     SkillsUtils.updateIronHideArmor(player, entity.getAbilityTier(Skills.IRON_HIDE));
                 }
                 if (skill == Skills.HARD_KNOCK_LIFE) {
-                    SkillsUtils.updateHardKnockLife(player);
+                    SkillsUtils.updateHardKnockLifeArmor(player);
                 }
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
             };
@@ -296,6 +320,58 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_URBAN_NAVIGATION:
                         case MenuSkillTreePath.INDEX_RAT_CATCHER:
                         case MenuSkillTreePath.INDEX_DISEASE_RESISTANCE:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.BREEZE_CLAN:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_SPEED_OF_THE_MOOR:
+                        case MenuSkillTreePath.INDEX_LIGHTSTEP:
+                        case MenuSkillTreePath.INDEX_SHARP_WIND:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.ECHO_CLAN:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_THICK_PELT:
+                        case MenuSkillTreePath.INDEX_FOREST_COVER:
+                        case MenuSkillTreePath.INDEX_STUNNING_BLOW:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.CREEK_CLAN:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_STRONG_SWIMMER:
+                        case MenuSkillTreePath.INDEX_AQUA_BALANCE:
+                        case MenuSkillTreePath.INDEX_WATERS_RESILIENCE:
+                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            break;
+                    }
+                    break;
+
+                case SkillBranches.SHADE_CLAN:
+                    switch (index) {
+                        case MenuSkillTree.INDEX_BACK:
+                            back.run();
+                            break;
+                        case MenuSkillTreePath.INDEX_NIGHTSTALKER:
+                        case MenuSkillTreePath.INDEX_TOXIC_CLAWS:
+                        case MenuSkillTreePath.INDEX_SILENT_KILL:
                             consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }

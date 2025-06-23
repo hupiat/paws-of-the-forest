@@ -67,6 +67,22 @@ public class MenuSkillTreePath {
     public static final int INDEX_RAT_CATCHER = 13;
     public static final int INDEX_DISEASE_RESISTANCE = 15;
 
+    public static final int INDEX_SPEED_OF_THE_MOOR = 11;
+    public static final int INDEX_LIGHTSTEP = 13;
+    public static final int INDEX_SHARP_WIND = 15;
+
+    public static final int INDEX_THICK_PELT = 11;
+    public static final int INDEX_FOREST_COVER = 13;
+    public static final int INDEX_STUNNING_BLOW = 15;
+
+    public static final int INDEX_STRONG_SWIMMER = 11;
+    public static final int INDEX_AQUA_BALANCE = 13;
+    public static final int INDEX_WATERS_RESILIENCE = 15;
+
+    public static final int INDEX_NIGHTSTALKER = 11;
+    public static final int INDEX_TOXIC_CLAWS = 13;
+    public static final int INDEX_SILENT_KILL = 15;
+
     private final SkillBranches branch;
 
     public MenuSkillTreePath(SkillBranches branch) {
@@ -135,6 +151,30 @@ public class MenuSkillTreePath {
                 case INDEX_DISEASE_RESISTANCE -> Skills.DISEASE_RESISTANCE;
                 default                      -> null;
             };
+            case BREEZE_CLAN -> switch (index) {
+                case INDEX_SPEED_OF_THE_MOOR -> Skills.SPEED_OF_THE_MOOR;
+                case INDEX_LIGHTSTEP -> Skills.LIGHTSTEP;
+                case INDEX_SHARP_WIND -> Skills.SHARP_WIND;
+                default -> null;
+            };
+            case ECHO_CLAN -> switch (index) {
+                case INDEX_THICK_PELT -> Skills.THICK_PELT;
+                case INDEX_FOREST_COVER -> Skills.FOREST_COVER;
+                case INDEX_STUNNING_BLOW -> Skills.STUNNING_BLOW;
+                default -> null;
+            };
+            case CREEK_CLAN -> switch (index) {
+                case INDEX_STRONG_SWIMMER -> Skills.STRONG_SWIMMER;
+                case INDEX_AQUA_BALANCE -> Skills.AQUA_BALANCE;
+                case INDEX_WATERS_RESILIENCE -> Skills.WATERS_RESILIENCE;
+                default -> null;
+            };
+            case SHADE_CLAN -> switch (index) {
+                case INDEX_NIGHTSTALKER -> Skills.NIGHTSTALKER;
+                case INDEX_TOXIC_CLAWS -> Skills.TOXIC_CLAWS;
+                case INDEX_SILENT_KILL -> Skills.SILENT_KILL;
+                default -> null;
+            };
         };
     }
 
@@ -153,6 +193,10 @@ public class MenuSkillTreePath {
                 case LONER -> drawLonerBranch(menu, entity);
                 case ROGUE -> drawRogueBranch(menu, entity);
                 case CITY_CAT -> drawCityCatBranch(menu, entity);
+                case BREEZE_CLAN -> drawBreezeClanBranch(menu, entity);
+                case ECHO_CLAN -> drawEchoClanBranch(menu, entity);
+                case CREEK_CLAN -> drawCreekClanBranch(menu, entity);
+                case SHADE_CLAN -> drawShadeClanBranch(menu, entity);
             }
         }
 
@@ -367,6 +411,123 @@ public class MenuSkillTreePath {
                 SkillBranches.UNLOCK_SKILL_TIER
         ));
     }
+
+    private static void drawBreezeClanBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_SPEED_OF_THE_MOOR, createTieredItem(
+                Material.RABBIT,
+                "Speed of the Moor",
+                "+15% plains movement speed.",
+                entity.getAbilityPerk(Skills.SPEED_OF_THE_MOOR),
+                Skills.SPEED_OF_THE_MOOR.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_LIGHTSTEP, createTieredItem(
+                Material.FEATHER,
+                "Lightstep",
+                "Reduced fall damage.",
+                entity.getAbilityPerk(Skills.LIGHTSTEP),
+                Skills.LIGHTSTEP.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_SHARP_WIND, createTieredItem(
+                Material.FLINT,
+                "Sharp Wind",
+                "10% chance to bleed in open spaces.",
+                entity.getAbilityPerk(Skills.SHARP_WIND),
+                Skills.SHARP_WIND.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawEchoClanBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_THICK_PELT, createTieredItem(
+                Material.LEATHER_CHESTPLATE,
+                "Thick Pelt",
+                "Reduces melee damage.",
+                entity.getAbilityPerk(Skills.THICK_PELT),
+                Skills.THICK_PELT.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_FOREST_COVER, createTieredItem(
+                Material.OAK_LEAVES,
+                "Forest Cover",
+                "Camouflage in wooded biomes.",
+                entity.getAbilityPerk(Skills.FOREST_COVER),
+                Skills.FOREST_COVER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_STUNNING_BLOW, createTieredItem(
+                Material.STONE_AXE,
+                "Stunning Blow",
+                "Bonus stagger chance from elevated attacks.",
+                entity.getAbilityPerk(Skills.STUNNING_BLOW),
+                Skills.STUNNING_BLOW.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawCreekClanBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_STRONG_SWIMMER, createTieredItem(
+                Material.SALMON,
+                "Strong Swimmer",
+                "Faster water movement.",
+                entity.getAbilityPerk(Skills.STRONG_SWIMMER),
+                Skills.STRONG_SWIMMER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_AQUA_BALANCE, createTieredItem(
+                Material.FISHING_ROD,
+                "Aqua Balance",
+                "Can fish for food.",
+                entity.getAbilityPerk(Skills.AQUA_BALANCE),
+                Skills.AQUA_BALANCE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_WATERS_RESILIENCE, createTieredItem(
+                Material.KELP,
+                "Water’s Resilience",
+                "Hunger decays slower in wet zones.",
+                entity.getAbilityPerk(Skills.WATERS_RESILIENCE),
+                Skills.WATERS_RESILIENCE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
+    private static void drawShadeClanBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_NIGHTSTALKER, createTieredItem(
+                Material.ENDER_EYE,
+                "Nightstalker",
+                "No night blindness.",
+                entity.getAbilityPerk(Skills.NIGHTSTALKER),
+                Skills.NIGHTSTALKER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_TOXIC_CLAWS, createTieredItem(
+                Material.POISONOUS_POTATO,
+                "Toxic Claws",
+                "Poison on low-light hits.",
+                entity.getAbilityPerk(Skills.TOXIC_CLAWS),
+                Skills.TOXIC_CLAWS.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_SILENT_KILL, createTieredItem(
+                Material.IRON_SWORD,
+                "Silent Kill",
+                "Bonus damage on sneak attacks.",
+                entity.getAbilityPerk(Skills.SILENT_KILL),
+                Skills.SILENT_KILL.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+    }
+
 
     private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
         ItemStack item = new ItemStack(material);

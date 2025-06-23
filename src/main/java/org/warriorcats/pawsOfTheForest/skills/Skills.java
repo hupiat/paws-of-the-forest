@@ -45,7 +45,23 @@ public enum Skills {
 
     URBAN_NAVIGATION("Urban Navigation", false, SkillBranches.CITY_CAT, 1),
     RAT_CATCHER("Rat Catcher", false, SkillBranches.CITY_CAT, 1),
-    DISEASE_RESISTANCE("Disease Resistance", false, SkillBranches.CITY_CAT, 1);
+    DISEASE_RESISTANCE("Disease Resistance", false, SkillBranches.CITY_CAT, 1),
+
+    SPEED_OF_THE_MOOR("Speed of the Moor", false, SkillBranches.BREEZE_CLAN, 1),
+    LIGHTSTEP("Lightstep", false, SkillBranches.BREEZE_CLAN, 1),
+    SHARP_WIND("Sharp Wind", false, SkillBranches.BREEZE_CLAN, 1),
+
+    THICK_PELT("Thick Pelt", false, SkillBranches.ECHO_CLAN, 1),
+    FOREST_COVER("Forest Cover", false, SkillBranches.ECHO_CLAN, 1),
+    STUNNING_BLOW("Stunning Blow", false, SkillBranches.ECHO_CLAN, 1),
+
+    STRONG_SWIMMER("Strong Swimmer", false, SkillBranches.CREEK_CLAN, 1),
+    AQUA_BALANCE("Aqua Balance", false, SkillBranches.CREEK_CLAN, 1),
+    WATERS_RESILIENCE("Water’s Resilience", false, SkillBranches.CREEK_CLAN, 1),
+
+    NIGHTSTALKER("Nightstalker", false, SkillBranches.SHADE_CLAN, 1),
+    TOXIC_CLAWS("Toxic Claws", false, SkillBranches.SHADE_CLAN, 1),
+    SILENT_KILL("Silent Kill", false, SkillBranches.SHADE_CLAN, 1);
 
     private final String displayName;
     private final boolean isActive;

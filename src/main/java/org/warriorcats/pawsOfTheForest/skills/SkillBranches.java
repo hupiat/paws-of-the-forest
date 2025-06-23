@@ -3,11 +3,17 @@ package org.warriorcats.pawsOfTheForest.skills;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 public enum SkillBranches {
-    HUNTING, NAVIGATION, RESILIENCE, HERBALIST, KITTYPET, LONER, ROGUE, CITY_CAT;
+    HUNTING, NAVIGATION, RESILIENCE, HERBALIST, KITTYPET, LONER, ROGUE, CITY_CAT, BREEZE_CLAN, ECHO_CLAN, CREEK_CLAN, SHADE_CLAN;
 
     @Override
     public String toString() {
-        return StringsUtils.capitalize(name().toLowerCase());
+        StringBuilder builder = new StringBuilder();
+        String[] split = name().toLowerCase().split("_");
+        for (String stub : split) {
+            builder.append(StringsUtils.capitalize(stub));
+            builder.append(" ");
+        }
+        return builder.toString().trim();
     }
 
     public static final double UNLOCK_SKILL = 8;
