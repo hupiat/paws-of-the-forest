@@ -112,7 +112,6 @@ public class EventsPreys implements LoadingListener {
                 if (!FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId())) {
                     FLEEING_PREYS.put(nearbyLiving.getUniqueId(), new BukkitRunnable() {
                         int ticks = 0;
-
                         @Override
                         public void run() {
                             if (!nearbyLiving.isValid()) {
@@ -120,14 +119,10 @@ public class EventsPreys implements LoadingListener {
                                 this.cancel();
                                 return;
                             }
-
-                            if (FLEEING_PREYS.containsKey(nearbyLiving.getUniqueId())) {
-                                ticks += 20;
-                                if (ticks >= Prey.fromEntity(nearbyLiving).get().fleeDurationSeconds() * 20) {
-                                    FLEEING_PREYS.remove(nearbyLiving.getUniqueId());
-                                    this.cancel();
-                                    return;
-                                }
+                            ticks += 20;
+                            if (ticks >= Prey.fromEntity(nearbyLiving).get().fleeDurationSeconds() * 20) {
+                                FLEEING_PREYS.remove(nearbyLiving.getUniqueId());
+                                this.cancel();
                             }
                         }
                     }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20));
