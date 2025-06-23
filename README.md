@@ -9,7 +9,7 @@ It enriches gameplay with advanced systems such as role management, dynamic weat
 ## ✅ Requirements
 
 - Java 21 or higher
-- [Maven](https://maven.apache.org/)
+- Gradle
 - A Minecraft **Paper 1.21.1** server
 
 ---
