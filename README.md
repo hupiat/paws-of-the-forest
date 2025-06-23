@@ -8,7 +8,7 @@ It enriches gameplay with advanced systems such as role management, dynamic weat
 
 ## ✅ Requirements
 
-- Java 17 or higher
+- Java 21 or higher
 - [Maven](https://maven.apache.org/)
 - A Minecraft **Paper 1.21.1** server
 
