@@ -299,7 +299,7 @@ public class MenuSkillTreePath {
     private static void drawKittypetBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_WELL_FED, createTieredItem(
                 Material.COOKED_SALMON,
-                "Well-Fed",
+                Skills.WELL_FED.toString(),
                 "Heals faster when full.",
                 entity.getAbilityPerk(Skills.WELL_FED),
                 Skills.WELL_FED.getMaxTiers(),
@@ -308,7 +308,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_PAMPERED, createTieredItem(
                 Material.MILK_BUCKET,
-                "Pampered",
+                Skills.PAMPERED.toString(),
                 "Less likely to fall ill.",
                 entity.getAbilityPerk(Skills.PAMPERED),
                 Skills.PAMPERED.getMaxTiers(),
@@ -317,7 +317,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_SHELTERED_MIND, createTieredItem(
                 Material.BOOK,
-                "Sheltered Mind",
+                Skills.SHELTERED_MIND.toString(),
                 "Immune to fear effects.",
                 entity.getAbilityPerk(Skills.SHELTERED_MIND),
                 Skills.SHELTERED_MIND.getMaxTiers(),
@@ -328,7 +328,7 @@ public class MenuSkillTreePath {
     private static void drawLonerBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_TRACKER, createTieredItem(
                 Material.COMPASS,
-                "Tracker",
+                Skills.TRACKER.toString(),
                 "Detect recent footsteps.",
                 entity.getAbilityPerk(Skills.TRACKER),
                 Skills.TRACKER.getMaxTiers(),
@@ -337,7 +337,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_CRAFTY, createTieredItem(
                 Material.FERN,
-                "Crafty",
+                Skills.CRAFTY.toString(),
                 "Use herbs more efficiently.",
                 entity.getAbilityPerk(Skills.CRAFTY),
                 Skills.CRAFTY.getMaxTiers(),
@@ -346,7 +346,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_FLEXIBLE_MORALS, createTieredItem(
                 Material.EMERALD,
-                "Flexible Morals",
+                Skills.FLEXIBLE_MORALS.toString(),
                 "Can trade/steal from NPCs.",
                 entity.getAbilityPerk(Skills.FLEXIBLE_MORALS),
                 Skills.FLEXIBLE_MORALS.getMaxTiers(),
@@ -357,7 +357,7 @@ public class MenuSkillTreePath {
     private static void drawRogueBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_AMBUSHER, createTieredItem(
                 Material.IRON_SWORD,
-                "Ambusher",
+                Skills.AMBUSHER.toString(),
                 "+Sneak attack damage.",
                 entity.getAbilityPerk(Skills.AMBUSHER),
                 Skills.AMBUSHER.getMaxTiers(),
@@ -366,7 +366,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_SCAVENGE, createTieredItem(
                 Material.ROTTEN_FLESH,
-                "Scavenge",
+                Skills.SCAVENGE.toString(),
                 "Loot items from trash piles.",
                 entity.getAbilityPerk(Skills.SCAVENGE),
                 Skills.SCAVENGE.getMaxTiers(),
@@ -375,7 +375,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_HARD_KNOCK_LIFE, createTieredItem(
                 Material.LEATHER_CHESTPLATE,
-                "Hard Knock Life",
+                Skills.HARD_KNOCK_LIFE.toString(),
                 "+1 natural armor.",
                 entity.getAbilityPerk(Skills.HARD_KNOCK_LIFE),
                 Skills.HARD_KNOCK_LIFE.getMaxTiers(),
@@ -386,7 +386,7 @@ public class MenuSkillTreePath {
     private static void drawCityCatBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_URBAN_NAVIGATION, createTieredItem(
                 Material.STONE,
-                "Urban Navigation",
+                Skills.URBAN_NAVIGATION.toString(),
                 "Speed boost on concrete/stone.",
                 entity.getAbilityPerk(Skills.URBAN_NAVIGATION),
                 Skills.URBAN_NAVIGATION.getMaxTiers(),
@@ -395,7 +395,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_RAT_CATCHER, createTieredItem(
                 Material.RABBIT,
-                "Rat Catcher",
+                Skills.RAT_CATCHER.toString(),
                 "Track and catch rats.",
                 entity.getAbilityPerk(Skills.RAT_CATCHER),
                 Skills.RAT_CATCHER.getMaxTiers(),
@@ -404,7 +404,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_DISEASE_RESISTANCE, createTieredItem(
                 Material.SPIDER_EYE,
-                "Disease Resistance",
+                Skills.DISEASE_RESISTANCE.toString(),
                 "Reduced illness severity.",
                 entity.getAbilityPerk(Skills.DISEASE_RESISTANCE),
                 Skills.DISEASE_RESISTANCE.getMaxTiers(),
@@ -414,8 +414,8 @@ public class MenuSkillTreePath {
 
     private static void drawBreezeClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_SPEED_OF_THE_MOOR, createTieredItem(
-                Material.RABBIT,
-                "Speed of the Moor",
+                Material.SUGAR,
+                Skills.SPEED_OF_THE_MOOR.toString(),
                 "+15% plains movement speed.",
                 entity.getAbilityPerk(Skills.SPEED_OF_THE_MOOR),
                 Skills.SPEED_OF_THE_MOOR.getMaxTiers(),
@@ -424,7 +424,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_LIGHTSTEP, createTieredItem(
                 Material.FEATHER,
-                "Lightstep",
+                Skills.LIGHTSTEP.toString(),
                 "Reduced fall damage.",
                 entity.getAbilityPerk(Skills.LIGHTSTEP),
                 Skills.LIGHTSTEP.getMaxTiers(),
@@ -432,8 +432,8 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_SHARP_WIND, createTieredItem(
-                Material.FLINT,
-                "Sharp Wind",
+                Material.PAPER,
+                Skills.SHARP_WIND.toString(),
                 "10% chance to bleed in open spaces.",
                 entity.getAbilityPerk(Skills.SHARP_WIND),
                 Skills.SHARP_WIND.getMaxTiers(),
@@ -443,8 +443,8 @@ public class MenuSkillTreePath {
 
     private static void drawEchoClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_THICK_PELT, createTieredItem(
-                Material.LEATHER_CHESTPLATE,
-                "Thick Pelt",
+                Material.LEATHER,
+                Skills.THICK_PELT.toString(),
                 "Reduces melee damage.",
                 entity.getAbilityPerk(Skills.THICK_PELT),
                 Skills.THICK_PELT.getMaxTiers(),
@@ -453,7 +453,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_FOREST_COVER, createTieredItem(
                 Material.OAK_LEAVES,
-                "Forest Cover",
+                Skills.FOREST_COVER.toString(),
                 "Camouflage in wooded biomes.",
                 entity.getAbilityPerk(Skills.FOREST_COVER),
                 Skills.FOREST_COVER.getMaxTiers(),
@@ -462,7 +462,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_STUNNING_BLOW, createTieredItem(
                 Material.STONE_AXE,
-                "Stunning Blow",
+                Skills.STUNNING_BLOW.toString(),
                 "Bonus stagger chance from elevated attacks.",
                 entity.getAbilityPerk(Skills.STUNNING_BLOW),
                 Skills.STUNNING_BLOW.getMaxTiers(),
@@ -472,8 +472,8 @@ public class MenuSkillTreePath {
 
     private static void drawCreekClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_STRONG_SWIMMER, createTieredItem(
-                Material.SALMON,
-                "Strong Swimmer",
+                Material.KELP,
+                Skills.STRONG_SWIMMER.toString(),
                 "Faster water movement.",
                 entity.getAbilityPerk(Skills.STRONG_SWIMMER),
                 Skills.STRONG_SWIMMER.getMaxTiers(),
@@ -482,7 +482,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_AQUA_BALANCE, createTieredItem(
                 Material.FISHING_ROD,
-                "Aqua Balance",
+                Skills.AQUA_BALANCE.toString(),
                 "Can fish for food.",
                 entity.getAbilityPerk(Skills.AQUA_BALANCE),
                 Skills.AQUA_BALANCE.getMaxTiers(),
@@ -490,8 +490,8 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_WATERS_RESILIENCE, createTieredItem(
-                Material.KELP,
-                "Water’s Resilience",
+                Material.TURTLE_HELMET,
+                Skills.WATERS_RESILIENCE.toString(),
                 "Hunger decays slower in wet zones.",
                 entity.getAbilityPerk(Skills.WATERS_RESILIENCE),
                 Skills.WATERS_RESILIENCE.getMaxTiers(),
@@ -501,8 +501,8 @@ public class MenuSkillTreePath {
 
     private static void drawShadeClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_NIGHTSTALKER, createTieredItem(
-                Material.ENDER_EYE,
-                "Nightstalker",
+                Material.ENDER_PEARL,
+                Skills.NIGHTSTALKER.toString(),
                 "No night blindness.",
                 entity.getAbilityPerk(Skills.NIGHTSTALKER),
                 Skills.NIGHTSTALKER.getMaxTiers(),
@@ -511,7 +511,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_TOXIC_CLAWS, createTieredItem(
                 Material.POISONOUS_POTATO,
-                "Toxic Claws",
+                Skills.TOXIC_CLAWS.toString(),
                 "Poison on low-light hits.",
                 entity.getAbilityPerk(Skills.TOXIC_CLAWS),
                 Skills.TOXIC_CLAWS.getMaxTiers(),
@@ -520,7 +520,7 @@ public class MenuSkillTreePath {
 
         menu.setItem(INDEX_SILENT_KILL, createTieredItem(
                 Material.IRON_SWORD,
-                "Silent Kill",
+                Skills.SILENT_KILL.toString(),
                 "Bonus damage on sneak attacks.",
                 entity.getAbilityPerk(Skills.SILENT_KILL),
                 Skills.SILENT_KILL.getMaxTiers(),

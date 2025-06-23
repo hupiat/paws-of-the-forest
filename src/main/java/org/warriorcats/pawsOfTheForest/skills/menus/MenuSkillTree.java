@@ -99,30 +99,26 @@ public abstract class MenuSkillTree {
                 TEXT_CLICK_TO_OPEN
         )));
 
-        menu.setItem(INDEX_BREEZE_CLAN, createMenuItem(Material.RABBIT, SkillBranches.BREEZE_CLAN.toString(), List.of(
-                MessagesConf.Skills.COLOR_DESCRIPTION +
-                        MessagesConf.Skills.BREEZE_CLAN_DESCRIPTION,
+        menu.setItem(INDEX_BREEZE_CLAN, createMenuItem(Material.SUGAR, SkillBranches.BREEZE_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION + MessagesConf.Skills.BREEZE_CLAN_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));
 
         menu.setItem(INDEX_ECHO_CLAN, createMenuItem(Material.OAK_LEAVES, SkillBranches.ECHO_CLAN.toString(), List.of(
-                MessagesConf.Skills.COLOR_DESCRIPTION +
-                        MessagesConf.Skills.ECHO_CLAN_DESCRIPTION,
+                MessagesConf.Skills.COLOR_DESCRIPTION + MessagesConf.Skills.ECHO_CLAN_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));
 
-        menu.setItem(INDEX_CREEK_CLAN, createMenuItem(Material.SALMON, SkillBranches.CREEK_CLAN.toString(), List.of(
-                MessagesConf.Skills.COLOR_DESCRIPTION +
-                        MessagesConf.Skills.CREEK_CLAN_DESCRIPTION,
+        menu.setItem(INDEX_CREEK_CLAN, createMenuItem(Material.KELP, SkillBranches.CREEK_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION + MessagesConf.Skills.CREEK_CLAN_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));
 
-        menu.setItem(INDEX_SHADE_CLAN, createMenuItem(Material.ENDER_EYE, SkillBranches.SHADE_CLAN.toString(), List.of(
-                MessagesConf.Skills.COLOR_DESCRIPTION +
-                        MessagesConf.Skills.SHADE_CLAN_DESCRIPTION,
+        menu.setItem(INDEX_SHADE_CLAN, createMenuItem(Material.ENDER_PEARL, SkillBranches.SHADE_CLAN.toString(), List.of(
+                MessagesConf.Skills.COLOR_DESCRIPTION + MessagesConf.Skills.SHADE_CLAN_DESCRIPTION,
                 "",
                 TEXT_CLICK_TO_OPEN
         )));
