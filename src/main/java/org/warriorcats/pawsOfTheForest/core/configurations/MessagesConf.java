@@ -146,5 +146,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_CAUGHT_RAT =
                 getPropertyOrDefault("skills.playerMessages.caughtRat", "You have caught a rat !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_BLEEDING =
+                getPropertyOrDefault("skills.playerMessages.bleeding", "You are bleeding !", CONFIG_FILE_NAME);
     }
 }

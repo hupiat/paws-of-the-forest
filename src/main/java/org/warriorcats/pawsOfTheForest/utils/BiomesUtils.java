@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.damage.DamageType;
 
@@ -67,6 +68,15 @@ public abstract class BiomesUtils {
     private static final Set<DamageType> FREEZE_DAMAGE_TYPES = Set.of(
             DamageType.FREEZE
     );
+
+    public static boolean isOpenSpace(Location loc) {
+        for (int y = 1; y <= 10; y++) {
+            if (!loc.clone().add(0, y, 0).getBlock().isEmpty()) {
+                return false;
+            }
+        }
+        return loc.getBlock().getLightFromSky() >= 14;
+    }
 
     public static boolean isPlain(Biome biome) {
         return PLAINS_BIOMES.contains(biome);

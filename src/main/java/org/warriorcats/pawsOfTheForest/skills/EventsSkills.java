@@ -54,10 +54,13 @@ public class EventsSkills implements LoadingListener {
     public static final double RAT_CATCHER_TIER_RANGE = 25;
     public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.15;
     public static final double LIGHTSTEP_TIER_PERCENTAGE = 0.5;
+    public static final double SHARP_WIND_TIER_PERCENTAGE = 0.1;
+    public static final double SHARP_WIND_TIER_DURATION_S = 10;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
     private final Map<UUID, Float> defaultSpeeds = new ConcurrentHashMap<>();
+    private final Map<UUID, Double> entitiesBleeding = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -166,6 +169,33 @@ public class EventsSkills implements LoadingListener {
                 }
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 10);
+
+        // SHARP_WIND bleeding
+        final int sharpWindScanDurationTicks = 10;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID uuid : entitiesBleeding.keySet()) {
+                    LivingEntity entity = (LivingEntity) Bukkit.getEntity(uuid);
+                    if (entity.isDead()) {
+                        entitiesBleeding.remove(uuid);
+                        return;
+                    }
+
+                    entity.damage(1);
+
+                    entity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, entity.getLocation().add(0, 1, 0), 5, 0.3, 0.5, 0.3, 0.02);
+
+                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_GENERIC_HURT, 0.3f, 1.2f);
+
+                    entitiesBleeding.put(uuid, entitiesBleeding.get(uuid) - sharpWindScanDurationTicks);
+
+                    if (entitiesBleeding.get(uuid) <= 0) {
+                        entitiesBleeding.remove(uuid);
+                    }
+                }
+            }
+        }.runTaskTimer(PawsOfTheForest.getInstance(), 0L, sharpWindScanDurationTicks);
     }
 
     // EFFICIENT_KILL
@@ -395,18 +425,17 @@ public class EventsSkills implements LoadingListener {
         });
     }
 
-    // AMBUSHER
 
     @EventHandler
     public void on(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
-        if (!MobsUtils.isStealthFrom(player, entity)) {
-            return;
-        }
-
+        // AMBUSHER
         HibernateUtils.withSession(session -> {
+            if (!MobsUtils.isStealthFrom(player, entity)) {
+                return;
+            }
             PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!playerEntity.hasAbility(Skills.AMBUSHER)) {
                 return;
@@ -414,6 +443,25 @@ public class EventsSkills implements LoadingListener {
             int tier = playerEntity.getAbilityTier(Skills.AMBUSHER);
             double factor = tier * AMBUSHER_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 + factor));
+        });
+
+        // SHARP_WIND
+        HibernateUtils.withSession(session -> {
+            if (!BiomesUtils.isOpenSpace(player.getLocation())) {
+                return;
+            }
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.SHARP_WIND)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.SHARP_WIND);
+            double factor = tier * SHARP_WIND_TIER_PERCENTAGE;
+            if (Math.random() < factor) {
+                entitiesBleeding.put(entity.getUniqueId(), SHARP_WIND_TIER_DURATION_S * 20);
+                if (entity instanceof Player damaged) {
+                    damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_BLEEDING);
+                }
+            }
         });
     }
 
