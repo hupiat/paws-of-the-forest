@@ -148,9 +148,15 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("skills.playerMessages.caughtRat", "You have caught a rat !", CONFIG_FILE_NAME);
 
         public static final String PLAYER_MESSAGE_BLEEDING =
-                getPropertyOrDefault("skills.playerMessages.bleeding", "You are bleeding !", CONFIG_FILE_NAME);
+                getPropertyOrDefault("skills.playerMessages.bleeding", "Sharp Wind ! You are bleeding !", CONFIG_FILE_NAME);
 
         public static final String PLAYER_MESSAGE_APPLIED_BLEEDING =
                 getPropertyOrDefault("skills.playerMessages.appliedBleeding", "Sharp Wind ! You have applied bleeding !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_STAGGERED =
+                getPropertyOrDefault("skills.playerMessages.staggered", "Stunning Blow ! You are staggered !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_STAGGERED =
+                getPropertyOrDefault("skills.playerMessages.appliedStaggered", "Stunning Blow ! You have applied staggered !", CONFIG_FILE_NAME);
     }
 }

@@ -57,8 +57,10 @@ public class EventsSkills implements LoadingListener {
     public static final double SPEED_OF_THE_MOOR_TIER_PERCENTAGE = 0.15;
     public static final double LIGHTSTEP_TIER_PERCENTAGE = 0.5;
     public static final double SHARP_WIND_TIER_PERCENTAGE = 0.1;
-    public static final double SHARP_WIND_TIER_DURATION_S = 10;
+    public static final int SHARP_WIND_TIER_DURATION_S = 10;
     public static final double THICK_PELT_TIER_PERCENTAGE = 0.1;
+    public static final double STUNNING_BLOW_TIER_PERCENTAGE = 0.15;
+    public static final int STUNNING_BLOW_DURATION_S = 10;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -475,10 +477,39 @@ public class EventsSkills implements LoadingListener {
             int tier = playerEntity.getAbilityTier(Skills.SHARP_WIND);
             double factor = tier * SHARP_WIND_TIER_PERCENTAGE;
             if (Math.random() < factor) {
-                entitiesBleeding.put(entity.getUniqueId(), SHARP_WIND_TIER_DURATION_S * 20);
+                entitiesBleeding.put(entity.getUniqueId(), (double) SHARP_WIND_TIER_DURATION_S * 20);
                 player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_BLEEDING);
                 if (entity instanceof Player damaged) {
                     damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_BLEEDING);
+                }
+            }
+        });
+
+        // STUNNING_BLOW
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.STUNNING_BLOW)) {
+                return;
+            }
+
+            int tier = playerEntity.getAbilityTier(Skills.STUNNING_BLOW);
+            double factor = tier * STUNNING_BLOW_TIER_PERCENTAGE;
+
+            if (player.getLocation().getY() > entity.getLocation().getY() + 1) {
+                if (Math.random() < factor) {
+                    entity.addPotionEffect(new PotionEffect(
+                            PotionEffectType.SLOWNESS,
+                            STUNNING_BLOW_DURATION_S * 20,
+                            1,
+                            true,
+                            false,
+                            false
+                    ));
+                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 1f, 1.2f);
+                    player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_STAGGERED);
+                    if (entity instanceof Player damaged) {
+                        damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_STAGGERED);
+                    }
                 }
             }
         });
