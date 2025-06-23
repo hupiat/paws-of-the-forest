@@ -33,6 +33,8 @@ public class EventsSkillsMenu implements Listener {
 
         if (EventsCore.PLAYERS_LEAVING.contains(player)) return;
 
+        if (!event.getView().getTitle().equals(MenuBackpack.TITLE)) return;
+
         HibernateUtils.withTransaction(((transaction, session) -> {
             PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
 
