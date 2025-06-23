@@ -8,6 +8,21 @@ import java.util.Set;
 
 public abstract class BiomesUtils {
 
+    private static final Set<Biome> FOREST_BIOMES = Set.of(
+            Biome.FOREST,
+            Biome.BIRCH_FOREST,
+            Biome.OLD_GROWTH_BIRCH_FOREST,
+            Biome.DARK_FOREST,
+            Biome.FLOWER_FOREST,
+            Biome.TAIGA,
+            Biome.OLD_GROWTH_PINE_TAIGA,
+            Biome.OLD_GROWTH_SPRUCE_TAIGA,
+            Biome.SNOWY_TAIGA,
+            Biome.WINDSWEPT_FOREST,
+            Biome.GROVE,
+            Biome.WOODED_BADLANDS
+    );
+
     private static final Set<Biome> PLAINS_BIOMES = Set.of(
             Biome.PLAINS,
             Biome.SUNFLOWER_PLAINS,
@@ -76,6 +91,10 @@ public abstract class BiomesUtils {
             }
         }
         return loc.getBlock().getLightFromSky() >= 14;
+    }
+
+    public static boolean isForest(Biome biome) {
+        return FOREST_BIOMES.contains(biome);
     }
 
     public static boolean isPlain(Biome biome) {

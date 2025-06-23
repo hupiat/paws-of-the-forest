@@ -24,6 +24,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.hibernate.Session;
@@ -514,6 +516,26 @@ public class EventsSkills implements LoadingListener {
         Player player = event.getPlayer();
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
                 .add(new FootStep(player.getLocation(), System.currentTimeMillis()));
+
+        // FOREST_COVER
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.FOREST_COVER)) {
+                return;
+            }
+            if (BiomesUtils.isForest(player.getLocation().getBlock().getBiome())) {
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.INVISIBILITY,
+                        Integer.MAX_VALUE,
+                        0,
+                        true,
+                        false,
+                        false
+                ));
+            } else {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            }
+        });
 
         // URBAN_NAVIGATION
         HibernateUtils.withSession(session -> {
