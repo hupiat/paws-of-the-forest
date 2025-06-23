@@ -76,77 +76,59 @@ public class EventsSkillsMenu implements Listener {
     }
 
     private void handleMainMenuClick(int index, Player player) {
+        Consumer<SkillBranches> consumer = branch -> {
+            player.closeInventory();
+            MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(branch));
+            MENUS_OPENED.get(player.getUniqueId()).open(player);
+        };
+
         switch (index) {
             case MenuSkillTree.INDEX_HUNTING:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HUNTING));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.HUNTING);
                 break;
 
             case MenuSkillTree.INDEX_NAVIGATION:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.NAVIGATION));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.NAVIGATION);
                 break;
 
             case MenuSkillTree.INDEX_RESILIENCE:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.RESILIENCE));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.RESILIENCE);
                 break;
 
             case MenuSkillTree.INDEX_HERBALIST:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.HERBALIST));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.HERBALIST);
                 break;
 
             case MenuSkillTree.INDEX_KITTYPET:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.KITTYPET));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.KITTYPET);
                 break;
 
             case MenuSkillTree.INDEX_LONER:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.LONER));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.LONER);
                 break;
 
             case MenuSkillTree.INDEX_ROGUE:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.ROGUE));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.ROGUE);
                 break;
 
             case MenuSkillTree.INDEX_CITY_CAT:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.CITY_CAT));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.CITY_CAT);
                 break;
 
             case MenuSkillTree.INDEX_BREEZE_CLAN:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.BREEZE_CLAN));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.BREEZE_CLAN);
                 break;
 
             case MenuSkillTree.INDEX_ECHO_CLAN:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.ECHO_CLAN));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.ECHO_CLAN);
                 break;
 
             case MenuSkillTree.INDEX_CREEK_CLAN:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.CREEK_CLAN));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.CREEK_CLAN);
                 break;
 
             case MenuSkillTree.INDEX_SHADE_CLAN:
-                player.closeInventory();
-                MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(SkillBranches.SHADE_CLAN));
-                MENUS_OPENED.get(player.getUniqueId()).open(player);
+                consumer.accept(SkillBranches.SHADE_CLAN);
                 break;
 
             case MenuSkillTree.INDEX_BACK:
