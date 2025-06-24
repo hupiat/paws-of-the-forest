@@ -565,17 +565,39 @@ public class EventsSkills implements LoadingListener {
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
                 .add(new FootStep(player.getLocation(), System.currentTimeMillis()));
 
+        // NIGHTSTALKER
+        HibernateUtils.withSession(session -> {
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.NIGHTSTALKER)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.NIGHTSTALKER);
+            if (BiomesUtils.isNight(player.getWorld())) {
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.NIGHT_VISION,
+                        Integer.MAX_VALUE,
+                        tier - 1,
+                        true,
+                        false,
+                        false
+                ));
+            } else {
+                player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+            }
+        });
+
         // FOREST_COVER
         HibernateUtils.withSession(session -> {
             PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
             if (!playerEntity.hasAbility(Skills.FOREST_COVER)) {
                 return;
             }
+            int tier = playerEntity.getAbilityTier(Skills.FOREST_COVER);
             if (BiomesUtils.isForest(player.getLocation().getBlock().getBiome())) {
                 player.addPotionEffect(new PotionEffect(
                         PotionEffectType.INVISIBILITY,
                         Integer.MAX_VALUE,
-                        0,
+                        tier - 1,
                         true,
                         false,
                         false

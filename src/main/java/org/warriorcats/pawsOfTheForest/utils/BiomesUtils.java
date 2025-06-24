@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.damage.DamageType;
 
@@ -125,6 +126,11 @@ public abstract class BiomesUtils {
 
     public static boolean isHot(Biome biome) {
         return HOT_BIOMES.contains(biome);
+    }
+
+    public static boolean isNight(World world) {
+        long time = world.getTime();
+        return time >= 13000 && time <= 23000;
     }
 
     public static boolean isDamageFromFire(DamageType damageType) {
