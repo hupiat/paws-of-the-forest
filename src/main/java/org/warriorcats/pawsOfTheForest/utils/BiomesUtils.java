@@ -133,6 +133,10 @@ public abstract class BiomesUtils {
         return time >= 13000 && time <= 23000;
     }
 
+    public static boolean isDark(Location location) {
+        return location.getBlock().getLightLevel() < 8;
+    }
+
     public static boolean isDamageFromFire(DamageType damageType) {
         return FIRE_DAMAGE_TYPES.contains(damageType);
     }

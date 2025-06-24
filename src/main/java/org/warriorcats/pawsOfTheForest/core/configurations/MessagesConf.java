@@ -157,7 +157,13 @@ public abstract class MessagesConf extends AbstractConfiguration {
                 getPropertyOrDefault("skills.playerMessages.staggered", "Stunning Blow ! You are staggered !", CONFIG_FILE_NAME);
 
         public static final String PLAYER_MESSAGE_APPLIED_STAGGERED =
-                getPropertyOrDefault("skills.playerMessages.appliedStaggered", "Stunning Blow ! You have applied staggered !", CONFIG_FILE_NAME);
+                getPropertyOrDefault("skills.playerMessages.appliedStaggered", "Stunning Blow ! You have applied stagger !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_POISONED =
+                getPropertyOrDefault("skills.playerMessages.poisoned", "Toxic Claws ! You are poisoned !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_POISONED =
+                getPropertyOrDefault("skills.playerMessages.appliedPoisoned", "Toxic Claws ! You have applied poison !", CONFIG_FILE_NAME);
 
         public static final String PLAYER_MESSAGE_APPLIED_AQUA_BALANCE =
                 getPropertyOrDefault("skills.playerMessages.appliedAquaBalance", "Aqua Balance ! You have caught some fresh fish !", CONFIG_FILE_NAME);

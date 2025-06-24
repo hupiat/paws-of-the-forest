@@ -7,6 +7,7 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityCategory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,5 +69,38 @@ public abstract class MobsUtils {
         int amount = 1 + random.nextInt(2);
 
         return new ItemStack(loot, amount);
+    }
+
+    public static boolean canBePoisoned(LivingEntity entity) {
+        if (entity instanceof Player) return true;
+
+        if (entity.getCategory() == EntityCategory.UNDEAD) return false;
+
+        switch (entity.getType()) {
+            case SHEEP:
+            case COW:
+            case PIG:
+            case CHICKEN:
+            case HORSE:
+            case DONKEY:
+            case MULE:
+            case LLAMA:
+            case RABBIT:
+            case WOLF:
+            case CAT:
+            case OCELOT:
+            case PARROT:
+            case VILLAGER:
+            case IRON_GOLEM:
+            case SNOW_GOLEM:
+            case FOX:
+            case PANDA:
+            case TURTLE:
+            case FROG:
+            case AXOLOTL:
+                return false;
+            default:
+                return true;
+        }
     }
 }

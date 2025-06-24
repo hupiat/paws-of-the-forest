@@ -60,6 +60,7 @@ public class EventsSkills implements LoadingListener {
     public static final int STUNNING_BLOW_DURATION_S = 10;
     public static final double AQUA_BALANCE_TIER_PERCENTAGE = 0.1;
     public static final double WATERS_RESILIENCE_TIER_PERCENTAGE = 0.1;
+    public static final int TOXIC_CLAWS_DURATION_S = 2;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -481,6 +482,32 @@ public class EventsSkills implements LoadingListener {
             event.setDamage(event.getDamage() * (1 + factor));
         });
 
+        // TOXIC_CLAWS
+        HibernateUtils.withSession(session -> {
+            if (!BiomesUtils.isDark(player.getLocation()) || !MobsUtils.canBePoisoned(entity)) {
+                return;
+            }
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.TOXIC_CLAWS)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.TOXIC_CLAWS);
+            entity.addPotionEffect(new PotionEffect(
+                    PotionEffectType.POISON,
+                    TOXIC_CLAWS_DURATION_S * 20,
+                    tier - 1,
+                    true,
+                    true,
+                    true
+            ));
+            entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 1f, 1.2f);
+            player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_POISONED);
+            if (entity instanceof Player damaged) {
+                damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_POISONED);
+            }
+        });
+
+
         // SHARP_WIND
         HibernateUtils.withSession(session -> {
             if (!BiomesUtils.isOpenSpace(player.getLocation())) {
@@ -516,7 +543,7 @@ public class EventsSkills implements LoadingListener {
                     entity.addPotionEffect(new PotionEffect(
                             PotionEffectType.SLOWNESS,
                             STUNNING_BLOW_DURATION_S * 20,
-                            1,
+                            tier - 1,
                             true,
                             false,
                             false
