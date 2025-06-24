@@ -16,6 +16,7 @@ import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Getter
@@ -91,7 +92,7 @@ public class MenuSkillTreePath {
         title = branch.toString() + " " + title;
     }
 
-    public static Skills getSkillByIndex(int index, SkillBranches branch) {
+    @Nullable public static Skills getSkillByIndex(int index, SkillBranches branch) {
         return switch (branch) {
             case HUNTING -> switch (index) {
                 case INDEX_PREY_SENSE       -> Skills.PREY_SENSE;
