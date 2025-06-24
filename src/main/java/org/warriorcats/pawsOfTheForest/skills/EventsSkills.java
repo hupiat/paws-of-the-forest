@@ -61,6 +61,7 @@ public class EventsSkills implements LoadingListener {
     public static final double AQUA_BALANCE_TIER_PERCENTAGE = 0.1;
     public static final double WATERS_RESILIENCE_TIER_PERCENTAGE = 0.1;
     public static final int TOXIC_CLAWS_DURATION_S = 2;
+    public static final double SILENT_KILL_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
@@ -479,6 +480,20 @@ public class EventsSkills implements LoadingListener {
             }
             int tier = playerEntity.getAbilityTier(Skills.AMBUSHER);
             double factor = tier * AMBUSHER_TIER_PERCENTAGE;
+            event.setDamage(event.getDamage() * (1 + factor));
+        });
+
+        // SILENT_KILL
+        HibernateUtils.withSession(session -> {
+            if (!MobsUtils.isStealthFrom(player, entity)) {
+                return;
+            }
+            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
+            if (!playerEntity.hasAbility(Skills.SILENT_KILL)) {
+                return;
+            }
+            int tier = playerEntity.getAbilityTier(Skills.SILENT_KILL);
+            double factor = tier * SILENT_KILL_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 + factor));
         });
 
