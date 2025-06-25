@@ -5,8 +5,16 @@ import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityCategory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -74,9 +82,25 @@ public abstract class MobsUtils {
     public static boolean canBePoisoned(LivingEntity entity) {
         if (entity instanceof Player) return true;
 
-        if (entity.getCategory() == EntityCategory.UNDEAD) return false;
-
         switch (entity.getType()) {
+            case ZOMBIE:
+            case ZOMBIE_VILLAGER:
+            case ZOMBIE_HORSE:
+            case ZOMBIFIED_PIGLIN:
+            case DROWNED:
+            case HUSK:
+            case STRAY:
+            case SKELETON:
+            case SKELETON_HORSE:
+            case WITHER_SKELETON:
+            case WITHER:
+            case PHANTOM:
+            case VEX:
+            case ZOGLIN:
+            case WARDEN:
+            case PIGLIN_BRUTE:
+                return false;
+
             case SHEEP:
             case COW:
             case PIG:
@@ -99,8 +123,26 @@ public abstract class MobsUtils {
             case FROG:
             case AXOLOTL:
                 return false;
+
             default:
                 return true;
         }
+    }
+
+    public static void setGlowingFor(Player receiver, Entity target, boolean glowing) {
+        net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) target).getHandle();
+
+        byte flags = nmsEntity.getEntityData().get(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE));
+
+        flags = glowing ? (byte)(flags | 0x40) : (byte)(flags & ~0x40);
+
+        SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
+                0, EntityDataSerializers.BYTE, flags
+        );
+
+        List<SynchedEntityData.DataValue<?>> list = List.of(dataValue);
+
+        ClientboundSetEntityDataPacket packet = new ClientboundSetEntityDataPacket(nmsEntity.getId(), list);
+        ((CraftPlayer) receiver).getHandle().connection.send(packet);
     }
 }

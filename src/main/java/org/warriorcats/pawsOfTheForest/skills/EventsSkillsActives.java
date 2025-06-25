@@ -1,22 +1,26 @@
 package org.warriorcats.pawsOfTheForest.skills;
 
 import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
+import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class EventsSkillsActives implements Listener {
+
+    public static final int PREY_SENSE_RADIUS = 25;
+    public static final int PREY_SENSE_DURATION_S = 5;
 
     // Handling persistent items (actives skills and noteblock) management
 
@@ -36,5 +40,33 @@ public class EventsSkillsActives implements Listener {
     @EventHandler
     public void on(PlayerDeathEvent event) {
         event.getDrops().removeIf(item -> ItemsUtils.isActiveSkill(event.getPlayer(), item));
+    }
+
+    // Handling active skills
+    @EventHandler
+    public void on(PlayerInteractEvent event) {
+        ItemStack item = event.getItem();
+
+        if (item == null || !ItemsUtils.isActiveSkill(event.getPlayer(), item)) return;
+        if (event.getAction().toString().contains("RIGHT_CLICK")) {
+            if (item.getType() == Skills.PREY_SENSE.getIcon()) {
+                handlePreySense(event);
+            }
+            event.setCancelled(true);
+        }
+    }
+
+    private void handlePreySense(PlayerInteractEvent event) {
+        Collection<LivingEntity> livingEntities = event.getPlayer().getWorld()
+                .getNearbyLivingEntities(event.getPlayer().getLocation(), PREY_SENSE_RADIUS);
+        for (LivingEntity livingEntity : livingEntities) {
+            MobsUtils.setGlowingFor(event.getPlayer(), livingEntity, true);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    MobsUtils.setGlowingFor(event.getPlayer(), livingEntity, false);
+                }
+            }.runTaskLater(PawsOfTheForest.getInstance(), PREY_SENSE_DURATION_S * 20);
+        }
     }
 }
