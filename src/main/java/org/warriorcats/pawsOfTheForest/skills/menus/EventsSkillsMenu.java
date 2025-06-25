@@ -16,16 +16,32 @@ import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
+import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class EventsSkillsMenu implements Listener {
 
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
+    public static final Map<UUID, List<MenuSkillTreePath>> MENUS_STORED = new HashMap<>();
+
+    public static boolean hasMenuSkillTreePathByPlayer(Player player, SkillBranches branches) {
+        try {
+            return getMenuSkillTreePathByPlayer(player, branches) != null;
+        } catch (IllegalArgumentException ignored) {
+            return false;
+        }
+    }
+
+    public static MenuSkillTreePath getMenuSkillTreePathByPlayer(Player player, SkillBranches branch) {
+        return MENUS_STORED.get(player.getUniqueId()).stream()
+                .filter(menu -> menu.getBranch() == branch)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Could not find stored menu skill tree path for player and branch : " + player.getName() + ", " + branch.toString()));
+    }
 
     @EventHandler
     public void on(InventoryCloseEvent event) {
@@ -41,7 +57,7 @@ public class EventsSkillsMenu implements Listener {
             ItemStack[] contents = event.getInventory().getContents();
             boolean empty = true;
             for (ItemStack item : contents) {
-                if (item != null && !item.getType().isAir()) {
+                if (!ItemsUtils.isEmpty(item)) {
                     empty = false;
                     break;
                 }
@@ -78,7 +94,11 @@ public class EventsSkillsMenu implements Listener {
     private void handleMainMenuClick(int index, Player player) {
         Consumer<SkillBranches> consumer = branch -> {
             player.closeInventory();
-            MENUS_OPENED.put(player.getUniqueId(), new MenuSkillTreePath(branch));
+            MenuSkillTreePath menuSkillTreePath = new MenuSkillTreePath(branch);
+            MENUS_OPENED.put(player.getUniqueId(), menuSkillTreePath);
+            MENUS_STORED.computeIfAbsent(player.getUniqueId(), uuid -> new ArrayList<>());
+            MENUS_STORED.get(player.getUniqueId()).removeIf(menu -> menu.getBranch() == branch);
+            MENUS_STORED.get(player.getUniqueId()).add(menuSkillTreePath);
             MENUS_OPENED.get(player.getUniqueId()).open(player);
         };
 
@@ -143,7 +163,7 @@ public class EventsSkillsMenu implements Listener {
                 MenuSkillTree.open(player);
                 MENUS_OPENED.remove(player.getUniqueId());
             };
-            Consumer<Double> consumer = (balance) -> {
+            BiConsumer<SkillBranches, Double> consumer = (branch, balance) -> {
                 PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
                 Skills skill = MenuSkillTreePath.getSkillByIndex(index, MENUS_OPENED.get(player.getUniqueId()).getBranch());
                 SkillEntity skillEntity = entity.getAbility(skill);
@@ -175,7 +195,12 @@ public class EventsSkillsMenu implements Listener {
                 if (skill == Skills.HARD_KNOCK_LIFE) {
                     SkillsUtils.updateHardKnockLifeArmor(player);
                 }
+                MENUS_STORED.get(player.getUniqueId()).removeIf(menu -> menu.getBranch() == branch);
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
+                MENUS_STORED.get(player.getUniqueId()).add(MENUS_OPENED.get(player.getUniqueId()));
+                if (skill.isActive()) {
+                    PlayersUtils.synchronizeInventory(player, entity);
+                }
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
                 case SkillBranches.HUNTING:
@@ -187,13 +212,13 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_PREY_SENSE:
                         case MenuSkillTreePath.INDEX_HUNTERS_COMPASS:
                         case MenuSkillTreePath.INDEX_LOW_SWEEP:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            consumer.accept(SkillBranches.HUNTING, SkillBranches.UNLOCK_SKILL);
                             break;
 
                         case MenuSkillTreePath.INDEX_SILENT_PAW:
                         case MenuSkillTreePath.INDEX_BLOOD_HUNTER:
                         case MenuSkillTreePath.INDEX_EFFICIENT_KILL:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.HUNTING, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
 
                     }
@@ -207,13 +232,13 @@ public class EventsSkillsMenu implements Listener {
 
                         case MenuSkillTreePath.INDEX_LOCATION_AWARENESS:
                         case MenuSkillTreePath.INDEX_PATHFINDING_BOOST:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            consumer.accept(SkillBranches.NAVIGATION, SkillBranches.UNLOCK_SKILL);
                             break;
 
                         case MenuSkillTreePath.INDEX_TRAIL_MEMORY:
                         case MenuSkillTreePath.INDEX_ENDURANCE_TRAVELER:
                         case MenuSkillTreePath.INDEX_CLIMBERS_GRACE:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.NAVIGATION, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -226,7 +251,7 @@ public class EventsSkillsMenu implements Listener {
 
                         case MenuSkillTreePath.INDEX_HOLD_ON:
                         case MenuSkillTreePath.INDEX_ON_YOUR_PAWS:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            consumer.accept(SkillBranches.RESILIENCE, SkillBranches.UNLOCK_SKILL);
                             break;
 
                         case MenuSkillTreePath.INDEX_IRON_HIDE:
@@ -234,7 +259,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_THICK_COAT:
                         case MenuSkillTreePath.INDEX_HEARTY_APPETITE:
                         case MenuSkillTreePath.INDEX_BEAST_OF_BURDEN:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.RESILIENCE, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -247,13 +272,13 @@ public class EventsSkillsMenu implements Listener {
 
                         case MenuSkillTreePath.INDEX_HERB_KNOWLEDGE:
                         case MenuSkillTreePath.INDEX_BREW_REMEDY:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL);
+                            consumer.accept(SkillBranches.HERBALIST, SkillBranches.UNLOCK_SKILL);
                             break;
 
                         case MenuSkillTreePath.INDEX_QUICK_GATHERER:
                         case MenuSkillTreePath.INDEX_BOTANICAL_LORE:
                         case MenuSkillTreePath.INDEX_CLEAN_PAWS:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.HERBALIST, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -265,7 +290,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_WELL_FED:
                         case MenuSkillTreePath.INDEX_PAMPERED:
                         case MenuSkillTreePath.INDEX_SHELTERED_MIND:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.KITTYPET, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -278,7 +303,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_TRACKER:
                         case MenuSkillTreePath.INDEX_CRAFTY:
                         case MenuSkillTreePath.INDEX_FLEXIBLE_MORALS:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.LONER, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -291,7 +316,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_AMBUSHER:
                         case MenuSkillTreePath.INDEX_SCAVENGE:
                         case MenuSkillTreePath.INDEX_HARD_KNOCK_LIFE:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.ROGUE, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -304,7 +329,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_URBAN_NAVIGATION:
                         case MenuSkillTreePath.INDEX_RAT_CATCHER:
                         case MenuSkillTreePath.INDEX_DISEASE_RESISTANCE:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.CITY_CAT, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -317,7 +342,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_SPEED_OF_THE_MOOR:
                         case MenuSkillTreePath.INDEX_LIGHTSTEP:
                         case MenuSkillTreePath.INDEX_SHARP_WIND:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.BREEZE_CLAN, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -330,7 +355,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_THICK_PELT:
                         case MenuSkillTreePath.INDEX_FOREST_COVER:
                         case MenuSkillTreePath.INDEX_STUNNING_BLOW:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.ECHO_CLAN, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -343,7 +368,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_STRONG_SWIMMER:
                         case MenuSkillTreePath.INDEX_AQUA_BALANCE:
                         case MenuSkillTreePath.INDEX_WATERS_RESILIENCE:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.CREEK_CLAN, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;
@@ -356,7 +381,7 @@ public class EventsSkillsMenu implements Listener {
                         case MenuSkillTreePath.INDEX_NIGHTSTALKER:
                         case MenuSkillTreePath.INDEX_TOXIC_CLAWS:
                         case MenuSkillTreePath.INDEX_SILENT_KILL:
-                            consumer.accept(SkillBranches.UNLOCK_SKILL_TIER);
+                            consumer.accept(SkillBranches.SHADE_CLAN, SkillBranches.UNLOCK_SKILL_TIER);
                             break;
                     }
                     break;

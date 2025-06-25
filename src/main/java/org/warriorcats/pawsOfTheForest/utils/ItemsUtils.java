@@ -3,9 +3,14 @@ package org.warriorcats.pawsOfTheForest.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
+import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
+import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -119,6 +124,42 @@ public abstract class ItemsUtils {
             Material.KELP,
             Material.SEAGRASS
     );
+
+    public static boolean isActiveSkill(Player player, ItemStack item, Skills skill) {
+        if (!EventsSkillsMenu.hasMenuSkillTreePathByPlayer(player, skill.getBranch())) {
+            return false;
+        }
+        return EventsSkillsMenu.getMenuSkillTreePathByPlayer(player, skill.getBranch()).getActiveSkills().stream()
+                .anyMatch(activeSkill -> activeSkill.isSimilar(item));
+    }
+
+    public static boolean isActiveSkill(Player player, ItemStack item) {
+        for (Skills skill : Skills.getActiveSkills()) {
+            if (isActiveSkill(player, item, skill)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static ItemStack getActiveSkill(Player player, Material icon) {
+        for (SkillBranches branch : SkillBranches.values()) {
+            if (!EventsSkillsMenu.hasMenuSkillTreePathByPlayer(player, branch)) {
+                continue;
+            }
+            Optional<ItemStack> activeSkillOpt = EventsSkillsMenu.getMenuSkillTreePathByPlayer(player, branch).getActiveSkills().stream()
+                    .filter(activeSkill -> activeSkill.getType() == icon)
+                    .findAny();
+            if (activeSkillOpt.isPresent()) {
+                return activeSkillOpt.get();
+            }
+        }
+        throw new IllegalArgumentException("Could not find active skill for player and icon : " + player.getName() + ", " + icon);
+    }
+
+    public static boolean isEmpty(ItemStack item) {
+        return item == null || item.isEmpty();
+    }
 
     public static boolean isUrbanBlock(Material material) {
         return URBAN_BLOCKS.contains(material);

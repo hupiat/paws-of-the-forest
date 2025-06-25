@@ -17,7 +17,7 @@ import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkillsPassives;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
@@ -62,7 +62,7 @@ public class EventsPreys implements LoadingListener {
                         List<Prey> preys = new ArrayList<>();
                         double higherSpawnChance = !playerEntity.hasAbility(Skills.BLOOD_HUNTER) ?
                                 HIGHER_SPAWN_CHANCE :
-                                HIGHER_SPAWN_CHANCE * (1 + playerEntity.getAbilityTier(Skills.BLOOD_HUNTER) * EventsSkills.BLOOD_HUNTER_TIER_PERCENTAGE);
+                                HIGHER_SPAWN_CHANCE * (1 + playerEntity.getAbilityTier(Skills.BLOOD_HUNTER) * EventsSkillsPassives.BLOOD_HUNTER_TIER_PERCENTAGE);
                         if (Math.random() < higherSpawnChance) {
                             preys = Prey.getAllHighers();
                         } else if (Math.random() < COMMON_SPAWN_CHANCE) {

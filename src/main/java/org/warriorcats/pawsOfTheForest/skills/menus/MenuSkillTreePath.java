@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.skills.menus;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,12 +18,13 @@ import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
+@EqualsAndHashCode
 public class MenuSkillTreePath {
-
-    private String title = "Skill Tree";
 
     public static final ChatColor COLOR_HIGHLIGHT = ChatColor.GRAY;
 
@@ -85,7 +87,10 @@ public class MenuSkillTreePath {
     public static final int INDEX_TOXIC_CLAWS = 13;
     public static final int INDEX_SILENT_KILL = 15;
 
+
+    private final Set<ItemStack> activeSkills = new HashSet<>();
     private final SkillBranches branch;
+    private String title = "Skill Tree";
 
     public MenuSkillTreePath(SkillBranches branch) {
         this.branch = branch;
@@ -181,6 +186,7 @@ public class MenuSkillTreePath {
     }
 
     public void open(Player player) {
+        activeSkills.clear();
         Inventory menu = Bukkit.createInventory(null, 45, title);
 
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
@@ -209,81 +215,215 @@ public class MenuSkillTreePath {
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.7f, 1.2f);
     }
 
-    private static void drawHuntingBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_PREY_SENSE, createSkillItem(Material.GHAST_TEAR, Skills.PREY_SENSE.toString(),
-                MessagesConf.Skills.PREY_SENSE_DESCRIPTION, entity.hasAbility(Skills.PREY_SENSE), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(Material.COMPASS, Skills.HUNTERS_COMPASS.toString(),
-                MessagesConf.Skills.HUNTERS_COMPASS_DESCRIPTION, entity.hasAbility(Skills.HUNTERS_COMPASS), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(Material.RABBIT_FOOT, Skills.LOW_SWEEP.toString(),
-                MessagesConf.Skills.LOW_SWEEP_DESCRIPTION, entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_SILENT_PAW, createTieredItem(Material.LEATHER, Skills.SILENT_PAW.toString(),
-                MessagesConf.Skills.SILENT_PAW_DESCRIPTION, entity.getAbilityPerk(Skills.SILENT_PAW),
-                Skills.SILENT_PAW.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(Material.REDSTONE, Skills.BLOOD_HUNTER.toString(),
-                MessagesConf.Skills.BLOOD_HUNTER_DESCRIPTION, entity.getAbilityPerk(Skills.BLOOD_HUNTER),
-                Skills.BLOOD_HUNTER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(Material.COOKED_BEEF, Skills.EFFICIENT_KILL.toString(),
-                MessagesConf.Skills.EFFICIENT_KILL_DESCRIPTION, entity.getAbilityPerk(Skills.EFFICIENT_KILL),
-                Skills.EFFICIENT_KILL.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+    private void drawHuntingBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_PREY_SENSE, createSkillItem(
+                Skills.PREY_SENSE.getIcon(),
+                Skills.PREY_SENSE.toString(),
+                MessagesConf.Skills.PREY_SENSE_DESCRIPTION,
+                entity.hasAbility(Skills.PREY_SENSE),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(
+                Skills.HUNTERS_COMPASS.getIcon(),
+                Skills.HUNTERS_COMPASS.toString(),
+                MessagesConf.Skills.HUNTERS_COMPASS_DESCRIPTION,
+                entity.hasAbility(Skills.HUNTERS_COMPASS),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(
+                Skills.LOW_SWEEP.getIcon(),
+                Skills.LOW_SWEEP.toString(),
+                MessagesConf.Skills.LOW_SWEEP_DESCRIPTION,
+                entity.hasAbility(Skills.LOW_SWEEP),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_SILENT_PAW, createTieredItem(
+                Skills.SILENT_PAW.getIcon(),
+                Skills.SILENT_PAW.toString(),
+                MessagesConf.Skills.SILENT_PAW_DESCRIPTION,
+                entity.getAbilityPerk(Skills.SILENT_PAW),
+                Skills.SILENT_PAW.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_BLOOD_HUNTER, createTieredItem(
+                Skills.BLOOD_HUNTER.getIcon(),
+                Skills.BLOOD_HUNTER.toString(),
+                MessagesConf.Skills.BLOOD_HUNTER_DESCRIPTION,
+                entity.getAbilityPerk(Skills.BLOOD_HUNTER),
+                Skills.BLOOD_HUNTER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_EFFICIENT_KILL, createTieredItem(
+                Skills.EFFICIENT_KILL.getIcon(),
+                Skills.EFFICIENT_KILL.toString(),
+                MessagesConf.Skills.EFFICIENT_KILL_DESCRIPTION,
+                entity.getAbilityPerk(Skills.EFFICIENT_KILL),
+                Skills.EFFICIENT_KILL.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
-    private static void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(Material.FILLED_MAP, Skills.LOCATION_AWARENESS.toString(),
-                MessagesConf.Skills.LOCATION_AWARENESS_DESCRIPTION, entity.hasAbility(Skills.LOCATION_AWARENESS), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(Material.FEATHER, Skills.PATHFINDING_BOOST.toString(),
-                MessagesConf.Skills.PATHFINDING_BOOST_DESCRIPTION, entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(Material.PAPER, Skills.TRAIL_MEMORY.toString(),
-                MessagesConf.Skills.TRAIL_MEMORY_DESCRIPTION, entity.getAbilityPerk(Skills.TRAIL_MEMORY),
-                Skills.TRAIL_MEMORY.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(Material.COOKED_PORKCHOP, Skills.ENDURANCE_TRAVELER.toString(),
-                MessagesConf.Skills.ENDURANCE_TRAVELER_DESCRIPTION, entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER),
-                Skills.ENDURANCE_TRAVELER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(Material.LADDER, Skills.CLIMBERS_GRACE.toString(),
-                MessagesConf.Skills.CLIMBERS_GRACE_DESCRIPTION, entity.getAbilityPerk(Skills.CLIMBERS_GRACE),
-                Skills.CLIMBERS_GRACE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+    private void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(
+                Skills.LOCATION_AWARENESS.getIcon(),
+                Skills.LOCATION_AWARENESS.toString(),
+                MessagesConf.Skills.LOCATION_AWARENESS_DESCRIPTION,
+                entity.hasAbility(Skills.LOCATION_AWARENESS),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(
+                Skills.PATHFINDING_BOOST.getIcon(),
+                Skills.PATHFINDING_BOOST.toString(),
+                MessagesConf.Skills.PATHFINDING_BOOST_DESCRIPTION,
+                entity.hasAbility(Skills.PATHFINDING_BOOST),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(
+                Skills.TRAIL_MEMORY.getIcon(),
+                Skills.TRAIL_MEMORY.toString(),
+                MessagesConf.Skills.TRAIL_MEMORY_DESCRIPTION,
+                entity.getAbilityPerk(Skills.TRAIL_MEMORY),
+                Skills.TRAIL_MEMORY.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_ENDURANCE_TRAVELER, createTieredItem(
+                Skills.ENDURANCE_TRAVELER.getIcon(),
+                Skills.ENDURANCE_TRAVELER.toString(),
+                MessagesConf.Skills.ENDURANCE_TRAVELER_DESCRIPTION,
+                entity.getAbilityPerk(Skills.ENDURANCE_TRAVELER),
+                Skills.ENDURANCE_TRAVELER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_CLIMBERS_GRACE, createTieredItem(
+                Skills.CLIMBERS_GRACE.getIcon(),
+                Skills.CLIMBERS_GRACE.toString(),
+                MessagesConf.Skills.CLIMBERS_GRACE_DESCRIPTION,
+                entity.getAbilityPerk(Skills.CLIMBERS_GRACE),
+                Skills.CLIMBERS_GRACE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
-    private static void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HOLD_ON, createSkillItem(Material.TOTEM_OF_UNDYING, Skills.HOLD_ON.toString(),
-                MessagesConf.Skills.HOLD_ON_DESCRIPTION, entity.hasAbility(Skills.HOLD_ON), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(Material.GOLDEN_APPLE, Skills.ON_YOUR_PAWS.toString(),
-                MessagesConf.Skills.ON_YOUR_PAWS_DESCRIPTION, entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_IRON_HIDE, createTieredItem(Material.IRON_CHESTPLATE, Skills.IRON_HIDE.toString(),
-                MessagesConf.Skills.IRON_HIDE_DESCRIPTION, entity.getAbilityPerk(Skills.IRON_HIDE),
-                Skills.IRON_HIDE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(Material.SPIDER_EYE, Skills.IMMUNE_SYSTEM.toString(),
-                MessagesConf.Skills.IMMUNE_SYSTEM_DESCRIPTION, entity.getAbilityPerk(Skills.IMMUNE_SYSTEM),
-                Skills.IMMUNE_SYSTEM.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_THICK_COAT, createTieredItem(Material.SNOWBALL, Skills.THICK_COAT.toString(),
-                MessagesConf.Skills.THICK_COAT_DESCRIPTION, entity.getAbilityPerk(Skills.THICK_COAT),
-                Skills.THICK_COAT.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_HEARTY_APPETITE, createTieredItem(Material.COOKED_MUTTON, Skills.HEARTY_APPETITE.toString(),
-                MessagesConf.Skills.HEARTY_APPETITE_DESCRIPTION, entity.getAbilityPerk(Skills.HEARTY_APPETITE),
-                Skills.HEARTY_APPETITE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_BEAST_OF_BURDEN, createTieredItem(Material.CHEST, Skills.BEAST_OF_BURDEN.toString(),
-                MessagesConf.Skills.BEAST_OF_BURDEN_DESCRIPTION, entity.getAbilityPerk(Skills.BEAST_OF_BURDEN),
-                Skills.BEAST_OF_BURDEN.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+    private void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_HOLD_ON, createSkillItem(
+                Skills.HOLD_ON.getIcon(),
+                Skills.HOLD_ON.toString(),
+                MessagesConf.Skills.HOLD_ON_DESCRIPTION,
+                entity.hasAbility(Skills.HOLD_ON),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(
+                Skills.ON_YOUR_PAWS.getIcon(),
+                Skills.ON_YOUR_PAWS.toString(),
+                MessagesConf.Skills.ON_YOUR_PAWS_DESCRIPTION,
+                entity.hasAbility(Skills.ON_YOUR_PAWS),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_IRON_HIDE, createTieredItem(
+                Skills.IRON_HIDE.getIcon(),
+                Skills.IRON_HIDE.toString(),
+                MessagesConf.Skills.IRON_HIDE_DESCRIPTION,
+                entity.getAbilityPerk(Skills.IRON_HIDE),
+                Skills.IRON_HIDE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_IMMUNE_SYSTEM, createTieredItem(
+                Skills.IMMUNE_SYSTEM.getIcon(),
+                Skills.IMMUNE_SYSTEM.toString(),
+                MessagesConf.Skills.IMMUNE_SYSTEM_DESCRIPTION,
+                entity.getAbilityPerk(Skills.IMMUNE_SYSTEM),
+                Skills.IMMUNE_SYSTEM.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_THICK_COAT, createTieredItem(
+                Skills.THICK_COAT.getIcon(),
+                Skills.THICK_COAT.toString(),
+                MessagesConf.Skills.THICK_COAT_DESCRIPTION,
+                entity.getAbilityPerk(Skills.THICK_COAT),
+                Skills.THICK_COAT.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_HEARTY_APPETITE, createTieredItem(
+                Skills.HEARTY_APPETITE.getIcon(),
+                Skills.HEARTY_APPETITE.toString(),
+                MessagesConf.Skills.HEARTY_APPETITE_DESCRIPTION,
+                entity.getAbilityPerk(Skills.HEARTY_APPETITE),
+                Skills.HEARTY_APPETITE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_BEAST_OF_BURDEN, createTieredItem(
+                Skills.BEAST_OF_BURDEN.getIcon(),
+                Skills.BEAST_OF_BURDEN.toString(),
+                MessagesConf.Skills.BEAST_OF_BURDEN_DESCRIPTION,
+                entity.getAbilityPerk(Skills.BEAST_OF_BURDEN),
+                Skills.BEAST_OF_BURDEN.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
-    private static void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(Material.FERN, Skills.HERB_KNOWLEDGE.toString(),
-                MessagesConf.Skills.HERB_KNOWLEDGE_DESCRIPTION, entity.hasAbility(Skills.HERB_KNOWLEDGE), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(Material.BREWING_STAND, Skills.BREW_REMEDY.toString(),
-                MessagesConf.Skills.BREW_REMEDY_DESCRIPTION, entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
-        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(Material.SHEARS, Skills.QUICK_GATHERER.toString(),
-                MessagesConf.Skills.QUICK_GATHERER_DESCRIPTION, entity.getAbilityPerk(Skills.QUICK_GATHERER),
-                Skills.QUICK_GATHERER.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(Material.WRITABLE_BOOK, Skills.BOTANICAL_LORE.toString(),
-                MessagesConf.Skills.BOTANICAL_LORE_DESCRIPTION, entity.getAbilityPerk(Skills.BOTANICAL_LORE),
-                Skills.BOTANICAL_LORE.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
-        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(Material.HONEYCOMB, Skills.CLEAN_PAWS.toString(),
-                MessagesConf.Skills.CLEAN_PAWS_DESCRIPTION, entity.getAbilityPerk(Skills.CLEAN_PAWS),
-                Skills.CLEAN_PAWS.getMaxTiers(), SkillBranches.UNLOCK_SKILL_TIER));
+    private void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
+        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(
+                Skills.HERB_KNOWLEDGE.getIcon(),
+                Skills.HERB_KNOWLEDGE.toString(),
+                MessagesConf.Skills.HERB_KNOWLEDGE_DESCRIPTION,
+                entity.hasAbility(Skills.HERB_KNOWLEDGE),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(
+                Skills.BREW_REMEDY.getIcon(),
+                Skills.BREW_REMEDY.toString(),
+                MessagesConf.Skills.BREW_REMEDY_DESCRIPTION,
+                entity.hasAbility(Skills.BREW_REMEDY),
+                SkillBranches.UNLOCK_SKILL
+        ));
+
+        menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(
+                Skills.QUICK_GATHERER.getIcon(),
+                Skills.QUICK_GATHERER.toString(),
+                MessagesConf.Skills.QUICK_GATHERER_DESCRIPTION,
+                entity.getAbilityPerk(Skills.QUICK_GATHERER),
+                Skills.QUICK_GATHERER.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_BOTANICAL_LORE, createTieredItem(
+                Skills.BOTANICAL_LORE.getIcon(),
+                Skills.BOTANICAL_LORE.toString(),
+                MessagesConf.Skills.BOTANICAL_LORE_DESCRIPTION,
+                entity.getAbilityPerk(Skills.BOTANICAL_LORE),
+                Skills.BOTANICAL_LORE.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
+
+        menu.setItem(INDEX_CLEAN_PAWS, createTieredItem(
+                Skills.CLEAN_PAWS.getIcon(),
+                Skills.CLEAN_PAWS.toString(),
+                MessagesConf.Skills.CLEAN_PAWS_DESCRIPTION,
+                entity.getAbilityPerk(Skills.CLEAN_PAWS),
+                Skills.CLEAN_PAWS.getMaxTiers(),
+                SkillBranches.UNLOCK_SKILL_TIER
+        ));
     }
 
-    private static void drawKittypetBranch(Inventory menu, PlayerEntity entity) {
+    private void drawKittypetBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_WELL_FED, createTieredItem(
-                Material.COOKED_SALMON,
+                Skills.WELL_FED.getIcon(),
                 Skills.WELL_FED.toString(),
                 MessagesConf.Skills.WELL_FED_DESCRIPTION,
                 entity.getAbilityPerk(Skills.WELL_FED),
@@ -292,7 +432,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_PAMPERED, createTieredItem(
-                Material.MILK_BUCKET,
+                Skills.PAMPERED.getIcon(),
                 Skills.PAMPERED.toString(),
                 MessagesConf.Skills.PAMPERED_DESCRIPTION,
                 entity.getAbilityPerk(Skills.PAMPERED),
@@ -301,7 +441,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_SHELTERED_MIND, createTieredItem(
-                Material.BOOK,
+                Skills.SHELTERED_MIND.getIcon(),
                 Skills.SHELTERED_MIND.toString(),
                 MessagesConf.Skills.SHELTERED_MIND_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SHELTERED_MIND),
@@ -310,9 +450,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawLonerBranch(Inventory menu, PlayerEntity entity) {
+    private void drawLonerBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_TRACKER, createTieredItem(
-                Material.COMPASS,
+                Skills.TRACKER.getIcon(),
                 Skills.TRACKER.toString(),
                 MessagesConf.Skills.TRACKER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.TRACKER),
@@ -321,7 +461,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_CRAFTY, createTieredItem(
-                Material.FERN,
+                Skills.CRAFTY.getIcon(),
                 Skills.CRAFTY.toString(),
                 MessagesConf.Skills.CRAFTY_DESCRIPTION,
                 entity.getAbilityPerk(Skills.CRAFTY),
@@ -330,7 +470,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_FLEXIBLE_MORALS, createTieredItem(
-                Material.EMERALD,
+                Skills.FLEXIBLE_MORALS.getIcon(),
                 Skills.FLEXIBLE_MORALS.toString(),
                 MessagesConf.Skills.FLEXIBLE_MORALS_DESCRIPTION,
                 entity.getAbilityPerk(Skills.FLEXIBLE_MORALS),
@@ -339,9 +479,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawRogueBranch(Inventory menu, PlayerEntity entity) {
+    private void drawRogueBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_AMBUSHER, createTieredItem(
-                Material.IRON_SWORD,
+                Skills.AMBUSHER.getIcon(),
                 Skills.AMBUSHER.toString(),
                 MessagesConf.Skills.AMBUSHER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.AMBUSHER),
@@ -350,7 +490,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_SCAVENGE, createTieredItem(
-                Material.ROTTEN_FLESH,
+                Skills.SCAVENGE.getIcon(),
                 Skills.SCAVENGE.toString(),
                 MessagesConf.Skills.SCAVENGE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SCAVENGE),
@@ -359,7 +499,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_HARD_KNOCK_LIFE, createTieredItem(
-                Material.LEATHER_CHESTPLATE,
+                Skills.HARD_KNOCK_LIFE.getIcon(),
                 Skills.HARD_KNOCK_LIFE.toString(),
                 MessagesConf.Skills.HARD_KNOCK_LIFE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.HARD_KNOCK_LIFE),
@@ -368,9 +508,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawCityCatBranch(Inventory menu, PlayerEntity entity) {
+    private void drawCityCatBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_URBAN_NAVIGATION, createTieredItem(
-                Material.STONE,
+                Skills.URBAN_NAVIGATION.getIcon(),
                 Skills.URBAN_NAVIGATION.toString(),
                 MessagesConf.Skills.URBAN_NAVIGATION_DESCRIPTION,
                 entity.getAbilityPerk(Skills.URBAN_NAVIGATION),
@@ -379,7 +519,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_RAT_CATCHER, createTieredItem(
-                Material.RABBIT,
+                Skills.RAT_CATCHER.getIcon(),
                 Skills.RAT_CATCHER.toString(),
                 MessagesConf.Skills.RAT_CATCHER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.RAT_CATCHER),
@@ -388,7 +528,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_DISEASE_RESISTANCE, createTieredItem(
-                Material.SPIDER_EYE,
+                Skills.DISEASE_RESISTANCE.getIcon(),
                 Skills.DISEASE_RESISTANCE.toString(),
                 MessagesConf.Skills.DISEASE_RESISTANCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.DISEASE_RESISTANCE),
@@ -397,9 +537,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawBreezeClanBranch(Inventory menu, PlayerEntity entity) {
+    private void drawBreezeClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_SPEED_OF_THE_MOOR, createTieredItem(
-                Material.SUGAR,
+                Skills.SPEED_OF_THE_MOOR.getIcon(),
                 Skills.SPEED_OF_THE_MOOR.toString(),
                 MessagesConf.Skills.SPEED_OF_THE_MOOR_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SPEED_OF_THE_MOOR),
@@ -408,7 +548,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_LIGHTSTEP, createTieredItem(
-                Material.FEATHER,
+                Skills.LIGHTSTEP.getIcon(),
                 Skills.LIGHTSTEP.toString(),
                 MessagesConf.Skills.LIGHTSTEP_DESCRIPTION,
                 entity.getAbilityPerk(Skills.LIGHTSTEP),
@@ -417,7 +557,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_SHARP_WIND, createTieredItem(
-                Material.PAPER,
+                Skills.SHARP_WIND.getIcon(),
                 Skills.SHARP_WIND.toString(),
                 MessagesConf.Skills.SHARP_WIND_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SHARP_WIND),
@@ -426,9 +566,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawEchoClanBranch(Inventory menu, PlayerEntity entity) {
+    private void drawEchoClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_THICK_PELT, createTieredItem(
-                Material.LEATHER,
+                Skills.THICK_PELT.getIcon(),
                 Skills.THICK_PELT.toString(),
                 MessagesConf.Skills.THICK_PELT_DESCRIPTION,
                 entity.getAbilityPerk(Skills.THICK_PELT),
@@ -437,7 +577,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_FOREST_COVER, createTieredItem(
-                Material.OAK_LEAVES,
+                Skills.FOREST_COVER.getIcon(),
                 Skills.FOREST_COVER.toString(),
                 MessagesConf.Skills.FOREST_COVER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.FOREST_COVER),
@@ -446,7 +586,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_STUNNING_BLOW, createTieredItem(
-                Material.STONE_AXE,
+                Skills.STUNNING_BLOW.getIcon(),
                 Skills.STUNNING_BLOW.toString(),
                 MessagesConf.Skills.STUNNING_BLOW_DESCRIPTION,
                 entity.getAbilityPerk(Skills.STUNNING_BLOW),
@@ -455,9 +595,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawCreekClanBranch(Inventory menu, PlayerEntity entity) {
+    private void drawCreekClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_STRONG_SWIMMER, createTieredItem(
-                Material.KELP,
+                Skills.STRONG_SWIMMER.getIcon(),
                 Skills.STRONG_SWIMMER.toString(),
                 MessagesConf.Skills.STRONG_SWIMMER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.STRONG_SWIMMER),
@@ -466,7 +606,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_AQUA_BALANCE, createTieredItem(
-                Material.FISHING_ROD,
+                Skills.AQUA_BALANCE.getIcon(),
                 Skills.AQUA_BALANCE.toString(),
                 MessagesConf.Skills.AQUA_BALANCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.AQUA_BALANCE),
@@ -475,7 +615,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_WATERS_RESILIENCE, createTieredItem(
-                Material.TURTLE_HELMET,
+                Skills.WATERS_RESILIENCE.getIcon(),
                 Skills.WATERS_RESILIENCE.toString(),
                 MessagesConf.Skills.WATERS_RESILIENCE_DESCRIPTION,
                 entity.getAbilityPerk(Skills.WATERS_RESILIENCE),
@@ -484,9 +624,9 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static void drawShadeClanBranch(Inventory menu, PlayerEntity entity) {
+    private void drawShadeClanBranch(Inventory menu, PlayerEntity entity) {
         menu.setItem(INDEX_NIGHTSTALKER, createTieredItem(
-                Material.ENDER_PEARL,
+                Skills.NIGHTSTALKER.getIcon(),
                 Skills.NIGHTSTALKER.toString(),
                 MessagesConf.Skills.NIGHTSTALKER_DESCRIPTION,
                 entity.getAbilityPerk(Skills.NIGHTSTALKER),
@@ -495,7 +635,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_TOXIC_CLAWS, createTieredItem(
-                Material.POISONOUS_POTATO,
+                Skills.TOXIC_CLAWS.getIcon(),
                 Skills.TOXIC_CLAWS.toString(),
                 MessagesConf.Skills.TOXIC_CLAWS_DESCRIPTION,
                 entity.getAbilityPerk(Skills.TOXIC_CLAWS),
@@ -504,7 +644,7 @@ public class MenuSkillTreePath {
         ));
 
         menu.setItem(INDEX_SILENT_KILL, createTieredItem(
-                Material.IRON_SWORD,
+                Skills.SILENT_KILL.getIcon(),
                 Skills.SILENT_KILL.toString(),
                 MessagesConf.Skills.SILENT_KILL_DESCRIPTION,
                 entity.getAbilityPerk(Skills.SILENT_KILL),
@@ -513,7 +653,7 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
+    private ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
@@ -526,10 +666,12 @@ public class MenuSkillTreePath {
         ));
         item.setItemMeta(meta);
 
+        activeSkills.add(item);
+
         return item;
     }
 
-    private static ItemStack createTieredItem(Material material, String name, String desc, double currentXp, int maxTier, double xpPerTier) {
+    private ItemStack createTieredItem(Material material, String name, String desc, double currentXp, int maxTier, double xpPerTier) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         int currentTier = (int) Math.round(currentXp / xpPerTier);

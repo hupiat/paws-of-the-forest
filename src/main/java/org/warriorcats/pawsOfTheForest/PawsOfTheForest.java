@@ -18,9 +18,10 @@ import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
 import org.warriorcats.pawsOfTheForest.core.settings.EventsSettings;
 import org.warriorcats.pawsOfTheForest.preys.EventsPreys;
 import org.warriorcats.pawsOfTheForest.shops.EventsShop;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkillsActives;
 import org.warriorcats.pawsOfTheForest.skills.commands.CommandOpenBackpack;
 import org.warriorcats.pawsOfTheForest.skills.commands.CommandOpenSkills;
-import org.warriorcats.pawsOfTheForest.skills.EventsSkills;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkillsPassives;
 import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
@@ -74,8 +75,9 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerEvent(new EventsSettings());
         registerEvent(new EventsShop());
         registerEvent(new EventsPreys());
-        registerEvent(new EventsSkills());
+        registerEvent(new EventsSkillsPassives());
         registerEvent(new EventsSkillsMenu());
+        registerEvent(new EventsSkillsActives());
 
         // Zipping resources pack to be sent to all players, and serving in local
         prepareHttpServerForResourcesPack();
