@@ -40,7 +40,7 @@ import static org.bukkit.potion.PotionEffectType.*;
 public class EventsCore implements Listener {
 
     public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
-    public static final int JUMPING_PLAYERS_SCAN_DELAY_TICKS = 15;
+    public static final int JUMPING_PLAYERS_SCAN_DELAY_TICKS = 8;
 
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -104,12 +104,6 @@ public class EventsCore implements Listener {
         });
     }
 
-    // Handling HUD progress bar updates
-    @EventHandler
-    public void on(PlayerPickupExperienceEvent event) {
-        HUD.updateInterface(event.getPlayer());
-    }
-
     // Handling custom events
 
     @EventHandler
@@ -117,7 +111,7 @@ public class EventsCore implements Listener {
         Player player = event.getPlayer();
 
         if (!PLAYERS_JUMPING.contains(player)) {
-            if (!player.isOnGround() && event.getFrom().getY() < event.getTo().getY()) {
+            if (!player.isOnGround() && player.getVelocity().getY() > 0) {
                 Bukkit.getPluginManager().callEvent(new PlayerJumpEvent(player));
                 PLAYERS_JUMPING.add(player);
                 new BukkitRunnable() {
