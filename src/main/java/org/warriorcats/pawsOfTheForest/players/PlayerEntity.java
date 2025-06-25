@@ -43,7 +43,7 @@ public class PlayerEntity {
     @JoinColumn(name = "settings_uuid", nullable = false)
     private SettingsEntity settings;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SkillBranchEntity> skillBranches = new ArrayList<>();
 
     @Lob
