@@ -7,6 +7,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
@@ -29,6 +30,9 @@ public abstract class HibernateUtils {
             var transaction = session.beginTransaction();
             T obj = callback.apply(transaction, session);
             session.persist(obj);
+            if (obj instanceof PlayerEntity player) {
+                EventsCore.PLAYER_CACHE.put(player.getUuid(), player);
+            }
             transaction.commit();
         });
     }
