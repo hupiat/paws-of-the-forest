@@ -1,6 +1,5 @@
 package org.warriorcats.pawsOfTheForest.core.events;
 
-import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -31,7 +30,9 @@ import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
 import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -45,6 +46,7 @@ public class EventsCore implements Listener {
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_LEAVING = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    public static final Map<UUID, PlayerEntity> PLAYER_CACHE = new ConcurrentHashMap<>();
 
     public static final Set<PotionEffectType> FEAR_EFFECTS = Set.of(
             BLINDNESS,
@@ -79,6 +81,7 @@ public class EventsCore implements Listener {
                     SkillsUtils.updateHardKnockLifeArmor(event.getPlayer());
                 }
             }
+            PLAYER_CACHE.put(event.getPlayer().getUniqueId(), existing);
         });
 
         // Toggling HUD
@@ -156,6 +159,7 @@ public class EventsCore implements Listener {
 
     @EventHandler
     public void on(PlayerQuitEvent event) {
+        PLAYER_CACHE.remove(event.getPlayer().getUniqueId());
         PLAYERS_LEAVING.add(event.getPlayer());
 
         new BukkitRunnable() {

@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
@@ -189,23 +190,21 @@ public class MenuSkillTreePath {
         activeSkills.clear();
         Inventory menu = Bukkit.createInventory(null, 45, title);
 
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
 
-            switch (branch) {
-                case HUNTING -> drawHuntingBranch(menu, entity);
-                case NAVIGATION -> drawNavigationBranch(menu, entity);
-                case RESILIENCE -> drawResilienceBranch(menu, entity);
-                case HERBALIST -> drawHerbalistBranch(menu, entity);
-                case KITTYPET -> drawKittypetBranch(menu, entity);
-                case LONER -> drawLonerBranch(menu, entity);
-                case ROGUE -> drawRogueBranch(menu, entity);
-                case CITY_CAT -> drawCityCatBranch(menu, entity);
-                case BREEZE_CLAN -> drawBreezeClanBranch(menu, entity);
-                case ECHO_CLAN -> drawEchoClanBranch(menu, entity);
-                case CREEK_CLAN -> drawCreekClanBranch(menu, entity);
-                case SHADE_CLAN -> drawShadeClanBranch(menu, entity);
-            }
+        switch (branch) {
+            case HUNTING -> drawHuntingBranch(menu, entity);
+            case NAVIGATION -> drawNavigationBranch(menu, entity);
+            case RESILIENCE -> drawResilienceBranch(menu, entity);
+            case HERBALIST -> drawHerbalistBranch(menu, entity);
+            case KITTYPET -> drawKittypetBranch(menu, entity);
+            case LONER -> drawLonerBranch(menu, entity);
+            case ROGUE -> drawRogueBranch(menu, entity);
+            case CITY_CAT -> drawCityCatBranch(menu, entity);
+            case BREEZE_CLAN -> drawBreezeClanBranch(menu, entity);
+            case ECHO_CLAN -> drawEchoClanBranch(menu, entity);
+            case CREEK_CLAN -> drawCreekClanBranch(menu, entity);
+            case SHADE_CLAN -> drawShadeClanBranch(menu, entity);
         }
 
         menu.setItem(MenuSkillTree.INDEX_BACK, createSimpleItem(Material.BARRIER, "§cBack", List.of("§7Return to Skill Tree Menu")));

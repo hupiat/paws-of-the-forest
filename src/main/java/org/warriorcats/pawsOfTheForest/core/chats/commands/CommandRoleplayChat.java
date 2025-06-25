@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -23,11 +24,9 @@ public class CommandRoleplayChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-                if (!playerEntity.getSettings().isShowRoleplay()) {
-                    continue;
-                }
+            PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+            if (!playerEntity.getSettings().isShowRoleplay()) {
+                continue;
             }
 
             player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_ROLEPLAY_CHANNEL + "[RP]",

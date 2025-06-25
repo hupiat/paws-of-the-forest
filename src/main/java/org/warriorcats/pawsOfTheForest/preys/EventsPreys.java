@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkillsPassives;
@@ -57,29 +58,27 @@ public class EventsPreys implements LoadingListener {
                     return !prey.isAquatic();
                 };
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    HibernateUtils.withSession(session -> {
-                        PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-                        List<Prey> preys = new ArrayList<>();
-                        double higherSpawnChance = !playerEntity.hasAbility(Skills.BLOOD_HUNTER) ?
-                                HIGHER_SPAWN_CHANCE :
-                                HIGHER_SPAWN_CHANCE * (1 + playerEntity.getAbilityTier(Skills.BLOOD_HUNTER) * EventsSkillsPassives.BLOOD_HUNTER_TIER_PERCENTAGE);
-                        if (Math.random() < higherSpawnChance) {
-                            preys = Prey.getAllHighers();
-                        } else if (Math.random() < COMMON_SPAWN_CHANCE) {
-                            preys = Prey.getAllCommons();
-                        }
-                        if (!preys.isEmpty()) {
-                            Prey toSpawn = preys.get(new Random().nextInt(preys.size()));
-                            Location locationToSpawn = getLocation.apply(player);
-                            if (isSuitable.apply(locationToSpawn, toSpawn)) {
-                                try {
-                                    MobsUtils.spawn(locationToSpawn, toSpawn.entityType().toLowerCase(), Math.random());
-                                } catch (IllegalArgumentException ignored) {
-                                    // We let vanilla spawn working as well so no fallback here
-                                }
+                    PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+                    List<Prey> preys = new ArrayList<>();
+                    double higherSpawnChance = !playerEntity.hasAbility(Skills.BLOOD_HUNTER) ?
+                            HIGHER_SPAWN_CHANCE :
+                            HIGHER_SPAWN_CHANCE * (1 + playerEntity.getAbilityTier(Skills.BLOOD_HUNTER) * EventsSkillsPassives.BLOOD_HUNTER_TIER_PERCENTAGE);
+                    if (Math.random() < higherSpawnChance) {
+                        preys = Prey.getAllHighers();
+                    } else if (Math.random() < COMMON_SPAWN_CHANCE) {
+                        preys = Prey.getAllCommons();
+                    }
+                    if (!preys.isEmpty()) {
+                        Prey toSpawn = preys.get(new Random().nextInt(preys.size()));
+                        Location locationToSpawn = getLocation.apply(player);
+                        if (isSuitable.apply(locationToSpawn, toSpawn)) {
+                            try {
+                                MobsUtils.spawn(locationToSpawn, toSpawn.entityType().toLowerCase(), Math.random());
+                            } catch (IllegalArgumentException ignored) {
+                                // We let vanilla spawn working as well so no fallback here
                             }
                         }
-                    });
+                    }
                 }
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 20 * DEFAULT_SPAWN_SCAN_DELAY_S);

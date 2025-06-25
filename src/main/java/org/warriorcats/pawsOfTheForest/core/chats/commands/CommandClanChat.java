@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -23,23 +24,21 @@ public class CommandClanChat extends AbstractCommand {
             return true;
         }
 
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
+        PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
 
-            if (senderEntity.getClan() == null) {
-                sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
-                return true;
-            }
+        if (senderEntity.getClan() == null) {
+            sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
+            return true;
+        }
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-                if (senderEntity.getClan() != entity.getClan()) {
-                    continue;
-                }
-                player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] ",
-                        MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
-                        MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)), (Player) sender));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+            if (senderEntity.getClan() != entity.getClan()) {
+                continue;
             }
+            player.sendMessage(formatWithClanPrefixIfPresent(MessagesConf.Chats.COLOR_CLAN_CHANNEL + "[Clan] ",
+                    MessagesConf.Chats.COLOR_PLAYER_NAME_DEFAULT + sender.getName() + ": " +
+                    MessagesConf.Chats.COLOR_MESSAGE + String.join(" ", java.util.Arrays.copyOfRange(args, 0, args.length)), (Player) sender));
         }
 
         return true;

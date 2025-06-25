@@ -25,7 +25,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.*;
@@ -126,27 +125,25 @@ public class EventsSkillsPassives implements LoadingListener {
 
                 event.setCancelled(true);
 
-                try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                    PlayerEntity pe = session.get(PlayerEntity.class, walker.getUniqueId());
-                    int tier = pe.getAbilityTier(Skills.SILENT_PAW);
-                    double factor = (tier == 0)
-                            ? 1
-                            : Math.pow(1.0 - SILENT_PAW_TIER_PERCENTAGE, Math.min(tier, 3));
-                    float reducedVol = (float) factor;
+                PlayerEntity pe = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+                int tier = pe.getAbilityTier(Skills.SILENT_PAW);
+                double factor = (tier == 0)
+                        ? 1
+                        : Math.pow(1.0 - SILENT_PAW_TIER_PERCENTAGE, Math.min(tier, 3));
+                float reducedVol = (float) factor;
 
-                    Location loc = walker.getLocation();
-                    double baseRadius = 16.0;
-                    for (Player listener : world.getPlayers()) {
-                        double effectiveRadius = baseRadius * reducedVol;
-                        if (listener.getLocation().distanceSquared(loc) <= effectiveRadius * effectiveRadius) {
-                            soundPacketsIgnored.add(listener.getUniqueId());
-                            listener.playSound(
-                                    loc,
-                                    loc.getBlock().getBlockData().getSoundGroup().getStepSound(),
-                                    reducedVol,
-                                    1.0f
-                            );
-                        }
+                Location loc = walker.getLocation();
+                double baseRadius = 16.0;
+                for (Player listener : world.getPlayers()) {
+                    double effectiveRadius = baseRadius * reducedVol;
+                    if (listener.getLocation().distanceSquared(loc) <= effectiveRadius * effectiveRadius) {
+                        soundPacketsIgnored.add(listener.getUniqueId());
+                        listener.playSound(
+                                loc,
+                                loc.getBlock().getBlockData().getSoundGroup().getStepSound(),
+                                reducedVol,
+                                1.0f
+                        );
                     }
                 }
             }
@@ -160,18 +157,16 @@ public class EventsSkillsPassives implements LoadingListener {
                 footsteps.values().forEach(list -> list.removeIf(fs -> now - fs.timestamp() >= 5000));
 
                 for (Player tracker : Bukkit.getOnlinePlayers()) {
-                    HibernateUtils.withSession(session -> {
-                        PlayerEntity entity = session.get(PlayerEntity.class, tracker.getUniqueId());
-                        if (!entity.hasAbility(Skills.TRACKER)) {
-                            return;
+                    PlayerEntity entity = EventsCore.PLAYER_CACHE.get(tracker.getUniqueId());
+                    if (!entity.hasAbility(Skills.TRACKER)) {
+                        return;
+                    }
+                    for (Footstep fs : footsteps.values().stream().flatMap(List::stream).toList()) {
+                        if (fs.location().getWorld().equals(tracker.getWorld())
+                                && fs.location().distanceSquared(tracker.getLocation()) < 25) {
+                            tracker.playEffect(fs.location(), Effect.SHOOT_WHITE_SMOKE, 0);
                         }
-                        for (Footstep fs : footsteps.values().stream().flatMap(List::stream).toList()) {
-                            if (fs.location().getWorld().equals(tracker.getWorld())
-                                    && fs.location().distanceSquared(tracker.getLocation()) < 25) {
-                                tracker.playEffect(fs.location(), Effect.SHOOT_WHITE_SMOKE, 0);
-                            }
-                        }
-                    });
+                    }
                 }
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0, 10);
@@ -224,19 +219,17 @@ public class EventsSkillsPassives implements LoadingListener {
             return;
         }
 
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity entity = session.get(PlayerEntity.class, killer.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(killer.getUniqueId());
 
-            if (!entity.hasAbility(Skills.EFFICIENT_KILL)) {
-                event.setDroppedExp((int) prey.get().xp());
-                return;
-            }
-
-            int tier = entity.getAbilityTier(Skills.EFFICIENT_KILL);
-            double factor = tier * EFFICIENT_KILL_TIER_PERCENTAGE;
-            event.setDroppedExp((int) prey.get().xp() + (int) Math.round(prey.get().xp() * factor));
-            event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
+        if (!entity.hasAbility(Skills.EFFICIENT_KILL)) {
+            event.setDroppedExp((int) prey.get().xp());
+            return;
         }
+
+        int tier = entity.getAbilityTier(Skills.EFFICIENT_KILL);
+        double factor = tier * EFFICIENT_KILL_TIER_PERCENTAGE;
+        event.setDroppedExp((int) prey.get().xp() + (int) Math.round(prey.get().xp() * factor));
+        event.getDrops().add(MobsUtils.getRandomDropFood(1, (int) Math.round((event.getDrops().size() + tier) * factor)));
     }
 
     @EventHandler
@@ -252,43 +245,26 @@ public class EventsSkillsPassives implements LoadingListener {
             return;
         }
 
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+
         // ENDURANCE_TRAVELER
-        HibernateUtils.withSession(session -> {
-            if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
-                return;
-            }
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.ENDURANCE_TRAVELER)) {
-                return;
-            }
-
+        if (!EventsCore.PLAYERS_FIGHTING.contains(player) && entity.hasAbility(Skills.ENDURANCE_TRAVELER)) {
             int tier = entity.getAbilityTier(Skills.ENDURANCE_TRAVELER);
-
             double factor = tier * ENDURANCE_TRAVELER_TIER_PERCENTAGE;
-
             int diff = currentLevel - newLevel;
             double reducedDiff = diff * (1.0 - factor);
-
             event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
-        });
+        }
+
 
         // WATERS_RESILIENCE
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.WATERS_RESILIENCE)) {
-                return;
-            }
-            if (BiomesUtils.isWater(player.getLocation().getBlock().getBiome())) {
-                int tier = entity.getAbilityTier(Skills.WATERS_RESILIENCE);
-
-                double factor = tier * WATERS_RESILIENCE_TIER_PERCENTAGE;
-
-                int diff = currentLevel - newLevel;
-                double reducedDiff = diff * (1.0 - factor);
-
-                event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
-            }
-        });
+        if (entity.hasAbility(Skills.WATERS_RESILIENCE) && BiomesUtils.isWater(player.getLocation().getBlock().getBiome())) {
+            int tier = entity.getAbilityTier(Skills.WATERS_RESILIENCE);
+            double factor = tier * WATERS_RESILIENCE_TIER_PERCENTAGE;
+            int diff = currentLevel - newLevel;
+            double reducedDiff = diff * (1.0 - factor);
+            event.setFoodLevel(currentLevel - (int) Math.ceil(reducedDiff));
+        }
     }
 
     // CLIMBERS_GRACE
@@ -296,30 +272,22 @@ public class EventsSkillsPassives implements LoadingListener {
     @EventHandler
     public void on(PlayerJumpEvent event) {
         Player player = event.getPlayer();
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.CLIMBERS_GRACE)) {
-                return;
-            }
-
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        if (entity.hasAbility(Skills.CLIMBERS_GRACE)) {
             int tier = entity.getAbilityTier(Skills.CLIMBERS_GRACE);
             double factor = tier * CLIMBERS_GRACE_TIER_PERCENTAGE;
-
             player.setVelocity(player.getVelocity().add(new Vector(0d, factor, 0d)));
-        });
+        }
     }
 
 
     @EventHandler
     public void on(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
 
         // THICK COAT
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.THICK_COAT)) {
-                return;
-            }
+        if (entity.hasAbility(Skills.THICK_COAT)) {
             Biome biome = player.getWorld().getBiome(player.getLocation());
             if (BiomesUtils.isHot(biome) && BiomesUtils.isDamageFromFire(event.getDamageSource().getDamageType())) {
                 event.setDamage(event.getDamage() + 1);
@@ -329,68 +297,45 @@ public class EventsSkillsPassives implements LoadingListener {
                 double factor = THICK_COAT_TIER_PERCENTAGE * tier;
                 event.setDamage(event.getDamage() * (1 - factor));
             }
-        });
+        }
 
         // LIGHTSTEP
-        HibernateUtils.withSession(session -> {
-            if (event.getDamageSource().getDamageType() != DamageType.FALL) {
-                return;
-            }
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.LIGHTSTEP)) {
-                return;
-            }
+        if (event.getDamageSource().getDamageType() == DamageType.FALL && entity.hasAbility(Skills.LIGHTSTEP)) {
             int tier = entity.getAbilityTier(Skills.LIGHTSTEP);
             double factor = tier * LIGHTSTEP_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 - factor));
-        });
+        }
 
         // THICK_PELT
-        HibernateUtils.withSession(session -> {
-            if (event.getDamageSource().getDamageType() != DamageType.PLAYER_ATTACK &&
-                    event.getDamageSource().getDamageType() != DamageType.MOB_ATTACK) {
-                return;
-            }
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.THICK_PELT)) {
-                return;
-            }
+        if ((event.getDamageSource().getDamageType() == DamageType.PLAYER_ATTACK ||
+                event.getDamageSource().getDamageType() == DamageType.MOB_ATTACK) &&
+                entity.hasAbility(Skills.THICK_PELT)) {
             int tier = entity.getAbilityTier(Skills.THICK_PELT);
             double factor = tier * THICK_PELT_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 - factor));
-        });
+        }
     }
 
     @EventHandler
     public void on(PlayerFreezeEvent event) {
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
-            if (!entity.hasAbility(Skills.THICK_COAT)) {
-                return;
-            }
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        if (entity.hasAbility(Skills.THICK_COAT)) {
             event.getPlayer().setFreezeTicks(0);
-        });
+        }
     }
 
     // HEARTY_APPETITE
 
     @EventHandler
     public void on(PlayerItemConsumeEvent event) {
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
-            if (!entity.hasAbility(Skills.HEARTY_APPETITE)) {
-                return;
-            }
-
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        if (entity.hasAbility(Skills.HEARTY_APPETITE)) {
             int tier = entity.getAbilityTier(Skills.HEARTY_APPETITE);
             double factor = tier * HEARTY_APPETITE_TIER_PERCENTAGE;
-
             float currentSaturation = event.getPlayer().getSaturation();
-
             float bonus = (float) (event.getPlayer().getFoodLevel() * factor);
-
             event.getPlayer().setSaturation(currentSaturation + bonus);
-        });
+        }
     }
 
     // WELL-FED
@@ -403,28 +348,23 @@ public class EventsSkillsPassives implements LoadingListener {
 
         if (player.getFoodLevel() < 20) return;
 
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!entity.hasAbility(Skills.WELL_FED)) return;
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
 
+        if (entity.hasAbility(Skills.WELL_FED)) {
             int tier = entity.getAbilityTier(Skills.WELL_FED);
             double factor = WELL_FED_TIER_PERCENTAGE * tier;
-
             event.setAmount(event.getAmount() * (1 + factor));
-        });
+        }
     }
 
     // SHELTERED_MIND
 
     @EventHandler
     public void on(PlayerFearEvent event) {
-        HibernateUtils.withSession(session -> {
-            PlayerEntity entity = session.get(PlayerEntity.class, event.getPlayer().getUniqueId());
-            if (!entity.hasAbility(Skills.SHELTERED_MIND)) {
-                return;
-            }
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        if (entity.hasAbility(Skills.SHELTERED_MIND)) {
             EventsCore.FEAR_EFFECTS.forEach(event.getPlayer()::removePotionEffect);
-        });
+        }
     }
 
 
@@ -433,12 +373,10 @@ public class EventsSkillsPassives implements LoadingListener {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
 
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+
         // FLEXIBLE_MORALS
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.FLEXIBLE_MORALS)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.FLEXIBLE_MORALS)) {
             int tier = playerEntity.getAbilityTier(Skills.FLEXIBLE_MORALS);
             if (entity instanceof Villager villager) {
                 player.openMerchant(villager, true);
@@ -448,19 +386,15 @@ public class EventsSkillsPassives implements LoadingListener {
                     player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_STOLE_FROM_NPC);
                 }
             }
-        });
+        }
 
         // RAT_CATCHER
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.RAT_CATCHER)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.RAT_CATCHER)) {
             entity.remove();
             player.getInventory().addItem(MobsUtils.getRandomLootFromRat());
             player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_CAUGHT_RAT);
             event.setCancelled(true);
-        });
+        }
     }
 
 
@@ -469,43 +403,25 @@ public class EventsSkillsPassives implements LoadingListener {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+
         // AMBUSHER
-        HibernateUtils.withSession(session -> {
-            if (!MobsUtils.isStealthFrom(player, entity)) {
-                return;
-            }
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.AMBUSHER)) {
-                return;
-            }
+        if (MobsUtils.isStealthFrom(player, entity) && playerEntity.hasAbility(Skills.AMBUSHER)) {
             int tier = playerEntity.getAbilityTier(Skills.AMBUSHER);
             double factor = tier * AMBUSHER_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 + factor));
-        });
+        }
 
         // SILENT_KILL
-        HibernateUtils.withSession(session -> {
-            if (!MobsUtils.isStealthFrom(player, entity)) {
-                return;
-            }
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.SILENT_KILL)) {
-                return;
-            }
+        if (MobsUtils.isStealthFrom(player, entity) && playerEntity.hasAbility(Skills.SILENT_KILL)) {
             int tier = playerEntity.getAbilityTier(Skills.SILENT_KILL);
             double factor = tier * SILENT_KILL_TIER_PERCENTAGE;
             event.setDamage(event.getDamage() * (1 + factor));
-        });
+        }
 
         // TOXIC_CLAWS
-        HibernateUtils.withSession(session -> {
-            if (!BiomesUtils.isDark(player.getLocation()) || !MobsUtils.canBePoisoned(entity)) {
-                return;
-            }
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.TOXIC_CLAWS)) {
-                return;
-            }
+        if (BiomesUtils.isDark(player.getLocation()) && MobsUtils.canBePoisoned(entity) &&
+                playerEntity.hasAbility(Skills.TOXIC_CLAWS)) {
             int tier = playerEntity.getAbilityTier(Skills.TOXIC_CLAWS);
             entity.addPotionEffect(new PotionEffect(
                     PotionEffectType.POISON,
@@ -520,18 +436,10 @@ public class EventsSkillsPassives implements LoadingListener {
             if (entity instanceof Player damaged) {
                 damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_POISONED);
             }
-        });
-
+        }
 
         // SHARP_WIND
-        HibernateUtils.withSession(session -> {
-            if (!BiomesUtils.isOpenSpace(player.getLocation())) {
-                return;
-            }
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.SHARP_WIND)) {
-                return;
-            }
+        if (BiomesUtils.isOpenSpace(player.getLocation()) && playerEntity.hasAbility(Skills.SHARP_WIND)) {
             int tier = playerEntity.getAbilityTier(Skills.SHARP_WIND);
             double factor = tier * SHARP_WIND_TIER_PERCENTAGE;
             if (Math.random() < factor) {
@@ -541,15 +449,10 @@ public class EventsSkillsPassives implements LoadingListener {
                     damaged.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_BLEEDING);
                 }
             }
-        });
+        }
 
         // STUNNING_BLOW
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.STUNNING_BLOW)) {
-                return;
-            }
-
+        if (playerEntity.hasAbility(Skills.STUNNING_BLOW)) {
             int tier = playerEntity.getAbilityTier(Skills.STUNNING_BLOW);
             double factor = tier * STUNNING_BLOW_TIER_PERCENTAGE;
 
@@ -570,7 +473,7 @@ public class EventsSkillsPassives implements LoadingListener {
                     }
                 }
             }
-        });
+        }
     }
 
     // SCAVENGE
@@ -584,21 +487,15 @@ public class EventsSkillsPassives implements LoadingListener {
 
         Block block = event.getClickedBlock();
 
-        if (!ItemsUtils.isTrashBlock(block.getType())) {
-            return;
-        }
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
 
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.SCAVENGE)) {
-                return;
-            }
+        if (ItemsUtils.isTrashBlock(block.getType()) && playerEntity.hasAbility(Skills.SCAVENGE)) {
             player.getInventory().addItem(ItemsUtils.getRandomLootFromTrash());
             player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_FOUND_TRASH_LOOT);
             block.setType(Material.DIRT);
             player.playSound(block.getLocation(), Sound.BLOCK_COMPOSTER_EMPTY, 1.0f, 1.0f);
             event.setCancelled(true);
-        });
+        }
     }
 
     @EventHandler
@@ -607,12 +504,10 @@ public class EventsSkillsPassives implements LoadingListener {
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
                 .add(new Footstep(player.getLocation(), System.currentTimeMillis()));
 
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+
         // NIGHTSTALKER
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.NIGHTSTALKER)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.NIGHTSTALKER)) {
             int tier = playerEntity.getAbilityTier(Skills.NIGHTSTALKER);
             if (BiomesUtils.isNight(player.getWorld())) {
                 player.addPotionEffect(new PotionEffect(
@@ -626,14 +521,10 @@ public class EventsSkillsPassives implements LoadingListener {
             } else {
                 player.removePotionEffect(PotionEffectType.NIGHT_VISION);
             }
-        });
+        }
 
         // FOREST_COVER
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.FOREST_COVER)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.FOREST_COVER)) {
             int tier = playerEntity.getAbilityTier(Skills.FOREST_COVER);
             if (BiomesUtils.isForest(player.getLocation().getBlock().getBiome())) {
                 player.addPotionEffect(new PotionEffect(
@@ -647,28 +538,20 @@ public class EventsSkillsPassives implements LoadingListener {
             } else {
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
             }
-        });
+        }
 
         // URBAN_NAVIGATION
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.URBAN_NAVIGATION)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.URBAN_NAVIGATION)) {
             Material blockBelow = player.getLocation().subtract(0, 1, 0).getBlock().getType();
             defaultSpeeds.putIfAbsent(player.getUniqueId(), player.getWalkSpeed());
             int tier = playerEntity.getAbilityTier(Skills.URBAN_NAVIGATION);
             double factor = tier * URBAN_NAVIGATION_TIER_PERCENTAGE;
             PlayersUtils.increaseMovementSpeed(player,
                     () -> ItemsUtils.isUrbanBlock(blockBelow), factor, defaultSpeeds.get(player.getUniqueId()));
-        });
+        }
 
         // SPEED OF THE MOOR
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.SPEED_OF_THE_MOOR)) {
-                return;
-            }
+        if (playerEntity.hasAbility(Skills.SPEED_OF_THE_MOOR)) {
             defaultSpeeds.putIfAbsent(player.getUniqueId(), player.getWalkSpeed());
             int tier = playerEntity.getAbilityTier(Skills.SPEED_OF_THE_MOOR);
             double factor = tier * SPEED_OF_THE_MOOR_TIER_PERCENTAGE;
@@ -676,17 +559,11 @@ public class EventsSkillsPassives implements LoadingListener {
                     () -> BiomesUtils.isPlain(player.getLocation().getBlock().getBiome()),
                     factor,
                     defaultSpeeds.get(player.getUniqueId()));
-        });
+        }
 
         // STRONG_SWIMMER
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.STRONG_SWIMMER)) {
-                return;
-            }
-
+        if (playerEntity.hasAbility(Skills.STRONG_SWIMMER)) {
             int tier = playerEntity.getAbilityTier(Skills.STRONG_SWIMMER);
-
             if (player.isInWater() || player.isSwimming()) {
                 player.addPotionEffect(new PotionEffect(
                         PotionEffectType.DOLPHINS_GRACE,
@@ -699,18 +576,12 @@ public class EventsSkillsPassives implements LoadingListener {
             } else {
                 player.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
             }
-        });
+        }
 
         // RAT_CATCHER tracking
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            if (!playerEntity.hasAbility(Skills.RAT_CATCHER)) {
-                return;
-            }
-
+        if (playerEntity.hasAbility(Skills.RAT_CATCHER)) {
             int tier = playerEntity.getAbilityTier(Skills.RAT_CATCHER);
             double radius = tier * RAT_CATCHER_TIER_RANGE;
-
             player.getWorld().getNearbyLivingEntities(player.getLocation(), radius, radius, radius)
                     .stream()
                     .filter(entity -> {
@@ -726,7 +597,7 @@ public class EventsSkillsPassives implements LoadingListener {
                                 0
                         );
                     });
-        });
+        }
     }
 
     // AQUA_BALANCE
@@ -734,21 +605,19 @@ public class EventsSkillsPassives implements LoadingListener {
     public void on(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
-        HibernateUtils.withSession(session -> {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-            event.setCancelled(true);
-            if (event.getCaught() != null) {
-                event.getCaught().remove();
-            }
-            if (!playerEntity.hasAbility(Skills.AQUA_BALANCE)) {
-                return;
-            }
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+
+        event.setCancelled(true);
+        if (event.getCaught() != null) {
+            event.getCaught().remove();
+        }
+        if (playerEntity.hasAbility(Skills.AQUA_BALANCE)) {
             int tier = playerEntity.getAbilityTier(Skills.AQUA_BALANCE);
             if (Math.random() < tier * AQUA_BALANCE_TIER_PERCENTAGE) {
                 player.getInventory().addItem(ItemsUtils.getRandomLootFromFish());
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.4f);
                 player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_AQUA_BALANCE);
             }
-        });
+        }
     }
 }

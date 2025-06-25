@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
@@ -131,10 +132,8 @@ public abstract class MenuSkillTree {
     }
 
     public static double getSkillPoints(Player player) {
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            return entity.getXpPerks();
-        }
+        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        return entity.getXpPerks();
     }
 
     public static ItemStack createSkillPointsItemStack(Player player) {

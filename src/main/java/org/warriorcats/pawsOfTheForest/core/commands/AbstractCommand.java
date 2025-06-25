@@ -7,6 +7,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -27,12 +28,10 @@ public abstract class AbstractCommand implements CommandExecutor, TabCompleter {
     }
 
     protected String formatWithClanPrefixIfPresent(String prefix, String message, Player sender) {
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity playerEntity = session.get(PlayerEntity.class, sender.getUniqueId());
-            if (playerEntity.getClan() != null) {
-                return playerEntity.getClan().getColorCode() + "[" + playerEntity.getClan().toString() + "]" + " " + prefix + " " + message;
-            }
-            return prefix + " " + message;
+        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(sender.getUniqueId());
+        if (playerEntity.getClan() != null) {
+            return playerEntity.getClan().getColorCode() + "[" + playerEntity.getClan().toString() + "]" + " " + prefix + " " + message;
         }
+        return prefix + " " + message;
     }
 }

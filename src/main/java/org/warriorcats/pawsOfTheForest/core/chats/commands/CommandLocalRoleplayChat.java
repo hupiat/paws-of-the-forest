@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -26,11 +27,9 @@ public class CommandLocalRoleplayChat extends AbstractCommand {
 
         Location senderLocation = ((Player) sender).getLocation();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity playerEntity = session.get(PlayerEntity.class, player.getUniqueId());
-                if (!playerEntity.getSettings().isShowRoleplay()) {
-                    continue;
-                }
+            PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+            if (!playerEntity.getSettings().isShowRoleplay()) {
+                continue;
             }
 
             boolean x = Math.abs(player.getLocation().getX() - senderLocation.getX()) < ChatChannels.LOCAL_CHANNEL_RADIUS;

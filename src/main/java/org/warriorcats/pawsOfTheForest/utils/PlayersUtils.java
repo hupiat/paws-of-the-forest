@@ -3,6 +3,7 @@ package org.warriorcats.pawsOfTheForest.utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 
@@ -43,9 +44,7 @@ public abstract class PlayersUtils {
     }
 
     public static void synchronizeInventory(Player player) {
-        HibernateUtils.withSession(session ->
-            synchronizeInventory(player, session.get(PlayerEntity.class, player.getUniqueId()))
-        );
+        synchronizeInventory(player, EventsCore.PLAYER_CACHE.get(player.getUniqueId()));
     }
 
     public static void synchronizeInventory(Player player, PlayerEntity entity) {

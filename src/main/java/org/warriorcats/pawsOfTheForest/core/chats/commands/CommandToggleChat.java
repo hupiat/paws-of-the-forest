@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -17,10 +18,7 @@ import java.util.List;
 public class CommandToggleChat extends AbstractCommand {
 
     public static ChatChannels getToggledChat(Player player) {
-        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-            PlayerEntity entity = session.get(PlayerEntity.class, player.getUniqueId());
-            return entity.getSettings().getToggledChat();
-        }
+        return EventsCore.PLAYER_CACHE.get(player.getUniqueId()).getSettings().getToggledChat();
     }
 
     public static void setToggledChat(Player player, ChatChannels chatToggled) {
@@ -42,22 +40,18 @@ public class CommandToggleChat extends AbstractCommand {
         ChatChannels chatToggled = ChatChannels.valueOf(args[0].toUpperCase());
 
         if (chatToggled == ChatChannels.CLAN) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
-                if (senderEntity.getClan() == null) {
-                    sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
-                    return true;
-                }
+            PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+            if (senderEntity.getClan() == null) {
+                sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
+                return true;
             }
         }
 
         if (ChatChannels.isRoleplay(chatToggled)) {
-            try (Session session = HibernateUtils.getSessionFactory().openSession()) {
-                PlayerEntity senderEntity = session.get(PlayerEntity.class, ((Player) sender).getUniqueId());
-                if (!senderEntity.getSettings().isShowRoleplay()) {
-                    sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_SHOWING_ROLEPLAY);
-                    return true;
-                }
+            PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+            if (!senderEntity.getSettings().isShowRoleplay()) {
+                sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_SHOWING_ROLEPLAY);
+                return true;
             }
         }
 
