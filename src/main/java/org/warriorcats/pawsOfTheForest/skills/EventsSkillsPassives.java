@@ -64,7 +64,7 @@ public class EventsSkillsPassives implements LoadingListener {
     public static final double SILENT_KILL_TIER_PERCENTAGE = 0.1;
 
     private final Set<UUID> soundPacketsIgnored = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    private final Map<UUID, List<FootStep>> footsteps = new ConcurrentHashMap<>();
+    private final Map<UUID, List<Footstep>> footsteps = new ConcurrentHashMap<>();
     private final Map<UUID, Float> defaultSpeeds = new ConcurrentHashMap<>();
     private final Map<UUID, Double> entitiesBleeding = new ConcurrentHashMap<>();
 
@@ -165,7 +165,7 @@ public class EventsSkillsPassives implements LoadingListener {
                         if (!entity.hasAbility(Skills.TRACKER)) {
                             return;
                         }
-                        for (FootStep fs : footsteps.values().stream().flatMap(List::stream).toList()) {
+                        for (Footstep fs : footsteps.values().stream().flatMap(List::stream).toList()) {
                             if (fs.location().getWorld().equals(tracker.getWorld())
                                     && fs.location().distanceSquared(tracker.getLocation()) < 25) {
                                 tracker.playEffect(fs.location(), Effect.SHOOT_WHITE_SMOKE, 0);
@@ -605,7 +605,7 @@ public class EventsSkillsPassives implements LoadingListener {
     public void on(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
-                .add(new FootStep(player.getLocation(), System.currentTimeMillis()));
+                .add(new Footstep(player.getLocation(), System.currentTimeMillis()));
 
         // NIGHTSTALKER
         HibernateUtils.withSession(session -> {
