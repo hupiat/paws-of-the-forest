@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -33,6 +34,7 @@ public class EventsShop implements Listener {
                     entity.setCoins(balance - item.price());
                     player.getInventory().addItem(item.toItemStack());
                     player.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.MADE_BUY + " " + item.price() + " Paw Coins.");
+                    EventsCore.PLAYER_CACHE.put(player.getUniqueId(), entity);
                     transaction.commit();
                 } else {
                     player.sendMessage(ChatColor.RED + MessagesConf.Preys.NOT_ENOUGH_COINS);

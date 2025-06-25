@@ -201,6 +201,7 @@ public class EventsSkillsMenu implements Listener {
                 if (skill.isActive()) {
                     PlayersUtils.synchronizeInventory(player, entity);
                 }
+                EventsCore.PLAYER_CACHE.put(player.getUniqueId(), entity);
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
                 case SkillBranches.HUNTING:

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
@@ -57,6 +58,7 @@ public class CommandClans extends AbstractCommand {
                     sender.sendMessage(ChatColor.RED + MessagesConf.GENERIC_ERROR + " " + usage);
                     return true;
             }
+            EventsCore.PLAYER_CACHE.put(player.getUniqueId(), playerEntity);
             transaction.commit();
         }
 

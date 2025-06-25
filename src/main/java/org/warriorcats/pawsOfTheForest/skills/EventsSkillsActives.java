@@ -47,7 +47,7 @@ public class EventsSkillsActives implements Listener {
     public void on(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
 
-        if (item == null || !ItemsUtils.isActiveSkill(event.getPlayer(), item)) return;
+        if (ItemsUtils.isEmpty(item) || !ItemsUtils.isActiveSkill(event.getPlayer(), item)) return;
         if (event.getAction().toString().contains("RIGHT_CLICK")) {
             if (item.getType() == Skills.PREY_SENSE.getIcon()) {
                 handlePreySense(event);
