@@ -90,14 +90,8 @@ public abstract class PlayersUtils {
         }
 
         // Finally, adding skills and noteblock if needed
-        for (Skills skill : skills) {
-            if (!hasActiveSkillInInventory(player, skill)) {
-                player.getInventory().addItem(ItemsUtils.getActiveSkill(player, skill.getIcon()));
-            }
-        }
-
-        if (needNoteBlock) {
-            player.getInventory().addItem(new ItemStack(Material.NOTE_BLOCK));
+        for (ItemStack itemStack : itemsToAdd) {
+            player.getInventory().addItem(itemStack);
         }
 
         player.updateInventory();
