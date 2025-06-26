@@ -1,7 +1,6 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +9,6 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
-import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
