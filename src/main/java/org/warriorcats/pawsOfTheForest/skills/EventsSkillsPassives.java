@@ -125,7 +125,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
                 event.setCancelled(true);
 
-                PlayerEntity pe = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+                PlayerEntity pe = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
                 int tier = pe.getAbilityTier(Skills.SILENT_PAW);
                 double factor = (tier == 0)
                         ? 1
@@ -157,7 +157,7 @@ public class EventsSkillsPassives implements LoadingListener {
                 footsteps.values().forEach(list -> list.removeIf(fs -> now - fs.timestamp() >= 5000));
 
                 for (Player tracker : Bukkit.getOnlinePlayers()) {
-                    PlayerEntity entity = EventsCore.PLAYER_CACHE.get(tracker.getUniqueId());
+                    PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(tracker.getUniqueId());
                     if (!entity.hasAbility(Skills.TRACKER)) {
                         return;
                     }
@@ -219,7 +219,7 @@ public class EventsSkillsPassives implements LoadingListener {
             return;
         }
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(killer.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(killer.getUniqueId());
 
         if (!entity.hasAbility(Skills.EFFICIENT_KILL)) {
             event.setDroppedExp((int) prey.get().xp());
@@ -245,7 +245,7 @@ public class EventsSkillsPassives implements LoadingListener {
             return;
         }
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         // ENDURANCE_TRAVELER
         if (!EventsCore.PLAYERS_FIGHTING.contains(player) && entity.hasAbility(Skills.ENDURANCE_TRAVELER)) {
@@ -272,7 +272,7 @@ public class EventsSkillsPassives implements LoadingListener {
     @EventHandler
     public void on(PlayerJumpEvent event) {
         Player player = event.getPlayer();
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
         if (entity.hasAbility(Skills.CLIMBERS_GRACE)) {
             int tier = entity.getAbilityTier(Skills.CLIMBERS_GRACE);
             double factor = tier * CLIMBERS_GRACE_TIER_PERCENTAGE;
@@ -284,7 +284,7 @@ public class EventsSkillsPassives implements LoadingListener {
     @EventHandler
     public void on(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         // THICK COAT
         if (entity.hasAbility(Skills.THICK_COAT)) {
@@ -318,7 +318,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
     @EventHandler
     public void on(PlayerFreezeEvent event) {
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
         if (entity.hasAbility(Skills.THICK_COAT)) {
             event.getPlayer().setFreezeTicks(0);
         }
@@ -328,7 +328,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
     @EventHandler
     public void on(PlayerItemConsumeEvent event) {
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
         if (entity.hasAbility(Skills.HEARTY_APPETITE)) {
             int tier = entity.getAbilityTier(Skills.HEARTY_APPETITE);
             double factor = tier * HEARTY_APPETITE_TIER_PERCENTAGE;
@@ -348,7 +348,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
         if (player.getFoodLevel() < 20) return;
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         if (entity.hasAbility(Skills.WELL_FED)) {
             int tier = entity.getAbilityTier(Skills.WELL_FED);
@@ -361,7 +361,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
     @EventHandler
     public void on(PlayerFearEvent event) {
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
         if (entity.hasAbility(Skills.SHELTERED_MIND)) {
             EventsCore.FEAR_EFFECTS.forEach(event.getPlayer()::removePotionEffect);
         }
@@ -373,7 +373,7 @@ public class EventsSkillsPassives implements LoadingListener {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
 
-        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(event.getPlayer().getUniqueId());
+        PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
 
         // FLEXIBLE_MORALS
         if (playerEntity.hasAbility(Skills.FLEXIBLE_MORALS)) {
@@ -403,7 +403,7 @@ public class EventsSkillsPassives implements LoadingListener {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity entity)) return;
 
-        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         // AMBUSHER
         if (MobsUtils.isStealthFrom(player, entity) && playerEntity.hasAbility(Skills.AMBUSHER)) {
@@ -487,7 +487,7 @@ public class EventsSkillsPassives implements LoadingListener {
 
         Block block = event.getClickedBlock();
 
-        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         if (ItemsUtils.isTrashBlock(block.getType()) && playerEntity.hasAbility(Skills.SCAVENGE)) {
             player.getInventory().addItem(ItemsUtils.getRandomLootFromTrash());
@@ -504,7 +504,7 @@ public class EventsSkillsPassives implements LoadingListener {
         footsteps.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>())
                 .add(new Footstep(player.getLocation(), System.currentTimeMillis()));
 
-        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         // NIGHTSTALKER
         if (playerEntity.hasAbility(Skills.NIGHTSTALKER)) {
@@ -605,7 +605,7 @@ public class EventsSkillsPassives implements LoadingListener {
     public void on(PlayerFishEvent event) {
         Player player = event.getPlayer();
 
-        PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         event.setCancelled(true);
         if (event.getCaught() != null) {

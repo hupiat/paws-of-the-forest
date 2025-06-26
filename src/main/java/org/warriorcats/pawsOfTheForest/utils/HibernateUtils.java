@@ -13,7 +13,6 @@ import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -31,7 +30,7 @@ public abstract class HibernateUtils {
             T obj = callback.apply(transaction, session);
             session.persist(obj);
             if (obj instanceof PlayerEntity player) {
-                EventsCore.PLAYER_CACHE.put(player.getUuid(), player);
+                EventsCore.PLAYERS_CACHE.put(player.getUuid(), player);
             }
             transaction.commit();
         });

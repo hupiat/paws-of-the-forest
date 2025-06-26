@@ -7,11 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.Arrays;
 
@@ -42,7 +40,7 @@ public abstract class MenuSettings {
     public static ChatChannels getNextChat(Player player, ChatChannels current) {
         ChatChannels[] values;
         SettingsEntity settings = fetchSettings(player);
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
         values = Arrays.stream(ChatChannels.values()).filter(channel -> {
             boolean filtered = true;
             if (!settings.isShowRoleplay()) {
@@ -76,7 +74,7 @@ public abstract class MenuSettings {
     }
 
     private static SettingsEntity fetchSettings(Player player) {
-        return EventsCore.PLAYER_CACHE.get(player.getUniqueId()).getSettings();
+        return EventsCore.PLAYERS_CACHE.get(player.getUniqueId()).getSettings();
     }
 }
 

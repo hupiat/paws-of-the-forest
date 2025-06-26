@@ -189,6 +189,7 @@ public class EventsSkillsMenu implements Listener {
                 skillEntity.setProgress(skillEntity.getProgress() + balance);
                 session.persist(entity);
                 session.getTransaction().commit();
+                EventsCore.PLAYERS_CACHE.put(player.getUniqueId(), entity);
                 if (skill == Skills.IRON_HIDE) {
                     SkillsUtils.updateIronHideArmor(player, entity.getAbilityTier(Skills.IRON_HIDE));
                 }
@@ -201,7 +202,6 @@ public class EventsSkillsMenu implements Listener {
                 if (skill.isActive()) {
                     PlayersUtils.synchronizeInventory(player, entity);
                 }
-                EventsCore.PLAYER_CACHE.put(player.getUniqueId(), entity);
             };
             switch (MENUS_OPENED.get(player.getUniqueId()).getBranch()) {
                 case SkillBranches.HUNTING:

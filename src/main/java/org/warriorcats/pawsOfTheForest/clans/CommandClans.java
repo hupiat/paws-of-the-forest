@@ -58,7 +58,7 @@ public class CommandClans extends AbstractCommand {
                     sender.sendMessage(ChatColor.RED + MessagesConf.GENERIC_ERROR + " " + usage);
                     return true;
             }
-            EventsCore.PLAYER_CACHE.put(player.getUniqueId(), playerEntity);
+            EventsCore.PLAYERS_CACHE.put(player.getUniqueId(), playerEntity);
             transaction.commit();
         }
 

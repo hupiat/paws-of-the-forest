@@ -10,13 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -190,7 +188,7 @@ public class MenuSkillTreePath {
         activeSkills.clear();
         Inventory menu = Bukkit.createInventory(null, 45, title);
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
         switch (branch) {
             case HUNTING -> drawHuntingBranch(menu, entity);

@@ -58,7 +58,7 @@ public class EventsPreys implements LoadingListener {
                     return !prey.isAquatic();
                 };
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    PlayerEntity playerEntity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+                    PlayerEntity playerEntity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
                     List<Prey> preys = new ArrayList<>();
                     double higherSpawnChance = !playerEntity.hasAbility(Skills.BLOOD_HUNTER) ?
                             HIGHER_SPAWN_CHANCE :

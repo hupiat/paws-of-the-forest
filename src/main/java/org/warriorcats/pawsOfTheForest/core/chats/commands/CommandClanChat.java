@@ -5,12 +5,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class CommandClanChat extends AbstractCommand {
             return true;
         }
 
-        PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+        PlayerEntity senderEntity = EventsCore.PLAYERS_CACHE.get(((Player) sender).getUniqueId());
 
         if (senderEntity.getClan() == null) {
             sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
@@ -32,7 +30,7 @@ public class CommandClanChat extends AbstractCommand {
         }
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerEntity entity = EventsCore.PLAYER_CACHE.get(player.getUniqueId());
+            PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
             if (senderEntity.getClan() != entity.getClan()) {
                 continue;
             }

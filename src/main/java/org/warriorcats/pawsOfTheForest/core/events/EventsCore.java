@@ -46,7 +46,7 @@ public class EventsCore implements Listener {
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_LEAVING = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    public static final Map<UUID, PlayerEntity> PLAYER_CACHE = new ConcurrentHashMap<>();
+    public static final Map<UUID, PlayerEntity> PLAYERS_CACHE = new ConcurrentHashMap<>();
 
     public static final Set<PotionEffectType> FEAR_EFFECTS = Set.of(
             BLINDNESS,
@@ -81,7 +81,7 @@ public class EventsCore implements Listener {
                     SkillsUtils.updateHardKnockLifeArmor(event.getPlayer());
                 }
             }
-            PLAYER_CACHE.put(event.getPlayer().getUniqueId(), existing);
+            PLAYERS_CACHE.put(event.getPlayer().getUniqueId(), existing);
         });
 
         // Toggling HUD
@@ -159,7 +159,7 @@ public class EventsCore implements Listener {
 
     @EventHandler
     public void on(PlayerQuitEvent event) {
-        PLAYER_CACHE.remove(event.getPlayer().getUniqueId());
+        PLAYERS_CACHE.remove(event.getPlayer().getUniqueId());
         PLAYERS_LEAVING.add(event.getPlayer());
 
         new BukkitRunnable() {

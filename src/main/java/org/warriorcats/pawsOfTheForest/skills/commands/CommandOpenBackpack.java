@@ -10,8 +10,6 @@ import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.skills.menus.MenuBackpack;
-import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTree;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class CommandOpenBackpack extends AbstractCommand {
             return true;
         }
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(((Player) sender).getUniqueId());
         if (!entity.hasAbility(Skills.BEAST_OF_BURDEN)) {
             sender.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_BEAST_OF_BURDEN_NOT_UNLOCKED);
             return true;

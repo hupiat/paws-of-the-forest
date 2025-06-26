@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.hibernate.Session;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.commands.AbstractCommand;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
@@ -18,7 +17,7 @@ import java.util.List;
 public class CommandToggleChat extends AbstractCommand {
 
     public static ChatChannels getToggledChat(Player player) {
-        return EventsCore.PLAYER_CACHE.get(player.getUniqueId()).getSettings().getToggledChat();
+        return EventsCore.PLAYERS_CACHE.get(player.getUniqueId()).getSettings().getToggledChat();
     }
 
     public static void setToggledChat(Player player, ChatChannels chatToggled) {
@@ -40,7 +39,7 @@ public class CommandToggleChat extends AbstractCommand {
         ChatChannels chatToggled = ChatChannels.valueOf(args[0].toUpperCase());
 
         if (chatToggled == ChatChannels.CLAN) {
-            PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+            PlayerEntity senderEntity = EventsCore.PLAYERS_CACHE.get(((Player) sender).getUniqueId());
             if (senderEntity.getClan() == null) {
                 sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_A_CLAN_MEMBER);
                 return true;
@@ -48,7 +47,7 @@ public class CommandToggleChat extends AbstractCommand {
         }
 
         if (ChatChannels.isRoleplay(chatToggled)) {
-            PlayerEntity senderEntity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+            PlayerEntity senderEntity = EventsCore.PLAYERS_CACHE.get(((Player) sender).getUniqueId());
             if (!senderEntity.getSettings().isShowRoleplay()) {
                 sender.sendMessage(ChatColor.RED + MessagesConf.Chats.NOT_SHOWING_ROLEPLAY);
                 return true;

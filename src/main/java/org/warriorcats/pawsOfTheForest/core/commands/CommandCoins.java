@@ -1,13 +1,11 @@
 package org.warriorcats.pawsOfTheForest.core.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class CommandCoins extends AbstractCommand {
             return true;
         }
 
-        PlayerEntity entity = EventsCore.PLAYER_CACHE.get(((Player) sender).getUniqueId());
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(((Player) sender).getUniqueId());
         sender.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_LEFT + " " + entity.getCoins());
 
         return true;

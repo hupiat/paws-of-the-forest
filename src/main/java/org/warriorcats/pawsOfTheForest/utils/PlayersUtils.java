@@ -44,7 +44,7 @@ public abstract class PlayersUtils {
     }
 
     public static void synchronizeInventory(Player player) {
-        synchronizeInventory(player, EventsCore.PLAYER_CACHE.get(player.getUniqueId()));
+        synchronizeInventory(player, EventsCore.PLAYERS_CACHE.get(player.getUniqueId()));
     }
 
     public static void synchronizeInventory(Player player, PlayerEntity entity) {
