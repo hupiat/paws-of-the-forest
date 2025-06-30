@@ -18,7 +18,7 @@ import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 
-import java.util.Collection;
+import java.util.*;
 
 public class EventsSkillsActives implements Listener {
 
@@ -54,6 +54,8 @@ public class EventsSkillsActives implements Listener {
         if (event.getAction().toString().contains("RIGHT_CLICK")) {
             if (item.getType() == Skills.PREY_SENSE.getIcon()) {
                 handlePreySense(event);
+            } else if (item.getType() == Skills.HUNTERS_COMPASS.getIcon()) {
+               handleHuntersCompass(event);
             }
             event.setCancelled(true);
         }
@@ -67,5 +69,12 @@ public class EventsSkillsActives implements Listener {
                 livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * PREY_SENSE_DURATION_S, 0, false, false));
             }
         }
+    }
+
+    private void handleHuntersCompass(PlayerInteractEvent event) {
+        Optional<LivingEntity> shorter = Prey.getAllEntities().stream()
+                .min(Comparator.comparingDouble(prey ->
+                        prey.getLocation().distanceSquared(event.getPlayer().getLocation())));
+        shorter.ifPresent(entity -> event.getPlayer().setCompassTarget(entity.getLocation()));
     }
 }
