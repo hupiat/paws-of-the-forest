@@ -186,8 +186,8 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String PLAYER_MESSAGE_APPLIED_LOW_SWEEP =
                 getPropertyOrDefault("skills.playerMessages.appliedLowSweep", "Low Sweep ! You sweep the legs of the target !", CONFIG_FILE_NAME);
 
-        public static final String PLAYER_MESSAGE_PATHFINDING_BOOST_IN_COMBAT =
-                getPropertyOrDefault("skills.playerMessages.pathfindingBoostInCombat", "You cannot use this while fighting !", CONFIG_FILE_NAME);
+        public static final String PLAYER_MESSAGE_IN_COMBAT =
+                getPropertyOrDefault("skills.playerMessages.inCombat", "You cannot use this while fighting !", CONFIG_FILE_NAME);
 
         public static final String PLAYER_MESSAGE_APPLIED_PATHFINDING_BOOST =
                 getPropertyOrDefault("skills.playerMessages.appliedPathfindingBoost", "Pathfinding Boost ! You can now run faster and jump higher !", CONFIG_FILE_NAME);
@@ -200,6 +200,15 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String PLAYER_MESSAGE_HOLD_ON_SUCCUMBED =
                 getPropertyOrDefault("skills.playerMessages.holdOnSuccumbed", "You succumbed...", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_ON_YOUR_PAWS =
+                getPropertyOrDefault("skills.playerMessages.onYourPaws", "On Your Paws ! You are reviving :", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_ON_YOUR_PAWS_NOT_IN_CLAN =
+                getPropertyOrDefault("skills.playerMessages.onYourPawsNotInClan", "This player is not in your clan.", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_ON_YOUR_PAWS_REVIVED =
+                getPropertyOrDefault("skills.playerMessages.onYourPawsRevived", "On Your Paws ! You have been revived !", CONFIG_FILE_NAME);
 
         public static final String PREY_SENSE_DESCRIPTION =
                 getPropertyOrDefault("skills.descriptions.preySense", "Reveal nearby prey (5s glowing, 25 blocks)", CONFIG_FILE_NAME);
