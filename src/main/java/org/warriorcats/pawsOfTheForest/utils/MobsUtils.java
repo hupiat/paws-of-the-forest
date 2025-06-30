@@ -5,24 +5,33 @@ import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public abstract class MobsUtils {
+
+    public static List<LivingEntity> getAllEntities() {
+        List<LivingEntity> entities = new ArrayList<>();
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity instanceof LivingEntity livingEntity) {
+                    entities.add(livingEntity);
+                }
+            }
+        }
+        return entities;
+    }
 
     public static String getModelName(ModeledEntity modeledEntity) {
          return modeledEntity.getModels().entrySet().iterator().next().getKey();

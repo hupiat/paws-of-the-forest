@@ -39,15 +39,9 @@ public record Prey(String entityType, double xp, long coins, float fleeDurationS
     }
 
     public static List<LivingEntity> getAllEntities() {
-        List<LivingEntity> entities = new ArrayList<>();
-        for (World world : Bukkit.getWorlds()) {
-            for (Entity entity : world.getEntities()) {
-                if (entity instanceof LivingEntity livingEntity && isPrey(livingEntity)) {
-                    entities.add(livingEntity);
-                }
-            }
-        }
-        return entities;
+        return MobsUtils.getAllEntities().stream()
+                .filter(Prey::isPrey)
+                .toList();
     }
 
     public static List<Prey> getAllCommons() {

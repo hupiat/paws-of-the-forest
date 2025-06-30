@@ -55,7 +55,8 @@ public abstract class PlayersUtils {
         // First, clearing skills and noteblock
         for (int i = 0; i < player.getInventory().getContents().length; i++) {
             ItemStack itemStack = player.getInventory().getContents()[i];
-            if (ItemsUtils.isActiveSkill(player, itemStack) || itemStack.getType() == Material.NOTE_BLOCK) {
+            if (!ItemsUtils.isEmpty(itemStack) &&
+                    (ItemsUtils.isActiveSkill(player, itemStack) || itemStack.getType() == Material.NOTE_BLOCK)) {
                 player.getInventory().clear(i);
             }
         }

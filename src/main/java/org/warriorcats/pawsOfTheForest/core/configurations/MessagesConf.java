@@ -171,6 +171,21 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String PLAYER_MESSAGE_APPLIED_AQUA_BALANCE =
                 getPropertyOrDefault("skills.playerMessages.appliedAquaBalance", "Aqua Balance ! You have caught some fresh fish !", CONFIG_FILE_NAME);
 
+        public static final String PLAYER_MESSAGE_APPLIED_PREY_SENSE =
+                getPropertyOrDefault("skills.playerMessages.appliedPreySense", "Prey Sense ! You attune your senses to the wild... Scanning for nearby prey.", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_HUNTERS_COMPASS =
+                getPropertyOrDefault("skills.playerMessages.appliedHuntersCompass", "Hunter's Compass ! You grip the earth beneath your paws... The hunt is on.", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_PREPARE_LOW_SWEEP =
+                getPropertyOrDefault("skills.playerMessages.prepareLowSweep", "You focus your weight... Preparing to sweep !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_LOW_SWEEP_NO_TARGET =
+                getPropertyOrDefault("skills.playerMessages.lowSweepNoTarget", "No target nearby.", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_APPLIED_LOW_SWEEP =
+                getPropertyOrDefault("skills.playerMessages.appliedLowSweep", "Low Sweep ! You sweep the legs of the target !", CONFIG_FILE_NAME);
+
         public static final String PREY_SENSE_DESCRIPTION =
                 getPropertyOrDefault("skills.descriptions.preySense", "Reveal nearby prey (5s glowing, 25 blocks)", CONFIG_FILE_NAME);
 
