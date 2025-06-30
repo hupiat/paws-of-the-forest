@@ -126,21 +126,4 @@ public abstract class MobsUtils {
                 return true;
         }
     }
-
-    public static void setGlowingFor(Player receiver, Entity target, boolean glowing) {
-        net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) target).getHandle();
-
-        byte flags = nmsEntity.getEntityData().get(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE));
-
-        flags = glowing ? (byte)(flags | 0x40) : (byte)(flags & ~0x40);
-
-        SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
-                0, EntityDataSerializers.BYTE, flags
-        );
-
-        List<SynchedEntityData.DataValue<?>> list = List.of(dataValue);
-
-        ClientboundSetEntityDataPacket packet = new ClientboundSetEntityDataPacket(nmsEntity.getId(), list);
-        ((CraftPlayer) receiver).getHandle().connection.send(packet);
-    }
 }
