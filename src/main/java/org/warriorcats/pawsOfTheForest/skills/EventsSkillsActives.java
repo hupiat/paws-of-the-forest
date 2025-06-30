@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
@@ -27,11 +28,13 @@ public class EventsSkillsActives implements Listener {
     public static final int PREY_SENSE_DURATION_TICKS = 5 * 20;
     public static final int LOW_SWEEP_CHARGE_DELAY_TICKS = 20; // 1s
     public static final int LOW_SWEEP_SLOWNESS_DURATION_TICKS = 50; // 2.5s
-    public static final int LOW_SWEEP_RANGE = 4; // 2.5s
+    public static final int LOW_SWEEP_RANGE = 4;
+    public static final int PATHFINDING_BOOST_DURATION_TICKS = 10 * 20;
 
     public static final long PREY_SENSE_COOLDOWN_S = 20;
     public static final long HUNTERS_COMPASS_COOLDOWN_S = 60;
     public static final long LOW_SWEEP_COOLDOWN_S = 15;
+    public static final long PATHFINDING_BOOST_COOLDOWN_S = 20;
 
     // Handling persistent items (actives skills and noteblock) management
 
@@ -67,6 +70,8 @@ public class EventsSkillsActives implements Listener {
                handleHuntersCompass(event);
             } else if (item.getType() == Skills.LOW_SWEEP.getIcon()) {
                 handleLowSweep(event);
+            } else if (item.getType() == Skills.PATHFINDING_BOOST.getIcon()) {
+                handlePathfindingBoost(event);
             }
             event.setCancelled(true);
         }
@@ -138,6 +143,18 @@ public class EventsSkillsActives implements Listener {
                     },
                     LOW_SWEEP_CHARGE_DELAY_TICKS
             );
+        }, event);
+    }
+
+    private void handlePathfindingBoost(PlayerInteractEvent event) {
+        withCooldown(() -> {
+            if (EventsCore.PLAYERS_FIGHTING.contains(event.getPlayer())) {
+                event.getPlayer().sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_PATHFINDING_BOOST_IN_COMBAT);
+                return;
+            }
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, PATHFINDING_BOOST_DURATION_TICKS, 0, false, false));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PATHFINDING_BOOST_DURATION_TICKS, 0, false, false));
+            ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), PATHFINDING_BOOST_COOLDOWN_S);
         }, event);
     }
 
