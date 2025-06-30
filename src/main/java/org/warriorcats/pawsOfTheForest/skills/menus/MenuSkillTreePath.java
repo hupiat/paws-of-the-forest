@@ -17,9 +17,7 @@ import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @EqualsAndHashCode
@@ -213,29 +211,11 @@ public class MenuSkillTreePath {
     }
 
     private void drawHuntingBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_PREY_SENSE, createSkillItem(
-                Skills.PREY_SENSE.getIcon(),
-                Skills.PREY_SENSE.toString(),
-                MessagesConf.Skills.PREY_SENSE_DESCRIPTION,
-                entity.hasAbility(Skills.PREY_SENSE),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        Map<Integer, ItemStack> actives = generateActiveSkillsFor(entity, SkillBranches.HUNTING);
 
-        menu.setItem(INDEX_HUNTERS_COMPASS, createSkillItem(
-                Skills.HUNTERS_COMPASS.getIcon(),
-                Skills.HUNTERS_COMPASS.toString(),
-                MessagesConf.Skills.HUNTERS_COMPASS_DESCRIPTION,
-                entity.hasAbility(Skills.HUNTERS_COMPASS),
-                SkillBranches.UNLOCK_SKILL
-        ));
-
-        menu.setItem(INDEX_LOW_SWEEP, createSkillItem(
-                Skills.LOW_SWEEP.getIcon(),
-                Skills.LOW_SWEEP.toString(),
-                MessagesConf.Skills.LOW_SWEEP_DESCRIPTION,
-                entity.hasAbility(Skills.LOW_SWEEP),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        menu.setItem(INDEX_PREY_SENSE, actives.get(INDEX_PREY_SENSE));
+        menu.setItem(INDEX_HUNTERS_COMPASS, actives.get(INDEX_HUNTERS_COMPASS));
+        menu.setItem(INDEX_LOW_SWEEP, actives.get(INDEX_LOW_SWEEP));
 
         menu.setItem(INDEX_SILENT_PAW, createTieredItem(
                 Skills.SILENT_PAW.getIcon(),
@@ -266,21 +246,10 @@ public class MenuSkillTreePath {
     }
 
     private void drawNavigationBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_LOCATION_AWARENESS, createSkillItem(
-                Skills.LOCATION_AWARENESS.getIcon(),
-                Skills.LOCATION_AWARENESS.toString(),
-                MessagesConf.Skills.LOCATION_AWARENESS_DESCRIPTION,
-                entity.hasAbility(Skills.LOCATION_AWARENESS),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        Map<Integer, ItemStack> actives = generateActiveSkillsFor(entity, SkillBranches.NAVIGATION);
 
-        menu.setItem(INDEX_PATHFINDING_BOOST, createSkillItem(
-                Skills.PATHFINDING_BOOST.getIcon(),
-                Skills.PATHFINDING_BOOST.toString(),
-                MessagesConf.Skills.PATHFINDING_BOOST_DESCRIPTION,
-                entity.hasAbility(Skills.PATHFINDING_BOOST),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        menu.setItem(INDEX_LOCATION_AWARENESS, actives.get(INDEX_LOCATION_AWARENESS));
+        menu.setItem(INDEX_PATHFINDING_BOOST, actives.get(INDEX_PATHFINDING_BOOST));
 
         menu.setItem(INDEX_TRAIL_MEMORY, createTieredItem(
                 Skills.TRAIL_MEMORY.getIcon(),
@@ -311,21 +280,10 @@ public class MenuSkillTreePath {
     }
 
     private void drawResilienceBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HOLD_ON, createSkillItem(
-                Skills.HOLD_ON.getIcon(),
-                Skills.HOLD_ON.toString(),
-                MessagesConf.Skills.HOLD_ON_DESCRIPTION,
-                entity.hasAbility(Skills.HOLD_ON),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        Map<Integer, ItemStack> actives = generateActiveSkillsFor(entity, SkillBranches.RESILIENCE);
 
-        menu.setItem(INDEX_ON_YOUR_PAWS, createSkillItem(
-                Skills.ON_YOUR_PAWS.getIcon(),
-                Skills.ON_YOUR_PAWS.toString(),
-                MessagesConf.Skills.ON_YOUR_PAWS_DESCRIPTION,
-                entity.hasAbility(Skills.ON_YOUR_PAWS),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        menu.setItem(INDEX_HOLD_ON, actives.get(INDEX_HOLD_ON));
+        menu.setItem(INDEX_ON_YOUR_PAWS, actives.get(INDEX_ON_YOUR_PAWS));
 
         menu.setItem(INDEX_IRON_HIDE, createTieredItem(
                 Skills.IRON_HIDE.getIcon(),
@@ -374,21 +332,10 @@ public class MenuSkillTreePath {
     }
 
     private void drawHerbalistBranch(Inventory menu, PlayerEntity entity) {
-        menu.setItem(INDEX_HERB_KNOWLEDGE, createSkillItem(
-                Skills.HERB_KNOWLEDGE.getIcon(),
-                Skills.HERB_KNOWLEDGE.toString(),
-                MessagesConf.Skills.HERB_KNOWLEDGE_DESCRIPTION,
-                entity.hasAbility(Skills.HERB_KNOWLEDGE),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        Map<Integer, ItemStack> actives = generateActiveSkillsFor(entity, SkillBranches.HERBALIST);
 
-        menu.setItem(INDEX_BREW_REMEDY, createSkillItem(
-                Skills.BREW_REMEDY.getIcon(),
-                Skills.BREW_REMEDY.toString(),
-                MessagesConf.Skills.BREW_REMEDY_DESCRIPTION,
-                entity.hasAbility(Skills.BREW_REMEDY),
-                SkillBranches.UNLOCK_SKILL
-        ));
+        menu.setItem(INDEX_HERB_KNOWLEDGE, actives.get(INDEX_HERB_KNOWLEDGE));
+        menu.setItem(INDEX_BREW_REMEDY, actives.get(INDEX_BREW_REMEDY));
 
         menu.setItem(INDEX_QUICK_GATHERER, createTieredItem(
                 Skills.QUICK_GATHERER.getIcon(),
@@ -650,7 +597,33 @@ public class MenuSkillTreePath {
         ));
     }
 
-    private ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
+    public static Map<Integer, ItemStack> generateActiveSkillsFor(PlayerEntity entity, SkillBranches branch) {
+        Map<Integer, ItemStack> actives = new HashMap<>();
+
+        switch (branch) {
+            case HUNTING -> {
+                actives.put(INDEX_PREY_SENSE, createSkillItem(Skills.PREY_SENSE.getIcon(), Skills.PREY_SENSE.toString(), MessagesConf.Skills.PREY_SENSE_DESCRIPTION, entity.hasAbility(Skills.PREY_SENSE), SkillBranches.UNLOCK_SKILL));
+                actives.put(INDEX_HUNTERS_COMPASS, createSkillItem(Skills.HUNTERS_COMPASS.getIcon(), Skills.HUNTERS_COMPASS.toString(), MessagesConf.Skills.HUNTERS_COMPASS_DESCRIPTION, entity.hasAbility(Skills.HUNTERS_COMPASS), SkillBranches.UNLOCK_SKILL));
+                actives.put(INDEX_LOW_SWEEP, createSkillItem(Skills.LOW_SWEEP.getIcon(), Skills.LOW_SWEEP.toString(), MessagesConf.Skills.LOW_SWEEP_DESCRIPTION, entity.hasAbility(Skills.LOW_SWEEP), SkillBranches.UNLOCK_SKILL));
+            }
+            case NAVIGATION -> {
+                actives.put(INDEX_LOCATION_AWARENESS, createSkillItem(Skills.LOCATION_AWARENESS.getIcon(), Skills.LOCATION_AWARENESS.toString(), MessagesConf.Skills.LOCATION_AWARENESS_DESCRIPTION, entity.hasAbility(Skills.LOCATION_AWARENESS), SkillBranches.UNLOCK_SKILL));
+                actives.put(INDEX_PATHFINDING_BOOST, createSkillItem(Skills.PATHFINDING_BOOST.getIcon(), Skills.PATHFINDING_BOOST.toString(), MessagesConf.Skills.PATHFINDING_BOOST_DESCRIPTION, entity.hasAbility(Skills.PATHFINDING_BOOST), SkillBranches.UNLOCK_SKILL));
+            }
+            case RESILIENCE -> {
+                actives.put(INDEX_HOLD_ON, createSkillItem(Skills.HOLD_ON.getIcon(), Skills.HOLD_ON.toString(), MessagesConf.Skills.HOLD_ON_DESCRIPTION, entity.hasAbility(Skills.HOLD_ON), SkillBranches.UNLOCK_SKILL));
+                actives.put(INDEX_ON_YOUR_PAWS, createSkillItem(Skills.ON_YOUR_PAWS.getIcon(), Skills.ON_YOUR_PAWS.toString(), MessagesConf.Skills.ON_YOUR_PAWS_DESCRIPTION, entity.hasAbility(Skills.ON_YOUR_PAWS), SkillBranches.UNLOCK_SKILL));
+            }
+            case HERBALIST -> {
+                actives.put(INDEX_HERB_KNOWLEDGE, createSkillItem(Skills.HERB_KNOWLEDGE.getIcon(), Skills.HERB_KNOWLEDGE.toString(), MessagesConf.Skills.HERB_KNOWLEDGE_DESCRIPTION, entity.hasAbility(Skills.HERB_KNOWLEDGE), SkillBranches.UNLOCK_SKILL));
+                actives.put(INDEX_BREW_REMEDY, createSkillItem(Skills.BREW_REMEDY.getIcon(), Skills.BREW_REMEDY.toString(), MessagesConf.Skills.BREW_REMEDY_DESCRIPTION, entity.hasAbility(Skills.BREW_REMEDY), SkillBranches.UNLOCK_SKILL));
+            }
+        }
+
+        return actives;
+    }
+
+    private static ItemStack createSkillItem(Material material, String name, String desc, boolean unlocked, double xpCost) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
 
@@ -663,12 +636,10 @@ public class MenuSkillTreePath {
         ));
         item.setItemMeta(meta);
 
-        activeSkills.add(item);
-
         return item;
     }
 
-    private ItemStack createTieredItem(Material material, String name, String desc, double currentXp, int maxTier, double xpPerTier) {
+    private static ItemStack createTieredItem(Material material, String name, String desc, double currentXp, int maxTier, double xpPerTier) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         int currentTier = (int) Math.round(currentXp / xpPerTier);

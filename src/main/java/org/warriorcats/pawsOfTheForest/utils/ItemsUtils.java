@@ -6,9 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
+import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -124,10 +126,9 @@ public abstract class ItemsUtils {
     );
 
     public static boolean isActiveSkill(Player player, ItemStack item, Skills skill) {
-        if (!EventsSkillsMenu.hasMenuSkillTreePathByPlayer(player, skill.getBranch())) {
-            return false;
-        }
-        return EventsSkillsMenu.getMenuSkillTreePathByPlayer(player, skill.getBranch()).getActiveSkills().stream()
+        return MenuSkillTreePath
+                .generateActiveSkillsFor(EventsCore.PLAYERS_CACHE.get(player.getUniqueId()), skill.getBranch())
+                .values().stream()
                 .anyMatch(activeSkill -> activeSkill.isSimilar(item));
     }
 
@@ -142,10 +143,9 @@ public abstract class ItemsUtils {
 
     public static ItemStack getActiveSkill(Player player, Material icon) {
         for (SkillBranches branch : SkillBranches.values()) {
-            if (!EventsSkillsMenu.hasMenuSkillTreePathByPlayer(player, branch)) {
-                continue;
-            }
-            Optional<ItemStack> activeSkillOpt = EventsSkillsMenu.getMenuSkillTreePathByPlayer(player, branch).getActiveSkills().stream()
+            Optional<ItemStack> activeSkillOpt = MenuSkillTreePath
+                    .generateActiveSkillsFor(EventsCore.PLAYERS_CACHE.get(player.getUniqueId()), branch)
+                    .values().stream()
                     .filter(activeSkill -> activeSkill.getType() == icon)
                     .findAny();
             if (activeSkillOpt.isPresent()) {

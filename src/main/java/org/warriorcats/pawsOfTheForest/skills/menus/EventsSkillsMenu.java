@@ -26,22 +26,6 @@ import java.util.function.Consumer;
 public class EventsSkillsMenu implements Listener {
 
     public static final Map<UUID, MenuSkillTreePath> MENUS_OPENED = new HashMap<>();
-    public static final Map<UUID, List<MenuSkillTreePath>> MENUS_STORED = new HashMap<>();
-
-    public static boolean hasMenuSkillTreePathByPlayer(Player player, SkillBranches branches) {
-        try {
-            return getMenuSkillTreePathByPlayer(player, branches) != null;
-        } catch (IllegalArgumentException ignored) {
-            return false;
-        }
-    }
-
-    public static MenuSkillTreePath getMenuSkillTreePathByPlayer(Player player, SkillBranches branch) {
-        return MENUS_STORED.get(player.getUniqueId()).stream()
-                .filter(menu -> menu.getBranch() == branch)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Could not find stored menu skill tree path for player and branch : " + player.getName() + ", " + branch.toString()));
-    }
 
     @EventHandler
     public void on(InventoryCloseEvent event) {
@@ -96,9 +80,6 @@ public class EventsSkillsMenu implements Listener {
             player.closeInventory();
             MenuSkillTreePath menuSkillTreePath = new MenuSkillTreePath(branch);
             MENUS_OPENED.put(player.getUniqueId(), menuSkillTreePath);
-            MENUS_STORED.computeIfAbsent(player.getUniqueId(), uuid -> new ArrayList<>());
-            MENUS_STORED.get(player.getUniqueId()).removeIf(menu -> menu.getBranch() == branch);
-            MENUS_STORED.get(player.getUniqueId()).add(menuSkillTreePath);
             MENUS_OPENED.get(player.getUniqueId()).open(player);
         };
 
@@ -196,9 +177,7 @@ public class EventsSkillsMenu implements Listener {
                 if (skill == Skills.HARD_KNOCK_LIFE) {
                     SkillsUtils.updateHardKnockLifeArmor(player);
                 }
-                MENUS_STORED.get(player.getUniqueId()).removeIf(menu -> menu.getBranch() == branch);
                 MENUS_OPENED.get(player.getUniqueId()).open(player);
-                MENUS_STORED.get(player.getUniqueId()).add(MENUS_OPENED.get(player.getUniqueId()));
                 if (skill.isActive()) {
                     PlayersUtils.synchronizeInventory(player, entity);
                 }
