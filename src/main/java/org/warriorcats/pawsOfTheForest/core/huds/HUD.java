@@ -6,6 +6,6 @@ public abstract class HUD {
 
 
     public static void open(Player player) {
-
+        // TODO
     }
 }
