@@ -52,6 +52,14 @@ public abstract class PlayersUtils {
                 .filter(entity::hasAbility)
                 .toList();
 
+        // First, clearing skills and noteblock
+        for (int i = 0; i < player.getInventory().getContents().length; i++) {
+            ItemStack itemStack = player.getInventory().getContents()[i];
+            if (ItemsUtils.isActiveSkill(player, itemStack) || itemStack.getType() == Material.NOTE_BLOCK) {
+                player.getInventory().clear(i);
+            }
+        }
+
         // Prepare items to add (skills + noteblock if needed)
         List<ItemStack> itemsToAdd = new ArrayList<>();
         for (Skills skill : skills) {

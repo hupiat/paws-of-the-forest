@@ -2,14 +2,18 @@ package org.warriorcats.pawsOfTheForest.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
-import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 
 import java.io.ByteArrayInputStream;
@@ -20,6 +24,8 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public abstract class ItemsUtils {
+
+    public static final NamespacedKey COOLDOWN_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown");
 
     public static final Set<Material> URBAN_BLOCKS = Set.of(
             Material.STONE,
@@ -129,7 +135,7 @@ public abstract class ItemsUtils {
         return MenuSkillTreePath
                 .generateActiveSkillsFor(EventsCore.PLAYERS_CACHE.get(player.getUniqueId()), skill.getBranch())
                 .values().stream()
-                .anyMatch(activeSkill -> activeSkill.isSimilar(item));
+                .anyMatch(activeSkill -> isSameItem(activeSkill, item));
     }
 
     public static boolean isActiveSkill(Player player, ItemStack item) {
@@ -153,6 +159,31 @@ public abstract class ItemsUtils {
             }
         }
         throw new IllegalArgumentException("Could not find active skill for player and icon : " + player.getName() + ", " + icon);
+    }
+
+    public static boolean checkForCooldown(Player player, ItemStack item) {
+        return getCooldown(player, item) == 0;
+    }
+
+    public static long getCooldown(Player player, ItemStack item) {
+        if (!isActiveSkill(player, item)) {
+            throw new IllegalArgumentException("Item is not an active skill");
+        }
+        ItemMeta meta = item.getItemMeta();
+        long nextTime = meta.getPersistentDataContainer().getOrDefault(COOLDOWN_KEY, PersistentDataType.LONG, 0L);
+        long now = System.currentTimeMillis();
+        long remainingMillis = nextTime - now;
+        return Math.max(0, remainingMillis / 1000);
+    }
+
+    public static void setCooldown(Player player, ItemStack item, long cooldown) {
+        if (!isActiveSkill(player, item)) {
+            throw new IllegalArgumentException("Item is not an active skill");
+        }
+        ItemMeta meta = item.getItemMeta();
+        long nextAvailableTime = System.currentTimeMillis() + (cooldown * 1000);
+        meta.getPersistentDataContainer().set(COOLDOWN_KEY, PersistentDataType.LONG, nextAvailableTime);
+        item.setItemMeta(meta);
     }
 
     public static boolean isEmpty(ItemStack item) {
@@ -226,5 +257,24 @@ public abstract class ItemsUtils {
             Bukkit.getLogger().log(Level.SEVERE, "Could not deserialize item stacks array", e);
         }
         return new ItemStack[0];
+    }
+
+    // Checks for similarity without NBT tags
+    public static boolean isSameItem(ItemStack a, ItemStack b) {
+        if (a == null || b == null || a.getType() != b.getType()) return false;
+
+        ItemMeta metaA = a.getItemMeta();
+        ItemMeta metaB = b.getItemMeta();
+
+        if (metaA == null || metaB == null) return false;
+
+        if (!Objects.equals(metaA.getDisplayName(), metaB.getDisplayName())) return false;
+
+        List<String> loreA = metaA.getLore();
+        List<String> loreB = metaB.getLore();
+        if (loreA == null && loreB == null) return true;
+        if (loreA == null || loreB == null) return false;
+
+        return loreA.equals(loreB);
     }
 }
