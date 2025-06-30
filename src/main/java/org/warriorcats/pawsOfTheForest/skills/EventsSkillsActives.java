@@ -224,31 +224,30 @@ public class EventsSkillsActives implements Listener {
     }
 
     private void handleOnYourPaws(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+
+        if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
+            player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_IN_COMBAT);
+            return;
+        }
+
+        Entity targetEntity = player.getTargetEntity(25);
+        if (!(targetEntity instanceof Player target)) {
+            return;
+        }
+
+        if (!PlayersUtils.isDowned(target)) {
+            return;
+        }
+
+        if (EventsCore.PLAYERS_CACHE.get(player.getUniqueId()).getClan() !=
+                EventsCore.PLAYERS_CACHE.get(target.getUniqueId()).getClan()) {
+            player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_ON_YOUR_PAWS_NOT_IN_CLAN);
+            return;
+        }
+
         withCooldown(() -> {
-            Player player = event.getPlayer();
-
-            if (EventsCore.PLAYERS_FIGHTING.contains(player)) {
-                player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_IN_COMBAT);
-                return;
-            }
-
-            Entity targetEntity = player.getTargetEntity(25);
-            if (!(targetEntity instanceof Player target)) {
-                return;
-            }
-
-            if (!PlayersUtils.isDowned(target)) {
-                return;
-            }
-
-            if (EventsCore.PLAYERS_CACHE.get(player.getUniqueId()).getClan() !=
-                    EventsCore.PLAYERS_CACHE.get(target.getUniqueId()).getClan()) {
-                player.sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_ON_YOUR_PAWS_NOT_IN_CLAN);
-                return;
-            }
-
             player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_ON_YOUR_PAWS + " " + target.getName());
-
             Bukkit.getScheduler().runTaskLater(PawsOfTheForest.getInstance(), () -> {
                 if (!player.isOnline() || !target.isOnline()) return;
                 PlayersUtils.setDowned(target, false);
