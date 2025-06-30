@@ -3,8 +3,11 @@ package org.warriorcats.pawsOfTheForest.utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.skills.EventsSkillsActives;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 
 import java.util.ArrayList;
@@ -13,6 +16,38 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class PlayersUtils {
+
+    private static final String DOWNED_KEY = "downed";
+    private static final String DOWNED_CD_KEY = "hold_on_cd";
+
+    public static boolean isDowned(Player player) {
+        return player.hasMetadata(DOWNED_KEY) && player.getMetadata(DOWNED_KEY).getFirst().asBoolean();
+    }
+
+    public static void setDowned(Player player, boolean state) {
+        if (state) {
+            player.setMetadata(DOWNED_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), true));
+        } else {
+            player.removeMetadata(DOWNED_KEY, PawsOfTheForest.getInstance());
+        }
+    }
+
+    public static long getDownedCooldown(Player player) {
+        if (!player.hasMetadata(DOWNED_CD_KEY)) return 0;
+
+        long remaining = player.getMetadata(DOWNED_CD_KEY).getFirst().asLong() - System.currentTimeMillis();
+        return Math.max(0, remaining / 1000);
+    }
+
+    public static boolean hasHoldOnOnCooldown(Player player) {
+        return player.hasMetadata(DOWNED_CD_KEY) &&
+                player.getMetadata(DOWNED_CD_KEY).getFirst().asLong() > System.currentTimeMillis();
+    }
+
+    public static void markHoldOnUsed(Player player) {
+        long until = System.currentTimeMillis() + (EventsSkillsActives.HOLD_ON_COOLDOWN_S * 1000);
+        player.setMetadata(DOWNED_CD_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), until));
+    }
 
     public static void increaseMovementSpeed(Player player, Supplier<Boolean> condition, double factor, float defaultSpeed) {
         if (condition.get()) {

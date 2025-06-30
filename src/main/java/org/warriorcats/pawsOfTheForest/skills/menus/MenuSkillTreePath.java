@@ -1,6 +1,5 @@
 package org.warriorcats.pawsOfTheForest.skills.menus;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,7 +19,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Getter
-@EqualsAndHashCode
 public class MenuSkillTreePath {
 
     public static final ChatColor COLOR_HIGHLIGHT = ChatColor.GRAY;

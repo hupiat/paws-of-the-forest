@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "skill_branchs")
+@Table(name = "skill_branches")
 public class SkillBranchEntity {
 
     @Id

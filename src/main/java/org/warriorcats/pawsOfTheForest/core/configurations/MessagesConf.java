@@ -192,6 +192,15 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String PLAYER_MESSAGE_APPLIED_PATHFINDING_BOOST =
                 getPropertyOrDefault("skills.playerMessages.appliedPathfindingBoost", "Pathfinding Boost ! You can now run faster and jump higher !", CONFIG_FILE_NAME);
 
+        public static final String PLAYER_MESSAGE_APPLIED_HOLD_ON =
+                getPropertyOrDefault("skills.playerMessages.appliedHoldOn", "Hold On ! Triggered to protect :", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_HOLD_ON =
+                getPropertyOrDefault("skills.playerMessages.holdOn", "You're downed instead of dying !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_HOLD_ON_SUCCUMBED =
+                getPropertyOrDefault("skills.playerMessages.holdOnSuccumbed", "You succumbed...", CONFIG_FILE_NAME);
+
         public static final String PREY_SENSE_DESCRIPTION =
                 getPropertyOrDefault("skills.descriptions.preySense", "Reveal nearby prey (5s glowing, 25 blocks)", CONFIG_FILE_NAME);
 

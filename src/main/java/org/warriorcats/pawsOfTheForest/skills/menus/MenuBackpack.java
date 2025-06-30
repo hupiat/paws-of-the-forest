@@ -8,11 +8,12 @@ import org.bukkit.inventory.ItemStack;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkillsPassives;
+import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 
 public abstract class MenuBackpack {
 
-    public static final String TITLE = "Beast of Burden";
+    public static final String TITLE = Skills.BEAST_OF_BURDEN.getDisplayName();
 
     public static void open(Player player, int tier) {
         Inventory menu = Bukkit.createInventory(player, tier * EventsSkillsPassives.BEAST_OF_BURDEN_TIER_VALUE, TITLE);
