@@ -16,9 +16,9 @@ public enum Skills {
     BLOOD_HUNTER("Blood Hunter", false, SkillBranches.HUNTING, 4, Material.REDSTONE),
     EFFICIENT_KILL("Efficient Kill", false, SkillBranches.HUNTING, 3, Material.COOKED_BEEF),
 
-    LOCATION_AWARENESS("Location Awareness", true, SkillBranches.NAVIGATION, 1, Material.FILLED_MAP),
+    LOCATION_AWARENESS("Location Awareness", true, SkillBranches.NAVIGATION, 1, Material.COMPASS),
     PATHFINDING_BOOST("Pathfinding Boost", true, SkillBranches.NAVIGATION, 1, Material.FEATHER),
-    TRAIL_MEMORY("Trail Memory", false, SkillBranches.NAVIGATION, 3, Material.PAPER),
+    TRAIL_MEMORY("Trail Memory", false, SkillBranches.NAVIGATION, 3, Material.FILLED_MAP),
     ENDURANCE_TRAVELER("Endurance Traveler", false, SkillBranches.NAVIGATION, 4, Material.COOKED_PORKCHOP),
     CLIMBERS_GRACE("Climber’s Grace", false, SkillBranches.NAVIGATION, 2, Material.LADDER),
 

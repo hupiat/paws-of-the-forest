@@ -13,12 +13,14 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
+import org.warriorcats.pawsOfTheForest.core.events.PlayerInCombatEvent;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
-import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 
@@ -34,13 +36,16 @@ public class EventsSkillsActives implements Listener {
     public static final int PATHFINDING_BOOST_DURATION_TICKS = 10 * 20;
     public static final double HOLD_ON_RADIUS = 50;
     public static final long HOLD_ON_DURATION_TICKS = 2 * 60 * 20; // 2 minutes
-    public static final long ON_YOUR_PAWS_REVIVE_DURATION_TICKS = 8 * 20; // 8s
+    public static final long ON_YOUR_PAWS_DURATION_TICKS = 8 * 20; // 8s
 
     public static final long HOLD_ON_COOLDOWN_S = 600; // 2 minutes
     public static final long PREY_SENSE_COOLDOWN_S = 20;
     public static final long HUNTERS_COMPASS_COOLDOWN_S = 60;
     public static final long LOW_SWEEP_COOLDOWN_S = 15;
     public static final long PATHFINDING_BOOST_COOLDOWN_S = 20;
+    public static final long ON_YOUR_PAWS_COOLDOWN_S = 60;
+
+    private final Map<UUID, BukkitTask> pendingRevives = new HashMap<>();
 
     // Handling persistent items (actives skills and noteblock) management
 
@@ -116,6 +121,15 @@ public class EventsSkillsActives implements Listener {
             }
         } else if (player.getWalkSpeed() < 0.1) {
             player.setWalkSpeed(0.2f);
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerInCombatEvent event) {
+        Player player = event.getPlayer();
+        if (pendingRevives.containsKey(player.getUniqueId())) {
+            pendingRevives.get(player.getUniqueId()).cancel();
+            pendingRevives.remove(player.getUniqueId());
         }
     }
 
@@ -250,14 +264,17 @@ public class EventsSkillsActives implements Listener {
 
         withCooldown(() -> {
             player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_ON_YOUR_PAWS + " " + target.getName());
-            Bukkit.getScheduler().runTaskLater(PawsOfTheForest.getInstance(), () -> {
+            BukkitTask task = Bukkit.getScheduler().runTaskLater(PawsOfTheForest.getInstance(), () -> {
+                pendingRevives.remove(player.getUniqueId());
                 if (!player.isOnline() || !target.isOnline()) return;
                 PlayersUtils.setDowned(target, false);
                 target.setHealth(4);
                 target.setFoodLevel(10);
                 target.setFireTicks(0);
                 target.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_ON_YOUR_PAWS_REVIVED);
-            }, ON_YOUR_PAWS_REVIVE_DURATION_TICKS);
+                ItemsUtils.setCooldown(player, event.getItem(), ON_YOUR_PAWS_COOLDOWN_S);
+            }, ON_YOUR_PAWS_DURATION_TICKS);
+            pendingRevives.put(player.getUniqueId(), task);
         }, event);
     }
 
