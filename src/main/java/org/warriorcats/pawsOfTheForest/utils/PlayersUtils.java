@@ -60,8 +60,8 @@ public abstract class PlayersUtils {
     public static boolean hasActiveSkillInInventory(Player player, Skills skill) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (ItemsUtils.isActiveSkill(player, item)) {
-                ItemStack activeSkill = ItemsUtils.getActiveSkill(player, skill.getIcon());
-                if (activeSkill.isSimilar(item)) {
+                ItemStack activeSkill = ItemsUtils.getActiveSkill(player, skill);
+                if (ItemsUtils.isSameItem(activeSkill, item)) {
                     return true;
                 }
             }
@@ -100,7 +100,7 @@ public abstract class PlayersUtils {
         List<ItemStack> itemsToAdd = new ArrayList<>();
         for (Skills skill : skills) {
             if (!hasActiveSkillInInventory(player, skill)) {
-                itemsToAdd.add(ItemsUtils.getActiveSkill(player, skill.getIcon()));
+                itemsToAdd.add(ItemsUtils.getActiveSkill(player, skill));
             }
         }
         boolean needNoteBlock = !hasNoteBlockInInventory(player);

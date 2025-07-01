@@ -11,6 +11,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
+import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
@@ -146,18 +147,19 @@ public abstract class ItemsUtils {
         return false;
     }
 
-    public static ItemStack getActiveSkill(Player player, Material icon) {
+    public static ItemStack getActiveSkill(Player player, Skills skill) {
         for (SkillBranches branch : SkillBranches.values()) {
             Optional<ItemStack> activeSkillOpt = MenuSkillTreePath
                     .generateActiveSkillsFor(EventsCore.PLAYERS_CACHE.get(player.getUniqueId()), branch)
-                    .values().stream()
-                    .filter(activeSkill -> activeSkill.getType() == icon)
+                    .entrySet().stream()
+                    .filter(e -> MenuSkillTreePath.getSkillByIndex(e.getKey(), branch) == skill)
+                    .map(Map.Entry::getValue)
                     .findAny();
             if (activeSkillOpt.isPresent()) {
                 return activeSkillOpt.get();
             }
         }
-        throw new IllegalArgumentException("Could not find active skill for player and icon : " + player.getName() + ", " + icon);
+        throw new IllegalArgumentException("Could not find active skill for player and skill : " + player.getName() + ", " + skill);
     }
 
     public static boolean checkForCooldown(Player player, ItemStack item) {

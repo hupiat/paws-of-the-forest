@@ -18,6 +18,7 @@ import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
+import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 
@@ -126,16 +127,17 @@ public class EventsSkillsActives implements Listener {
 
         if (ItemsUtils.isEmpty(item) || !ItemsUtils.isActiveSkill(event.getPlayer(), item)) return;
         if (event.getAction().toString().contains("RIGHT_CLICK")) {
-            if (item.getType() == Skills.PREY_SENSE.getIcon()) {
-                handlePreySense(event);
-            } else if (item.getType() == Skills.HUNTERS_COMPASS.getIcon()) {
-               handleHuntersCompass(event);
-            } else if (item.getType() == Skills.LOW_SWEEP.getIcon()) {
-                handleLowSweep(event);
-            } else if (item.getType() == Skills.PATHFINDING_BOOST.getIcon()) {
-                handlePathfindingBoost(event);
-            } else if (item.getType() == Skills.ON_YOUR_PAWS.getIcon()) {
-                handleOnYourPaws(event);
+            for (Skills active : Skills.getActiveSkills()) {
+                ItemStack activeSkillTemplate = ItemsUtils.getActiveSkill(event.getPlayer(), active);
+                if (ItemsUtils.isSameItem(activeSkillTemplate, item)) {
+                    switch (active) {
+                        case PREY_SENSE -> handlePreySense(event);
+                        case HUNTERS_COMPASS -> handleHuntersCompass(event);
+                        case LOW_SWEEP -> handleLowSweep(event);
+                        case PATHFINDING_BOOST -> handlePathfindingBoost(event);
+                        case ON_YOUR_PAWS -> handleOnYourPaws(event);
+                    }
+                }
             }
             event.setCancelled(true);
         }
