@@ -17,36 +17,48 @@ import java.util.function.Supplier;
 
 public abstract class PlayersUtils {
 
-    private static final String DOWNED_KEY = "downed";
-    private static final String DOWNED_CD_KEY = "hold_on_cd";
+    private static final String META_DOWNED_KEY = "downed";
+    private static final String META_DOWNED_CD_KEY = "hold_on_cd";
+    private static final String META_WAYPOINT_INDEX = "waypoint_index";
+
+    public static int getWaypointIndex(Player player) {
+        return player.hasMetadata(META_WAYPOINT_INDEX)
+                ? player.getMetadata(META_WAYPOINT_INDEX).getFirst().asInt()
+                : -1;
+    }
+
+    public static void setWaypointIndex(Player player, int index) {
+        player.setMetadata(META_WAYPOINT_INDEX,
+                new FixedMetadataValue(PawsOfTheForest.getInstance(), index));
+    }
 
     public static boolean isDowned(Player player) {
-        return player.hasMetadata(DOWNED_KEY) && player.getMetadata(DOWNED_KEY).getFirst().asBoolean();
+        return player.hasMetadata(META_DOWNED_KEY) && player.getMetadata(META_DOWNED_KEY).getFirst().asBoolean();
     }
 
     public static void setDowned(Player player, boolean state) {
         if (state) {
-            player.setMetadata(DOWNED_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), true));
+            player.setMetadata(META_DOWNED_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), true));
         } else {
-            player.removeMetadata(DOWNED_KEY, PawsOfTheForest.getInstance());
+            player.removeMetadata(META_DOWNED_KEY, PawsOfTheForest.getInstance());
         }
     }
 
     public static long getDownedCooldown(Player player) {
-        if (!player.hasMetadata(DOWNED_CD_KEY)) return 0;
+        if (!player.hasMetadata(META_DOWNED_CD_KEY)) return 0;
 
-        long remaining = player.getMetadata(DOWNED_CD_KEY).getFirst().asLong() - System.currentTimeMillis();
+        long remaining = player.getMetadata(META_DOWNED_CD_KEY).getFirst().asLong() - System.currentTimeMillis();
         return Math.max(0, remaining / 1000);
     }
 
     public static boolean hasHoldOnOnCooldown(Player player) {
-        return player.hasMetadata(DOWNED_CD_KEY) &&
-                player.getMetadata(DOWNED_CD_KEY).getFirst().asLong() > System.currentTimeMillis();
+        return player.hasMetadata(META_DOWNED_CD_KEY) &&
+                player.getMetadata(META_DOWNED_CD_KEY).getFirst().asLong() > System.currentTimeMillis();
     }
 
     public static void markHoldOnUsed(Player player) {
         long until = System.currentTimeMillis() + (EventsSkillsActives.HOLD_ON_COOLDOWN_S * 1000);
-        player.setMetadata(DOWNED_CD_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), until));
+        player.setMetadata(META_DOWNED_CD_KEY, new FixedMetadataValue(PawsOfTheForest.getInstance(), until));
     }
 
     public static void increaseMovementSpeed(Player player, Supplier<Boolean> condition, double factor, float defaultSpeed) {

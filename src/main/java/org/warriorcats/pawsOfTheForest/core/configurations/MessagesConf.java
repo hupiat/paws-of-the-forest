@@ -210,6 +210,18 @@ public abstract class MessagesConf extends AbstractConfiguration {
         public static final String PLAYER_MESSAGE_ON_YOUR_PAWS_REVIVED =
                 getPropertyOrDefault("skills.playerMessages.onYourPawsRevived", "On Your Paws ! You have been revived !", CONFIG_FILE_NAME);
 
+        public static final String PLAYER_MESSAGE_LOCATION_AWARENESS_VISITED =
+                getPropertyOrDefault("skills.playerMessages.locationAwarenessVisited", "Location Awareness ! You have located and stored a waypoint !", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_LOCATION_AWARENESS =
+                getPropertyOrDefault("skills.playerMessages.locationAwareness", "Location Awareness ! Switched to waypoint :", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_LOCATION_AWARENESS_NO_WAYPOINT =
+                getPropertyOrDefault("skills.playerMessages.locationAwarenessNoWaypoint", "No stored waypoint to display", CONFIG_FILE_NAME);
+
+        public static final String PLAYER_MESSAGE_TRAIL_MEMORY =
+                getPropertyOrDefault("skills.playerMessages.trailMemory", "Trail Memory ! You have been teleported to :", CONFIG_FILE_NAME);
+
         public static final String PREY_SENSE_DESCRIPTION =
                 getPropertyOrDefault("skills.descriptions.preySense", "Reveal nearby prey (5s glowing, 25 blocks)", CONFIG_FILE_NAME);
 

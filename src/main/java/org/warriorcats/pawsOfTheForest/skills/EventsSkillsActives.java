@@ -1,8 +1,11 @@
 package org.warriorcats.pawsOfTheForest.skills;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,7 +16,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
@@ -25,6 +27,7 @@ import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.PlayersUtils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EventsSkillsActives implements Listener {
 
@@ -44,8 +47,12 @@ public class EventsSkillsActives implements Listener {
     public static final long LOW_SWEEP_COOLDOWN_S = 15;
     public static final long PATHFINDING_BOOST_COOLDOWN_S = 20;
     public static final long ON_YOUR_PAWS_COOLDOWN_S = 60;
+    public static final long LOCATION_AWARENESS_COOLDOWN_S = 60;
 
-    private final Map<UUID, BukkitTask> pendingRevives = new HashMap<>();
+    public static final Map<UUID, Map<Waypoints, Pair<Biome, Location>>> STORED_WAYPOINTS =
+            new ConcurrentHashMap<>();
+
+    private final Map<UUID, BukkitTask> pendingRevives = new ConcurrentHashMap<>();
 
     // Handling persistent items (actives skills and noteblock) management
 
@@ -122,6 +129,25 @@ public class EventsSkillsActives implements Listener {
         } else if (player.getWalkSpeed() < 0.1) {
             player.setWalkSpeed(0.2f);
         }
+
+        if (EventsCore.PLAYERS_CACHE.get(player.getUniqueId()).hasAbility(Skills.LOCATION_AWARENESS)) {
+            Biome currentBiome = player.getWorld().getBiome(player.getLocation());
+            Map<Waypoints, Pair<Biome, Location>> stored = STORED_WAYPOINTS.get(player.getUniqueId());
+            Optional<Waypoints> processing = Waypoints.getFromBiome(currentBiome);
+            if (processing.isEmpty()) {
+                return;
+            }
+            if (stored == null) {
+                stored = new HashMap<>();
+            }
+            Pair<Biome, Location> storedLocation = stored.get(processing.get());
+            if (storedLocation == null || storedLocation.getKey() != currentBiome) {
+                storedLocation = Pair.of(currentBiome, player.getLocation());
+                stored.put(processing.get(), storedLocation);
+                STORED_WAYPOINTS.put(player.getUniqueId(), stored);
+                player.sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_LOCATION_AWARENESS_VISITED);
+            }
+        }
     }
 
     @EventHandler
@@ -150,6 +176,7 @@ public class EventsSkillsActives implements Listener {
                         case LOW_SWEEP -> handleLowSweep(event);
                         case PATHFINDING_BOOST -> handlePathfindingBoost(event);
                         case ON_YOUR_PAWS -> handleOnYourPaws(event);
+                        case LOCATION_AWARENESS -> handleLocationAwareness(event);
                     }
                 }
             }
@@ -275,6 +302,37 @@ public class EventsSkillsActives implements Listener {
                 ItemsUtils.setCooldown(player, event.getItem(), ON_YOUR_PAWS_COOLDOWN_S);
             }, ON_YOUR_PAWS_DURATION_TICKS);
             pendingRevives.put(player.getUniqueId(), task);
+        }, event);
+    }
+
+    private void handleLocationAwareness(PlayerInteractEvent event) {
+        Map<Waypoints, Pair<Biome, Location>> stored = STORED_WAYPOINTS.get(event.getPlayer().getUniqueId());
+        if (stored == null) {
+            event.getPlayer().sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_LOCATION_AWARENESS_NO_WAYPOINT);
+            return;
+        }
+        withCooldown(() -> {
+            int currentIndex = PlayersUtils.getWaypointIndex(event.getPlayer());
+            currentIndex++;
+            Waypoints nextWaypoint = Waypoints.getFromIndex(currentIndex);
+            while (!stored.containsKey(nextWaypoint)) {
+                currentIndex++;
+                nextWaypoint = Waypoints.getFromIndex(currentIndex);
+                if (stored.containsKey(nextWaypoint)) {
+                    break;
+                } else if (currentIndex >= Waypoints.values().length - 1) {
+                    currentIndex = 0;
+                    nextWaypoint = Waypoints.getFromIndex(currentIndex);
+                }
+            }
+
+            PlayersUtils.setWaypointIndex(event.getPlayer(), currentIndex);
+
+            Pair<Biome, Location> location = stored.get(nextWaypoint);
+
+            event.getPlayer().setCompassTarget(location.getValue());
+            event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_LOCATION_AWARENESS + " " + nextWaypoint);
+            ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), LOCATION_AWARENESS_COOLDOWN_S);
         }, event);
     }
 
