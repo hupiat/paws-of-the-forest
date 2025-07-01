@@ -14,7 +14,7 @@ import java.util.logging.Level;
 
 public abstract class HttpServerUtils {
 
-    public static final int RESOURCES_PACK_PORT = 8027;
+    public static final int RESOURCES_PACK_PORT = 8175;
 
     private static HttpServer httpServer;
 
