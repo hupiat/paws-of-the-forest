@@ -48,6 +48,8 @@ public class EventsSkillsActives implements Listener {
     public static final long PATHFINDING_BOOST_COOLDOWN_S = 20;
     public static final long ON_YOUR_PAWS_COOLDOWN_S = 60;
     public static final long LOCATION_AWARENESS_COOLDOWN_S = 60;
+    public static final long TRAIL_MEMORY_BASE_COOLDOWN_S = 80;
+    public static final long TRAIL_MEMORY_TIER_VALUE_S = 20;
 
     public static final Map<UUID, Map<Waypoints, Pair<Biome, Location>>> STORED_WAYPOINTS =
             new ConcurrentHashMap<>();
@@ -182,6 +184,12 @@ public class EventsSkillsActives implements Listener {
             }
             event.setCancelled(true);
         }
+        if (event.getAction().toString().contains("LEFT_CLICK") &&
+                ItemsUtils.isSameItem(ItemsUtils.getActiveSkill(event.getPlayer(), Skills.LOCATION_AWARENESS), item) &&
+                EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId()).hasAbility(Skills.TRAIL_MEMORY)) {
+            handleTrailMemory(event);
+            event.setCancelled(true);
+        }
     }
 
     private void handlePreySense(PlayerInteractEvent event) {
@@ -201,7 +209,7 @@ public class EventsSkillsActives implements Listener {
             }
             ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), PREY_SENSE_COOLDOWN_S);
             event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_PREY_SENSE);
-        }, event);
+        }, event, false);
     }
 
     private void handleHuntersCompass(PlayerInteractEvent event) {
@@ -214,7 +222,7 @@ public class EventsSkillsActives implements Listener {
                 ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), HUNTERS_COMPASS_COOLDOWN_S);
                 event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_HUNTERS_COMPASS);
             });
-        }, event);
+        }, event, false);
     }
 
     private void handleLowSweep(PlayerInteractEvent event) {
@@ -250,7 +258,7 @@ public class EventsSkillsActives implements Listener {
                     },
                     LOW_SWEEP_CHARGE_DELAY_TICKS
             );
-        }, event);
+        }, event, false);
     }
 
     private void handlePathfindingBoost(PlayerInteractEvent event) {
@@ -263,7 +271,7 @@ public class EventsSkillsActives implements Listener {
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, PATHFINDING_BOOST_DURATION_TICKS, 0, false, false));
             event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_APPLIED_PATHFINDING_BOOST);
             ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), PATHFINDING_BOOST_COOLDOWN_S);
-        }, event);
+        }, event, false);
     }
 
     private void handleOnYourPaws(PlayerInteractEvent event) {
@@ -302,7 +310,7 @@ public class EventsSkillsActives implements Listener {
                 ItemsUtils.setCooldown(player, event.getItem(), ON_YOUR_PAWS_COOLDOWN_S);
             }, ON_YOUR_PAWS_DURATION_TICKS);
             pendingRevives.put(player.getUniqueId(), task);
-        }, event);
+        }, event, false);
     }
 
     private void handleLocationAwareness(PlayerInteractEvent event) {
@@ -333,7 +341,29 @@ public class EventsSkillsActives implements Listener {
             event.getPlayer().setCompassTarget(location.getValue());
             event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_LOCATION_AWARENESS + " " + nextWaypoint);
             ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), LOCATION_AWARENESS_COOLDOWN_S);
-        }, event);
+        }, event, false);
+    }
+
+    private void handleTrailMemory(PlayerInteractEvent event) {
+        Map<Waypoints, Pair<Biome, Location>> stored = STORED_WAYPOINTS.get(event.getPlayer().getUniqueId());
+        if (stored == null) {
+            event.getPlayer().sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_LOCATION_AWARENESS_NO_WAYPOINT);
+            return;
+        }
+        int currentIndex = PlayersUtils.getWaypointIndex(event.getPlayer());
+        if (currentIndex < 0) {
+            event.getPlayer().sendMessage(ChatColor.RED + MessagesConf.Skills.PLAYER_MESSAGE_TRAIL_MEMORY_NO_WAYPOINT);
+            return;
+        }
+        withCooldown(() -> {
+            Waypoints waypoint = Waypoints.getFromIndex(currentIndex);
+            Pair<Biome, Location> location = stored.get(waypoint);
+            event.getPlayer().teleport(location.getValue());
+            event.getPlayer().sendMessage(MessagesConf.Skills.COLOR_FEEDBACK + MessagesConf.Skills.PLAYER_MESSAGE_TRAIL_MEMORY + " " + waypoint);
+
+            int tier = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId()).getAbilityTier(Skills.TRAIL_MEMORY);
+            ItemsUtils.setCooldown(event.getPlayer(), event.getItem(), TRAIL_MEMORY_BASE_COOLDOWN_S - TRAIL_MEMORY_TIER_VALUE_S * tier, ItemsUtils.META_COOLDOWN_SECONDARY_KEY);
+        }, event, true);
     }
 
     private void handleDownedState(Player dying, long delay) {
@@ -347,8 +377,9 @@ public class EventsSkillsActives implements Listener {
         }, delay);
     }
 
-    private void withCooldown(Runnable runnable, PlayerInteractEvent event) {
-        if (ItemsUtils.checkForCooldown(event.getPlayer(), event.getItem())) {
+    private void withCooldown(Runnable runnable, PlayerInteractEvent event, boolean secondary) {
+        if (ItemsUtils.checkForCooldown(event.getPlayer(), event.getItem(),
+                secondary ? ItemsUtils.META_COOLDOWN_SECONDARY_KEY : ItemsUtils.META_COOLDOWN_KEY)) {
             runnable.run();
         } else {
             event.getPlayer().sendMessage(ChatColor.RED +

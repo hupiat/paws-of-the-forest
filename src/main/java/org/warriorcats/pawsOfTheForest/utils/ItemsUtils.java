@@ -11,7 +11,6 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
-import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.SkillBranches;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.skills.menus.MenuSkillTreePath;
@@ -25,7 +24,8 @@ import java.util.stream.Collectors;
 
 public abstract class ItemsUtils {
 
-    public static final NamespacedKey COOLDOWN_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown");
+    public static final NamespacedKey META_COOLDOWN_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown");
+    public static final NamespacedKey META_COOLDOWN_SECONDARY_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown_secondary");
 
     public static final Set<Material> URBAN_BLOCKS = Set.of(
             Material.STONE,
@@ -163,27 +163,39 @@ public abstract class ItemsUtils {
     }
 
     public static boolean checkForCooldown(Player player, ItemStack item) {
-        return getCooldown(player, item) == 0;
+        return checkForCooldown(player, item, META_COOLDOWN_KEY);
+    }
+
+    public static boolean checkForCooldown(Player player, ItemStack item, NamespacedKey key) {
+        return getCooldown(player, item, key) == 0;
     }
 
     public static long getCooldown(Player player, ItemStack item) {
+        return getCooldown(player, item, META_COOLDOWN_KEY);
+    }
+
+    public static long getCooldown(Player player, ItemStack item, NamespacedKey key) {
         if (!isActiveSkill(player, item)) {
             throw new IllegalArgumentException("Item is not an active skill");
         }
         ItemMeta meta = item.getItemMeta();
-        long nextTime = meta.getPersistentDataContainer().getOrDefault(COOLDOWN_KEY, PersistentDataType.LONG, 0L);
+        long nextTime = meta.getPersistentDataContainer().getOrDefault(key, PersistentDataType.LONG, 0L);
         long now = System.currentTimeMillis();
         long remainingMillis = nextTime - now;
         return Math.max(0, remainingMillis / 1000);
     }
 
     public static void setCooldown(Player player, ItemStack item, long cooldown) {
+        setCooldown(player, item, cooldown, META_COOLDOWN_KEY);
+    }
+
+    public static void setCooldown(Player player, ItemStack item, long cooldown, NamespacedKey key) {
         if (!isActiveSkill(player, item)) {
             throw new IllegalArgumentException("Item is not an active skill");
         }
         ItemMeta meta = item.getItemMeta();
         long nextAvailableTime = System.currentTimeMillis() + (cooldown * 1000);
-        meta.getPersistentDataContainer().set(COOLDOWN_KEY, PersistentDataType.LONG, nextAvailableTime);
+        meta.getPersistentDataContainer().set(key, PersistentDataType.LONG, nextAvailableTime);
         item.setItemMeta(meta);
     }
 
