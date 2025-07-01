@@ -117,7 +117,6 @@ public class EventsSkillsActives implements Listener {
         if (PlayersUtils.isDowned(player)) {
             handleDownedState(player, PlayersUtils.getDownedCooldown(player));
         }
-        PlayersUtils.synchronizeInventory(event.getPlayer());
     }
 
     @EventHandler
