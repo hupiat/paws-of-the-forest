@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.hibernate.Session;
+import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
@@ -76,6 +77,8 @@ public class EventsSkillsMenu implements Listener {
     }
 
     private void handleMainMenuClick(int index, Player player) {
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
+
         Consumer<SkillBranches> consumer = branch -> {
             player.closeInventory();
             MenuSkillTreePath menuSkillTreePath = new MenuSkillTreePath(branch);
@@ -117,19 +120,27 @@ public class EventsSkillsMenu implements Listener {
                 break;
 
             case MenuSkillTree.INDEX_BREEZE_CLAN:
-                consumer.accept(SkillBranches.BREEZE_CLAN);
+                if (entity.getClan() == Clans.BREEZE) {
+                    consumer.accept(SkillBranches.BREEZE_CLAN);
+                }
                 break;
 
             case MenuSkillTree.INDEX_ECHO_CLAN:
-                consumer.accept(SkillBranches.ECHO_CLAN);
+                if (entity.getClan() == Clans.ECHO) {
+                    consumer.accept(SkillBranches.ECHO_CLAN);
+                }
                 break;
 
             case MenuSkillTree.INDEX_CREEK_CLAN:
-                consumer.accept(SkillBranches.CREEK_CLAN);
+                if (entity.getClan() == Clans.CREEK) {
+                    consumer.accept(SkillBranches.CREEK_CLAN);
+                }
                 break;
 
             case MenuSkillTree.INDEX_SHADE_CLAN:
-                consumer.accept(SkillBranches.SHADE_CLAN);
+                if (entity.getClan() == Clans.SHADE) {
+                    consumer.accept(SkillBranches.SHADE_CLAN);
+                }
                 break;
 
             case MenuSkillTree.INDEX_BACK:
