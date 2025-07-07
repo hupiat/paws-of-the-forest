@@ -41,10 +41,8 @@ import static org.bukkit.potion.PotionEffectType.*;
 public class EventsCore implements Listener {
 
     public static final int FIGHTING_PLAYERS_SCAN_DELAY_S = 10;
-    public static final int JUMPING_PLAYERS_SCAN_DELAY_TICKS = 8;
 
     public static final Set<Player> PLAYERS_FIGHTING = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    public static final Set<Player> PLAYERS_JUMPING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Set<Player> PLAYERS_LEAVING = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final Map<UUID, PlayerEntity> PLAYERS_CACHE = new ConcurrentHashMap<>();
 
@@ -112,19 +110,6 @@ public class EventsCore implements Listener {
     @EventHandler
     public void on(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-
-        if (!PLAYERS_JUMPING.contains(player)) {
-            if (!player.isOnGround() && player.getVelocity().getY() > 0) {
-                Bukkit.getPluginManager().callEvent(new PlayerJumpEvent(player));
-                PLAYERS_JUMPING.add(player);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        PLAYERS_JUMPING.remove(player);
-                    }
-                }.runTaskLater(PawsOfTheForest.getInstance(), JUMPING_PLAYERS_SCAN_DELAY_TICKS);
-            }
-        }
 
         Block block = player.getLocation().getBlock();
         if (block.getType() == Material.POWDER_SNOW) {

@@ -1,5 +1,6 @@
 package org.warriorcats.pawsOfTheForest.vitals;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,12 +9,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -25,16 +28,16 @@ public class EventsVitals implements LoadingListener {
     public static final long BASE_MINECRAFT_ACTIVITY_FREQUENCY_TICKS = (long) (20L * 1.5);
 
     public static final double BASE_REGEN_VALUE = 0.05;
+    public static final double SOCIAL_REGEN_VALUE = 0.1;
+    public static final double DRINK_REGEN_VALUE = 0.3;
 
+    public static final double BASE_CONSUME_VALUE = 0.005;
     public static final double SPRINT_CONSUME_VALUE = 0.1;
     public static final double SWIM_CONSUME_VALUE = 0.01;
     public static final double JUMP_CONSUME_VALUE = 0.2;
     public static final double MINE_CONSUME_VALUE = 0.005;
     public static final double ATTACK_CONSUME_VALUE = 0.1;
     public static final double ATTACKED_CONSUME_VALUE = 0.1;
-
-    // For hygiene & social
-    public static final double BASE_CONSUME_VALUE = 0.005;
 
     private final Map<UUID, Double> distances = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastSocialActivities = new ConcurrentHashMap<>();
@@ -78,10 +81,10 @@ public class EventsVitals implements LoadingListener {
         if (total >= 4 && activityFrequency) {
             if (player.isSprinting()) {
                 decreaseVitals(player, SPRINT_CONSUME_VALUE, SPRINT_CONSUME_VALUE, 0, 0);
-            } else if (player.isSwimming()) {
+            } else if (player.isInWater()) {
                 decreaseVitals(player, 0, SWIM_CONSUME_VALUE, 0, 0);
-            } else if (player.isJumping()) {
-                decreaseVitals(player, JUMP_CONSUME_VALUE, JUMP_CONSUME_VALUE, 0, 0);
+            } else {
+                decreaseVitals(player, BASE_CONSUME_VALUE, BASE_CONSUME_VALUE, 0, 0);
             }
             activityFrequency = false;
         }
@@ -90,7 +93,16 @@ public class EventsVitals implements LoadingListener {
             total = 0;
         }
 
+        if (player.isInWaterOrRainOrBubbleColumn()) {
+            increaseVitals(player, 1, 0, 1, 0);
+        }
+
         distances.put(player.getUniqueId(), total);
+    }
+
+    @EventHandler
+    public void on(PlayerJumpEvent event) {
+        decreaseVitals(event.getPlayer(), JUMP_CONSUME_VALUE, JUMP_CONSUME_VALUE, 0, 0);
     }
 
     @EventHandler
@@ -117,13 +129,22 @@ public class EventsVitals implements LoadingListener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void on(AsyncPlayerChatEvent event) {
         lastSocialActivities.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+        increaseVitals(event.getPlayer(), 0, 0, 0, SOCIAL_REGEN_VALUE);
     }
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void on(PlayerInteractEvent event) {
         lastSocialActivities.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+        increaseVitals(event.getPlayer(), 0, 0, 0, SOCIAL_REGEN_VALUE);
+    }
+
+    @EventHandler
+    public void on(PlayerItemConsumeEvent event) {
+        if (ItemsUtils.isDrinkable(event.getItem())) {
+            increaseVitals(event.getPlayer(), DRINK_REGEN_VALUE, 0, 0, 0);
+        }
     }
 
     private void decreaseVitals(Player player, double thirst, double energy, double hygiene, double social) {

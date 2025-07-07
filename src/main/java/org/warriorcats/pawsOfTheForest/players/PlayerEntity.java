@@ -61,6 +61,22 @@ public class PlayerEntity {
     @Lob
     private byte[] backpackData;
 
+    public void setThirst(double thirst) {
+        this.thirst = Math.max(0, Math.min(thirst, 1.0));
+    }
+
+    public void setEnergy(double energy) {
+        this.energy = Math.max(0, Math.min(energy, 1.0));
+    }
+
+    public void setHygiene(double hygiene) {
+        this.hygiene = Math.max(0, Math.min(hygiene, 1.0));
+    }
+
+    public void setSocial(double social) {
+        this.social = Math.max(0, Math.min(social, 1.0));
+    }
+
     public boolean hasAbility(Skills skill) {
         return getAbilityInternal(skill).isPresent();
     }

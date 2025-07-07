@@ -6,7 +6,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
@@ -130,6 +132,17 @@ public abstract class ItemsUtils {
             Material.KELP,
             Material.SEAGRASS
     );
+
+    public static boolean isDrinkable(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+
+        Material type = item.getType();
+
+        return switch (type) {
+            case POTION, MILK_BUCKET, MUSHROOM_STEW, RABBIT_STEW, BEETROOT_SOUP -> true;
+            default -> false;
+        };
+    }
 
     public static boolean isActiveSkill(Player player, ItemStack item, Skills skill) {
         return MenuSkillTreePath
