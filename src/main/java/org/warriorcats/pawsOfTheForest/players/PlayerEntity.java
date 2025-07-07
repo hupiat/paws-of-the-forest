@@ -32,6 +32,18 @@ public class PlayerEntity {
     @Column(name = "xp_perks", nullable = false)
     private double xpPerks;
 
+    @Column(name = "thirst", nullable = false)
+    private double thirst = 1;
+
+    @Column(name = "energy", nullable = false)
+    private double energy = 1;
+
+    @Column(name = "hygiene", nullable = false)
+    private double hygiene = 1;
+
+    @Column(name = "social", nullable = false)
+    private double social = 1;
+
     @Column(name = "coins", nullable = false)
     private long coins;
 

@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.chats.ChatChannels;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.CommandToggleChat;
-import org.warriorcats.pawsOfTheForest.core.huds.HUD;
+import org.warriorcats.pawsOfTheForest.vitals.HUD;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;

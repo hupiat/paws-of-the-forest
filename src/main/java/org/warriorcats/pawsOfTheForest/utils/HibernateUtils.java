@@ -28,7 +28,6 @@ public abstract class HibernateUtils {
         withSession(session -> {
             var transaction = session.beginTransaction();
             T obj = callback.apply(transaction, session);
-            session.persist(obj);
             if (obj instanceof PlayerEntity player) {
                 EventsCore.PLAYERS_CACHE.put(player.getUuid(), player);
             }

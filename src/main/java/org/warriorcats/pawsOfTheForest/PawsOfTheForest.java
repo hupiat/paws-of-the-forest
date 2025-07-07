@@ -26,6 +26,7 @@ import org.warriorcats.pawsOfTheForest.skills.menus.EventsSkillsMenu;
 import org.warriorcats.pawsOfTheForest.utils.FileUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
+import org.warriorcats.pawsOfTheForest.vitals.EventsVitals;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,6 +79,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerEvent(new EventsSkillsPassives());
         registerEvent(new EventsSkillsMenu());
         registerEvent(new EventsSkillsActives());
+        registerEvent(new EventsVitals());
 
         // Zipping resources pack to be sent to all players, and serving in local
         prepareHttpServerForResourcesPack();
