@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
+import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
@@ -41,6 +42,7 @@ public class EventsIllnesses implements LoadingListener {
                             worsened.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
                             addPotionEffects(player, illness, illnessEntity.getAmplifier());
                             worsened.get(player.getUniqueId()).add(illness);
+                            player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.ILLNESS_WORSENED + " " + illness);
                         }
                     }
                 }
@@ -76,6 +78,7 @@ public class EventsIllnesses implements LoadingListener {
             entity.getIllnesses().add(illnessEntity);
             return entity;
         }));
+        player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.GOT_SICK + " " + illness);
         addPotionEffects(player, illness, 0);
     }
 

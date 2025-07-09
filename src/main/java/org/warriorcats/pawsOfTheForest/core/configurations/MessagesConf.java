@@ -387,4 +387,15 @@ public abstract class MessagesConf extends BaseConfiguration {
                 getPropertyOrDefault("skills.descriptions.silentKill", "Bonus damage on sneak attacks.", CONFIG_FILE_NAME);
 
     }
+
+    public static class Illnesses {
+        public static final ChatColor COLOR_FEEDBACK =
+                getPropertyOrDefault("illnesses.colors.feedback", ChatColor.DARK_RED, CONFIG_FILE_NAME);
+
+        public static final String GOT_SICK =
+                getPropertyOrDefault("illnesses.gotSick", "You got sick !", CONFIG_FILE_NAME);
+
+        public static final String ILLNESS_WORSENED =
+                getPropertyOrDefault("illnesses.illnessWorsened", "Your illness has worsened !", CONFIG_FILE_NAME);
+    }
 }
