@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventsIllnesses implements LoadingListener {
 
     public static final double BASE_INFECTION_RATE = 0.002;
+    public static final double NEARBY_BASE_INFECTION_RATE = 0.0011;
     public static final int BASE_INFECTION_DISTANCE = 5;
 
     private final Map<UUID, List<Illnesses>> worsened = new ConcurrentHashMap<>();
@@ -61,7 +62,7 @@ public class EventsIllnesses implements LoadingListener {
     @EventHandler
     public void on(PlayerMoveEvent event) {
         if (event.getPlayer().getWorld().hasStorm() && Math.random() < BASE_INFECTION_RATE ||
-            isNearFromPlayerSick(event.getPlayer(), Illnesses.UPPER_RESPIRATORY_INFECTION)) {
+            isNearFromPlayerSick(event.getPlayer(), Illnesses.UPPER_RESPIRATORY_INFECTION) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.UPPER_RESPIRATORY_INFECTION);
         }
     }
