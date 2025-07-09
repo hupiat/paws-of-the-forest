@@ -9,6 +9,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
@@ -31,6 +32,8 @@ public abstract class HUD {
 
     private static final Map<UUID, NamespacedKey> PROGRESS_BARS = new ConcurrentHashMap<>();
     private static final Map<UUID, NamespacedKey> DUMMY_BARS = new ConcurrentHashMap<>();
+
+    private static final Map<UUID, BukkitTask> SOCIAL_ACTION_BAR_TASKS = new ConcurrentHashMap<>();
 
     public static void open(Player player) {
         for (@NotNull Iterator<KeyedBossBar> it = Bukkit.getBossBars(); it.hasNext(); ) {
@@ -65,7 +68,12 @@ public abstract class HUD {
 
         // Action bar (social)
         String socialText = SOCIAL_ICON + "  " + (int) (entity.getSocial() * 100) + "%";
-        new BukkitRunnable() {
+
+        BukkitTask previous = SOCIAL_ACTION_BAR_TASKS.remove(uuid);
+        if (previous != null && !previous.isCancelled()) {
+            previous.cancel();
+        }
+        SOCIAL_ACTION_BAR_TASKS.put(uuid, new BukkitRunnable() {
             @Override
             public void run() {
                 if (!player.isOnline()) {
@@ -74,7 +82,7 @@ public abstract class HUD {
                 }
                 player.sendActionBar(Component.text(socialText));
             }
-        }.runTaskTimer(PawsOfTheForest.getInstance(), 0L, 20L);
+        }.runTaskTimer(PawsOfTheForest.getInstance(), 0L, 20L));
     }
 
     public static void remove(Player player) {
