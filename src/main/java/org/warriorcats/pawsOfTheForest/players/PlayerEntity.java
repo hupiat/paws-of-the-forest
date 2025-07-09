@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
+import org.warriorcats.pawsOfTheForest.illnesses.IllnessEntity;
+import org.warriorcats.pawsOfTheForest.illnesses.Illnesses;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
@@ -58,6 +60,9 @@ public class PlayerEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SkillBranchEntity> skillBranches = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<IllnessEntity> illnesses = new ArrayList<>();
+
     @Lob
     private byte[] backpackData;
 
@@ -75,6 +80,17 @@ public class PlayerEntity {
 
     public void setSocial(double social) {
         this.social = Math.max(0, Math.min(social, 1.0));
+    }
+
+    public boolean hasIllness(Illnesses illness) {
+        return illnesses.stream().anyMatch(illnessEntity -> illnessEntity.getIllness() == illness);
+    }
+
+    public IllnessEntity getIllness(Illnesses illness) {
+        return illnesses.stream()
+                .filter(illnessEntity -> illnessEntity.getIllness() == illness)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("Could not find illness: " + illness + " for player: " + name));
     }
 
     public boolean hasAbility(Skills skill) {

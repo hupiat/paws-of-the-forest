@@ -9,6 +9,7 @@ import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
+import org.warriorcats.pawsOfTheForest.illnesses.EventsIllnesses;
 import org.warriorcats.pawsOfTheForest.shops.CommandOpenShop;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
@@ -76,6 +77,7 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerEvent(new EventsSkillsMenu());
         registerEvent(new EventsSkillsActives());
         registerEvent(new EventsVitals());
+        registerEvent(new EventsIllnesses());
 
         // Zipping resources pack to be sent to all players, and serving in local
         prepareHttpServerForResourcesPack();

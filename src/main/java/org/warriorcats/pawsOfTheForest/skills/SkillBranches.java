@@ -18,13 +18,7 @@ public enum SkillBranches {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        String[] split = name().toLowerCase().split("_");
-        for (String stub : split) {
-            builder.append(StringsUtils.capitalize(stub));
-            builder.append(" ");
-        }
-        return builder.toString().trim();
+        return StringsUtils.capitalizeWithSpaces(name(), "_");
     }
 
     public static final double UNLOCK_SKILL = 8;

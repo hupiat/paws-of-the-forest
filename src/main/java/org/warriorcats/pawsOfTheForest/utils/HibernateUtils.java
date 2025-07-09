@@ -9,6 +9,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.settings.SettingsEntity;
+import org.warriorcats.pawsOfTheForest.illnesses.IllnessEntity;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
@@ -56,6 +57,7 @@ public abstract class HibernateUtils {
             sources.addAnnotatedClass(SettingsEntity.class);
             sources.addAnnotatedClass(SkillBranchEntity.class);
             sources.addAnnotatedClass(SkillEntity.class);
+            sources.addAnnotatedClass(IllnessEntity.class);
 
             Metadata metadata = sources.getMetadataBuilder().build();
             return metadata.getSessionFactoryBuilder().build();
