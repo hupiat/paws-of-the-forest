@@ -37,7 +37,6 @@ public abstract class HUD {
             BossBar b = it.next();
             b.removePlayer(player);
         }
-        remove(player);
         updateInterface(player);
     }
 
