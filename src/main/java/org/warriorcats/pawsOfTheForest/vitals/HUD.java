@@ -54,14 +54,12 @@ public abstract class HUD {
         // Dummy bar to scale vertically
         NamespacedKey dummyKey = NamespacedKey.minecraft("hud_dummy_" + uuid);
         BossBar dummy = Bukkit.createBossBar(dummyKey, " ", BarColor.WHITE, BarStyle.SEGMENTED_20);
-        dummy.setProgress(0.00001);
         dummy.addPlayer(player);
         DUMMY_BARS.put(uuid, dummyKey);
 
         // HUD bar
         NamespacedKey key = NamespacedKey.minecraft("hud_" + uuid);
         BossBar bar = Bukkit.createBossBar(key, barText, BarColor.WHITE, BarStyle.SEGMENTED_20);
-        bar.setProgress(0.00001);
         bar.addPlayer(player);
         PROGRESS_BARS.put(uuid, key);
 
