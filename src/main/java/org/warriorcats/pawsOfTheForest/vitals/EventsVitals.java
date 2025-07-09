@@ -34,7 +34,7 @@ public class EventsVitals implements LoadingListener {
     public static final double BASE_CONSUME_VALUE = 0.005;
     public static final double SPRINT_CONSUME_VALUE = 0.1;
     public static final double SWIM_CONSUME_VALUE = 0.01;
-    public static final double JUMP_CONSUME_VALUE = 0.2;
+    public static final double JUMP_CONSUME_VALUE = 0.02;
     public static final double MINE_CONSUME_VALUE = 0.005;
     public static final double ATTACK_CONSUME_VALUE = 0.1;
     public static final double ATTACKED_CONSUME_VALUE = 0.1;

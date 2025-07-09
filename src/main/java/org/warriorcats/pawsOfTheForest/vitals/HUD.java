@@ -46,8 +46,6 @@ public abstract class HUD {
     public static void updateInterface(Player player) {
         PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
 
-        remove(player);
-
         String barText = createPartialBar(entity.getThirst(), THIRST_FULL_ICON, THIRST_EMPTY_ICON) + "  " +
                 createPartialBar(entity.getEnergy(), ENERGY_FULL_ICON, ENERGY_EMPTY_ICON) + "  " +
                 createPartialBar(entity.getHygiene(), HYGIENE_FULL_ICON, HYGIENE_EMPTY_ICON);
@@ -55,16 +53,29 @@ public abstract class HUD {
         UUID uuid = player.getUniqueId();
 
         // Dummy bar to scale vertically
-        NamespacedKey dummyKey = NamespacedKey.minecraft("hud_dummy_" + uuid);
-        BossBar dummy = Bukkit.createBossBar(dummyKey, " ", BarColor.WHITE, BarStyle.SEGMENTED_20);
-        dummy.addPlayer(player);
-        DUMMY_BARS.put(uuid, dummyKey);
+        NamespacedKey dummyKey = DUMMY_BARS.computeIfAbsent(uuid, id -> NamespacedKey.minecraft("hud_dummy_" + id));
+        BossBar dummy = Bukkit.getBossBar(dummyKey);
+        if (dummy == null) {
+            dummy = Bukkit.createBossBar(dummyKey, " ", BarColor.WHITE, BarStyle.SEGMENTED_20);
+            dummy.addPlayer(player);
+        } else {
+            if (!dummy.getPlayers().contains(player)) {
+                dummy.addPlayer(player);
+            }
+        }
 
         // HUD bar
-        NamespacedKey key = NamespacedKey.minecraft("hud_" + uuid);
-        BossBar bar = Bukkit.createBossBar(key, barText, BarColor.WHITE, BarStyle.SEGMENTED_20);
-        bar.addPlayer(player);
-        PROGRESS_BARS.put(uuid, key);
+        NamespacedKey key = PROGRESS_BARS.computeIfAbsent(uuid, id -> NamespacedKey.minecraft("hud_" + id));
+        BossBar bar = Bukkit.getBossBar(key);
+        if (bar == null) {
+            bar = Bukkit.createBossBar(key, barText, BarColor.WHITE, BarStyle.SEGMENTED_20);
+            bar.addPlayer(player);
+        } else {
+            bar.setTitle(barText);
+            if (!bar.getPlayers().contains(player)) {
+                bar.addPlayer(player);
+            }
+        }
 
         // Action bar (social)
         String socialText = SOCIAL_ICON + "  " + (int) (entity.getSocial() * 100) + "%";
@@ -83,28 +94,6 @@ public abstract class HUD {
                 player.sendActionBar(Component.text(socialText));
             }
         }.runTaskTimer(PawsOfTheForest.getInstance(), 0L, 20L));
-    }
-
-    public static void remove(Player player) {
-        UUID uuid = player.getUniqueId();
-
-        NamespacedKey hudKey = PROGRESS_BARS.remove(uuid);
-        if (hudKey != null) {
-            BossBar bar = Bukkit.getBossBar(hudKey);
-            if (bar != null) {
-                bar.removeAll();
-                Bukkit.removeBossBar(hudKey);
-            }
-        }
-
-        NamespacedKey dummyKey = DUMMY_BARS.remove(uuid);
-        if (dummyKey != null) {
-            BossBar dummy = Bukkit.getBossBar(dummyKey);
-            if (dummy != null) {
-                dummy.removeAll();
-                Bukkit.removeBossBar(dummyKey);
-            }
-        }
     }
 
     private static String createPartialBar(double value, char fullChar, char emptyChar) {
