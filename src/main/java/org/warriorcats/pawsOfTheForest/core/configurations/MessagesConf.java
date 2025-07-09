@@ -2,7 +2,7 @@ package org.warriorcats.pawsOfTheForest.core.configurations;
 
 import org.bukkit.ChatColor;
 
-public abstract class MessagesConf extends AbstractConfiguration {
+public abstract class MessagesConf extends BaseConfiguration {
 
     public static final String CONFIG_FILE_NAME = "messages_config.properties";
 
@@ -38,6 +38,26 @@ public abstract class MessagesConf extends AbstractConfiguration {
 
         public static final String CHAT_TOGGLED =
                 getPropertyOrDefault("chats.chatToggled", "Chat toggled :", CONFIG_FILE_NAME);
+    }
+
+    public static class Shops {
+        public static final ChatColor COLOR_COINS =
+                getPropertyOrDefault("shops.colors.coins", ChatColor.DARK_GREEN, CONFIG_FILE_NAME);
+
+        public static final ChatColor COLOR_COINS_TEXT =
+                getPropertyOrDefault("shops.colors.coinsText", ChatColor.GOLD, CONFIG_FILE_NAME);
+
+        public static final ChatColor COLOR_COINS_LORE =
+                getPropertyOrDefault("shops.colors.coinsLore", ChatColor.GRAY, CONFIG_FILE_NAME);
+
+        public static final String COINS =
+                getPropertyOrDefault("shops.coins", "Coins :", CONFIG_FILE_NAME);
+
+        public static final String COINS_LORE_1 =
+                getPropertyOrDefault("shops.coinsLore1", "Your coins", CONFIG_FILE_NAME);
+
+        public static final String COINS_LORE_2 =
+                getPropertyOrDefault("shops.coinsLore2", "Earn it by killing preys !", CONFIG_FILE_NAME);
     }
 
     public static class Preys {

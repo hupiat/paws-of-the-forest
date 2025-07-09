@@ -7,11 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.warriorcats.pawsOfTheForest.clans.CommandClans;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.chats.commands.*;
-import org.warriorcats.pawsOfTheForest.core.commands.CommandCoins;
 import org.warriorcats.pawsOfTheForest.core.commands.CommandList;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.shops.CommandOpenShop;
-import org.warriorcats.pawsOfTheForest.core.commands.CommandXp;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.core.configurations.ShopsConf;
@@ -50,9 +48,9 @@ public final class PawsOfTheForest extends JavaPlugin {
         getLogger().info("Hibernate/MySQL connected.");
 
         // Loading config
-        MessagesConf.load(MessagesConf.CONFIG_FILE_NAME);
-        ShopsConf.load(ShopsConf.CONFIG_FILE_NAME);
-        PreysConf.load(PreysConf.CONFIG_FILE_NAME);
+        MessagesConf.getInstance().load(MessagesConf.CONFIG_FILE_NAME);
+        ShopsConf.getInstance().load(ShopsConf.CONFIG_FILE_NAME);
+        PreysConf.getInstance().load(PreysConf.CONFIG_FILE_NAME);
 
         // Registering commands
         registerCommand("global", new CommandGlobalChat());
@@ -64,8 +62,6 @@ public final class PawsOfTheForest extends JavaPlugin {
         registerCommand("reply", new CommandPrivateMessageReplyChat());
         registerCommand("toggle", new CommandToggleChat());
         registerCommand("list", new CommandList());
-        registerCommand("coins", new CommandCoins());
-        registerCommand("xp", new CommandXp());
         registerCommand("shop", new CommandOpenShop());
         registerCommand("clans", new CommandClans());
         registerCommand("skills", new CommandOpenSkills());

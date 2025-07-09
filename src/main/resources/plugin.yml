@@ -59,18 +59,6 @@ commands:
     aliases: [l]
     permission: warriorcats.list
 
-  coins:
-    description: Get your total coins
-    usage: /coins
-    aliases: [ co ]
-    permission: warriorcats.coins
-
-  xp:
-    description: Get your total xp
-    usage: /xp
-    aliases: [ xp ]
-    permission: warriorcats.xp
-
   shop:
     description: Open the shop HUD
     usage: /shop
