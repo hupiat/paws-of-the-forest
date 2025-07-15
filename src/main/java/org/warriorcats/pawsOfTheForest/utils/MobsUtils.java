@@ -5,14 +5,11 @@ import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
 import org.warriorcats.pawsOfTheForest.preys.Prey;
 
 import java.util.ArrayList;
@@ -20,6 +17,8 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class MobsUtils {
+
+    private static final NamespacedKey RABIES_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "rabies");
 
     public static List<LivingEntity> getAllEntities() {
         List<LivingEntity> entities = new ArrayList<>();
@@ -135,4 +134,17 @@ public abstract class MobsUtils {
                 return true;
         }
     }
+
+    public static void markInfectedByRabies(LivingEntity entity) {
+        entity.getPersistentDataContainer().set(
+                RABIES_KEY,
+                PersistentDataType.BYTE,
+                (byte) 1
+        );
+    }
+
+    public static boolean isInfectedWithRabies(LivingEntity entity) {
+        return entity.getPersistentDataContainer().has(RABIES_KEY, PersistentDataType.BYTE);
+    }
+
 }

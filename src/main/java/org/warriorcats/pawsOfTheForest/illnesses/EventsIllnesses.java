@@ -1,8 +1,11 @@
 package org.warriorcats.pawsOfTheForest.illnesses;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.Sound;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -13,6 +16,7 @@ import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.time.Instant;
 import java.util.*;
@@ -35,15 +39,21 @@ public class EventsIllnesses implements LoadingListener {
                     if (entity.hasIllness(illness)) {
                         IllnessEntity illnessEntity = entity.getIllness(illness);
                         if (illnessEntity.isWorsened()) {
-                            if (worsened.containsKey(player.getUniqueId()) &&
-                                    worsened.get(player.getUniqueId()).stream()
-                                            .anyMatch(worsened -> worsened == illness)) {
-                                continue;
+                            if (illnessEntity.getIllness().isFatal()) {
+                                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 0.5f);
+                                player.setHealth(0);
+                                player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.ILLNESS_WORSENED_DEATH + " " + illness);
+                            } else {
+                                if (worsened.containsKey(player.getUniqueId()) &&
+                                        worsened.get(player.getUniqueId()).stream()
+                                                .anyMatch(worsened -> worsened == illness)) {
+                                    continue;
+                                }
+                                worsened.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
+                                addPotionEffects(player, illness, illnessEntity.getAmplifier());
+                                worsened.get(player.getUniqueId()).add(illness);
+                                player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.ILLNESS_WORSENED + " " + illness);
                             }
-                            worsened.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
-                            addPotionEffects(player, illness, illnessEntity.getAmplifier());
-                            worsened.get(player.getUniqueId()).add(illness);
-                            player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.ILLNESS_WORSENED + " " + illness);
                         }
                     }
                 }
@@ -67,6 +77,30 @@ public class EventsIllnesses implements LoadingListener {
         }
     }
 
+    @EventHandler
+    public void on(CreatureSpawnEvent event) {
+        LivingEntity entity = event.getEntity();
+        if ((entity instanceof Wolf || entity instanceof Bat || entity instanceof Cat)
+                && Math.random() < BASE_INFECTION_RATE) {
+            MobsUtils.markInfectedByRabies(entity);
+        }
+    }
+
+    @EventHandler
+    public void on(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (!(event.getDamager() instanceof LivingEntity entity)) {
+            return;
+        }
+
+        if (MobsUtils.isInfectedWithRabies(entity) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
+            applyIllness(player, Illnesses.RABIES);
+        }
+    }
+
     private void applyIllness(Player player, Illnesses illness) {
         PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(player.getUniqueId());
         if (entity.hasIllness(illness)) {
@@ -85,13 +119,14 @@ public class EventsIllnesses implements LoadingListener {
 
     private void addPotionEffects(Player player, Illnesses illness, int amplifier) {
         removePotionEffects(player, illness);
-        for (PotionEffectType effect : illness.getPotionEffects()) {
-            player.addPotionEffect(new PotionEffect(effect, Integer.MAX_VALUE, amplifier));
+        for (Map.Entry<PotionEffectType, Integer> effect : illness.getPotionEffects().entrySet()) {
+            player.addPotionEffect(new PotionEffect(effect.getKey(), Integer.MAX_VALUE,
+                    amplifier > 0 ? amplifier : effect.getValue()));
         }
     }
 
     private void removePotionEffects(Player player, Illnesses illness) {
-        for (PotionEffectType effect : illness.getPotionEffects()) {
+        for (PotionEffectType effect : illness.getPotionEffects().keySet()) {
             player.removePotionEffect(effect);
         }
     }

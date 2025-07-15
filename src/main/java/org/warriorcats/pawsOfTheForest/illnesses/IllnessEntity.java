@@ -23,14 +23,9 @@ public class IllnessEntity {
     private Date gotAt;
 
     public int getAmplifier() {
-        return switch (illness) {
-            case UPPER_RESPIRATORY_INFECTION -> {
-                long elapsed = new Date().getTime() - gotAt.getTime();
-                long threshold = 5L * 20 * 60 * 1000;
-                yield elapsed >= threshold ? 2 : 0;
-            }
-            default -> 0;
-        };
+        long elapsed = new Date().getTime() - gotAt.getTime();
+        long threshold = (long) illness.getDaysBeforeWorsened() * 20 * 60 * 1000;
+        return elapsed >= threshold ? 2 : 0;
     }
 
     public boolean isWorsened() {

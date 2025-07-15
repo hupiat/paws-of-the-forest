@@ -4,70 +4,80 @@ import lombok.Getter;
 import org.bukkit.potion.PotionEffectType;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
-import java.util.Set;
+import java.util.Map;
 
 @Getter
 public enum Illnesses {
-    UPPER_RESPIRATORY_INFECTION(false, Set.of(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.WEAKNESS,
-            PotionEffectType.HUNGER,
-            PotionEffectType.NAUSEA
-    )),
-    RABIES(true, Set.of(
-            PotionEffectType.NAUSEA,
-            PotionEffectType.JUMP_BOOST
+    UPPER_RESPIRATORY_INFECTION(false, 5, Map.of(
+            PotionEffectType.SLOWNESS, 0,
+            PotionEffectType.WEAKNESS, 0,
+            PotionEffectType.HUNGER, 0,
+            PotionEffectType.NAUSEA, 0
     )),
 
-    INTERNAL_PARASITES(true, Set.of(
-            PotionEffectType.HUNGER,
-            PotionEffectType.SLOWNESS
-    )),
-    EXTERNAL_PARASITES(false, Set.of(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.HUNGER,
-            PotionEffectType.NAUSEA
+    RABIES(true, 2, Map.of(
+            PotionEffectType.NAUSEA, 2,
+            PotionEffectType.BLINDNESS, 0,
+            PotionEffectType.JUMP_BOOST, 1
     )),
 
-    FROSTBITE(true, Set.of(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.WITHER,
-            PotionEffectType.BLINDNESS
-    )),
-    HEATSTROKE(true, Set.of(
-            PotionEffectType.NAUSEA,
-            PotionEffectType.BLINDNESS,
-            PotionEffectType.WEAKNESS
+    INTERNAL_PARASITES(true, 7, Map.of(
+            PotionEffectType.HUNGER, 1,
+            PotionEffectType.SLOWNESS, 0
     )),
 
-    INFECTED_WOUNDS(true, Set.of(
-            PotionEffectType.WITHER,
-            PotionEffectType.WEAKNESS
-    )),
-    BROKEN_BONES(false, Set.of(
-            PotionEffectType.SLOWNESS,
-            PotionEffectType.NAUSEA
+    EXTERNAL_PARASITES(false, 0, Map.of(
+            PotionEffectType.SLOWNESS, 0,
+            PotionEffectType.HUNGER, 0,
+            PotionEffectType.NAUSEA, 0
     )),
 
-    POISONING(true, Set.of(
-            PotionEffectType.POISON,
-            PotionEffectType.NAUSEA,
-            PotionEffectType.HUNGER,
-            PotionEffectType.WITHER
+    FROSTBITE(true, 2, Map.of(
+            PotionEffectType.SLOWNESS, 1,
+            PotionEffectType.WITHER, 0,
+            PotionEffectType.BLINDNESS, 0
     )),
-    SEIZURES(false, Set.of(
-            PotionEffectType.NAUSEA,
-            PotionEffectType.LEVITATION
+
+    HEATSTROKE(true, 2, Map.of(
+            PotionEffectType.NAUSEA, 1,
+            PotionEffectType.BLINDNESS, 0,
+            PotionEffectType.WEAKNESS, 0
     )),
-    ARTHRITIS(false, Set.of(
-            PotionEffectType.SLOWNESS
+
+    INFECTED_WOUNDS(true, 3, Map.of(
+            PotionEffectType.WITHER, 0,
+            PotionEffectType.WEAKNESS, 1
+    )),
+
+    BROKEN_BONES(false, 0, Map.of(
+            PotionEffectType.SLOWNESS, 3,
+            PotionEffectType.NAUSEA, 0
+    )),
+
+    POISONING(true, 1, Map.of(
+            PotionEffectType.POISON, 1,
+            PotionEffectType.NAUSEA, 0,
+            PotionEffectType.HUNGER, 0,
+            PotionEffectType.WITHER, 0
+    )),
+
+    SEIZURES(false, 0, Map.of(
+            PotionEffectType.NAUSEA, 0,
+            PotionEffectType.BLINDNESS, 0,
+            PotionEffectType.LEVITATION, 0
+    )),
+
+    ARTHRITIS(false, 0, Map.of(
+            PotionEffectType.SLOWNESS, 0
     ));
 
     private final boolean fatal;
-    private final Set<PotionEffectType> potionEffects;
+    private final int daysBeforeWorsened;
+    private final Map<PotionEffectType, Integer> potionEffects;
 
-    Illnesses(boolean fatal, Set<PotionEffectType> potionEffects) {
+    Illnesses(boolean fatal, int daysBeforeWorsened, Map<PotionEffectType, Integer> potionEffects) {
         this.fatal = fatal;
+        this.daysBeforeWorsened = daysBeforeWorsened;
         this.potionEffects = potionEffects;
     }
 
