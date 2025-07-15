@@ -6,6 +6,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -16,6 +17,7 @@ import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.time.Instant;
@@ -98,6 +100,13 @@ public class EventsIllnesses implements LoadingListener {
 
         if (MobsUtils.isInfectedWithRabies(entity) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
             applyIllness(player, Illnesses.RABIES);
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerItemConsumeEvent event) {
+        if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem())) && Math.random() < BASE_INFECTION_RATE) {
+            applyIllness(event.getPlayer(), Illnesses.INTERNAL_PARASITES);
         }
     }
 

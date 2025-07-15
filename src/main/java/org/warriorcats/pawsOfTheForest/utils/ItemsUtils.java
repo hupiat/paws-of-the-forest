@@ -133,6 +133,13 @@ public abstract class ItemsUtils {
             Material.SEAGRASS
     );
 
+    public static boolean isRawPrey(ItemStack item) {
+        return switch (item.getType()) {
+            case COD, SALMON, TROPICAL_FISH, PUFFERFISH, RABBIT, CHICKEN, MUTTON, PORKCHOP, BEEF -> true;
+            default -> false;
+        };
+    }
+
     public static boolean isDrinkable(ItemStack item) {
         if (item == null || item.getType().isAir()) return false;
 
