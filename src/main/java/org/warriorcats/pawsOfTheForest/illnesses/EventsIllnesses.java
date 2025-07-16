@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.illnesses;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -30,7 +31,9 @@ public class EventsIllnesses implements LoadingListener {
     public static final double NEARBY_BASE_INFECTION_RATE = 0.0011;
     public static final int BASE_INFECTION_DISTANCE = 5;
 
-    private final Map<UUID, List<Illnesses>> worsened = new ConcurrentHashMap<>();
+    // Illnesses which causes to death when worsened will not be present here
+    private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> timeInTallGrass = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -51,7 +54,7 @@ public class EventsIllnesses implements LoadingListener {
                                                 .anyMatch(worsened -> worsened == illness)) {
                                     continue;
                                 }
-                                worsened.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
+                                worsened.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>());
                                 addPotionEffects(player, illness, illnessEntity.getAmplifier());
                                 worsened.get(player.getUniqueId()).add(illness);
                                 player.sendMessage(MessagesConf.Illnesses.COLOR_FEEDBACK + MessagesConf.Illnesses.ILLNESS_WORSENED + " " + illness);
@@ -73,11 +76,31 @@ public class EventsIllnesses implements LoadingListener {
 
     @EventHandler
     public void on(PlayerMoveEvent event) {
+        // UPPER_RESPIRATORY_INFECTION
         if (event.getPlayer().getWorld().hasStorm() && Math.random() < BASE_INFECTION_RATE ||
             isNearFromPlayerSick(event.getPlayer(), Illnesses.UPPER_RESPIRATORY_INFECTION) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.UPPER_RESPIRATORY_INFECTION);
         }
+
+        // EXTERNAL_PARASITES
+        Block blockBelow = event.getTo().clone().subtract(0, 1, 0).getBlock();
+        UUID uuid = event.getPlayer().getUniqueId();
+
+        if (blockBelow.getType().toString().contains("TALL_GRASS")) {
+            timeInTallGrass.putIfAbsent(uuid, System.currentTimeMillis());
+
+            long elapsed = System.currentTimeMillis() - timeInTallGrass.get(uuid);
+            if ((elapsed > 120_000 && Math.random() < BASE_INFECTION_RATE) ||
+                    (elapsed > 30_000 && Math.random() < BASE_INFECTION_RATE / 2)) {
+                applyIllness(event.getPlayer(), Illnesses.EXTERNAL_PARASITES);
+                timeInTallGrass.remove(uuid);
+            }
+        } else {
+            timeInTallGrass.remove(uuid);
+        }
     }
+
+    // RABIES
 
     @EventHandler
     public void on(CreatureSpawnEvent event) {
@@ -105,6 +128,7 @@ public class EventsIllnesses implements LoadingListener {
 
     @EventHandler
     public void on(PlayerItemConsumeEvent event) {
+        // INTERNAL_PARASITES
         if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem())) && Math.random() < BASE_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.INTERNAL_PARASITES);
         }
