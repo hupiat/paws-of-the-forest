@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.illnesses;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -38,6 +39,7 @@ public class EventsIllnesses implements LoadingListener {
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeInTallGrass = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeInSnow = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> timeInSun = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -104,8 +106,8 @@ public class EventsIllnesses implements LoadingListener {
         }
 
         // FROSTBITE
-        if (BiomesUtils.isCold(blockBelow) &&
-                EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId()).getClan() != Clans.CREEK) {
+        PlayerEntity entity = EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId());
+        if (BiomesUtils.isCold(blockBelow) && entity.getClan() != Clans.CREEK) {
             timeInSnow.putIfAbsent(uuid, System.currentTimeMillis());
 
             long duration = System.currentTimeMillis() - timeInSnow.get(uuid);
@@ -115,6 +117,24 @@ public class EventsIllnesses implements LoadingListener {
             }
         } else {
             timeInSnow.remove(uuid);
+        }
+
+        // HEATSTROKE
+        Location loc = event.getPlayer().getLocation();
+        if (event.getPlayer().getWorld().getTime() > 0 && event.getPlayer().getWorld().getTime() < 12300
+                && event.getPlayer().getWorld().getHighestBlockYAt(loc) <= loc.getBlockY() + 1
+                && !event.getPlayer().getEyeLocation().getBlock().getType().toString().contains("WATER")
+                && entity.getClan() != Clans.BREEZE) {
+
+            timeInSun.putIfAbsent(uuid, System.currentTimeMillis());
+
+            long duration = System.currentTimeMillis() - timeInSun.get(uuid);
+            if (duration > 90_000) {
+                applyIllness(event.getPlayer(), Illnesses.HEATSTROKE);
+                timeInSun.remove(uuid);
+            }
+        } else {
+            timeInSun.remove(uuid);
         }
     }
 
