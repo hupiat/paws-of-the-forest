@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.illnesses;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -13,10 +14,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
+import org.warriorcats.pawsOfTheForest.clans.Clans;
 import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
+import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
@@ -34,6 +37,7 @@ public class EventsIllnesses implements LoadingListener {
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeInTallGrass = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> timeInSnow = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -97,6 +101,20 @@ public class EventsIllnesses implements LoadingListener {
             }
         } else {
             timeInTallGrass.remove(uuid);
+        }
+
+        // FROSTBITE
+        if (BiomesUtils.isCold(blockBelow) &&
+                EventsCore.PLAYERS_CACHE.get(event.getPlayer().getUniqueId()).getClan() != Clans.CREEK) {
+            timeInSnow.putIfAbsent(uuid, System.currentTimeMillis());
+
+            long duration = System.currentTimeMillis() - timeInSnow.get(uuid);
+            if (duration > 60_000 && event.getPlayer().getRemainingAir() < 300) {
+                applyIllness(event.getPlayer(), Illnesses.FROSTBITE);
+                timeInSnow.remove(uuid);
+            }
+        } else {
+            timeInSnow.remove(uuid);
         }
     }
 

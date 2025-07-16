@@ -3,7 +3,9 @@ package org.warriorcats.pawsOfTheForest.utils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
@@ -122,6 +124,13 @@ public abstract class BiomesUtils {
 
     public static boolean isCold(Biome biome) {
         return COLD_BIOMES.contains(biome);
+    }
+
+    public static boolean isCold(Block block) {
+        return switch (block.getType()) {
+            case SNOW, SNOW_BLOCK, ICE, PACKED_ICE, BLUE_ICE, FROSTED_ICE -> true;
+            default -> block.getType().name().contains("ICE");
+        };
     }
 
     public static boolean isHot(Biome biome) {
