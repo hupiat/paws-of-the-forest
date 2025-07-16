@@ -147,4 +147,7 @@ public abstract class MobsUtils {
         return entity.getPersistentDataContainer().has(RABIES_KEY, PersistentDataType.BYTE);
     }
 
+    public static boolean canBeInfectedByRabies(LivingEntity entity) {
+        return entity instanceof Wolf || entity instanceof Bat || entity instanceof Cat;
+    }
 }

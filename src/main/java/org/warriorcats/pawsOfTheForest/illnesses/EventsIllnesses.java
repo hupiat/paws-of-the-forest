@@ -105,8 +105,7 @@ public class EventsIllnesses implements LoadingListener {
     @EventHandler
     public void on(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if ((entity instanceof Wolf || entity instanceof Bat || entity instanceof Cat)
-                && Math.random() < BASE_INFECTION_RATE) {
+        if (MobsUtils.canBeInfectedByRabies(entity) && Math.random() < BASE_INFECTION_RATE) {
             MobsUtils.markInfectedByRabies(entity);
         }
     }
