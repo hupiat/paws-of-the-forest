@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,7 +19,8 @@ import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public abstract class HibernateUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class HibernateUtils {
 
     public static void withSession(Consumer<Session> callback) {
         try (Session session = getSessionFactory().openSession()) {

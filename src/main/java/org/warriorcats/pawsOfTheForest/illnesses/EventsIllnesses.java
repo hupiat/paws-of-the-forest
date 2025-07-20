@@ -37,6 +37,7 @@ public class EventsIllnesses implements LoadingListener {
 
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
+
     private final Map<UUID, Long> timeInTallGrass = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeInSnow = new ConcurrentHashMap<>();
     private final Map<UUID, Long> timeInSun = new ConcurrentHashMap<>();

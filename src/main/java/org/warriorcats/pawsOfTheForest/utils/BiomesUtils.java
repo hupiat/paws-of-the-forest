@@ -1,15 +1,17 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
-public abstract class BiomesUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class BiomesUtils {
 
     public static final Set<Biome> WATER_BIOMES = Set.of(
             Biome.OCEAN,

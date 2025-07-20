@@ -3,6 +3,8 @@ package org.warriorcats.pawsOfTheForest.utils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -12,7 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 
-public abstract class HttpServerUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class HttpServerUtils {
 
     public static final int RESOURCES_PACK_PORT = 8175;
 

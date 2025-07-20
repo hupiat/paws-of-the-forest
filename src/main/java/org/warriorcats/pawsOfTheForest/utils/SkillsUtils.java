@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
@@ -7,7 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public abstract class SkillsUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class SkillsUtils {
 
     private static final String NAME_IRON_HIDE_BONUS = "IRON_HIDE_BONUS";
     private static final UUID UUID_IRON_HIDE_BONUS = UUID.fromString("00000000-0000-0000-0000-000000000001");

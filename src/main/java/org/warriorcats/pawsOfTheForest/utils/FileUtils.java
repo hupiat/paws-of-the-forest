@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.warriorcats.pawsOfTheForest.PawsOfTheForest;
@@ -15,7 +17,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-public abstract class FileUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class FileUtils {
 
     public static final File PLUGIN_DATA_FOLDER = PawsOfTheForest.getInstance().getDataFolder();
 

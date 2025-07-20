@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class PlayersUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class PlayersUtils {
 
     private static final String META_DOWNED_KEY = "downed";
     private static final String META_DOWNED_CD_KEY = "hold_on_cd";

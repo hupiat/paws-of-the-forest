@@ -1,5 +1,7 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -24,7 +26,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public abstract class ItemsUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class ItemsUtils {
 
     public static final NamespacedKey META_COOLDOWN_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown");
     public static final NamespacedKey META_COOLDOWN_SECONDARY_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown_secondary");

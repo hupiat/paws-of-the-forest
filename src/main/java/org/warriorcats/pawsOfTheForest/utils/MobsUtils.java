@@ -5,6 +5,8 @@ import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class MobsUtils {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class MobsUtils {
 
     private static final NamespacedKey RABIES_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "rabies");
 

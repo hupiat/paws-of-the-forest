@@ -1,6 +1,10 @@
 package org.warriorcats.pawsOfTheForest.utils;
 
-public abstract class StringsUtils {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class StringsUtils {
 
     public static String capitalize(String input) {
         if (input == null || input.isEmpty()) {
