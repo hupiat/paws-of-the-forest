@@ -195,6 +195,12 @@ public class EventsIllnesses implements LoadingListener {
         if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem())) && Math.random() < BASE_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.INTERNAL_PARASITES);
         }
+
+        // POISONING
+        // No infection rate here
+        if (ItemsUtils.isBadPrey(event.getItem()) || ItemsUtils.isToxicItem(event.getItem()) || ItemsUtils.isToxicHerb(event.getItem())) {
+            applyIllness(event.getPlayer(), Illnesses.POISONING);
+        }
     }
 
     // EXTERNAL_PARASITES infested beds behaviour
@@ -214,8 +220,8 @@ public class EventsIllnesses implements LoadingListener {
             return;
         }
 
+        // No infection rate here
         if (event.getDamageSource().getDamageType() == DamageType.FALL && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE) {
-            // No infection rate here, this is planned
             applyIllness(player, Illnesses.BROKEN_BONES);
         }
     }

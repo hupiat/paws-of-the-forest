@@ -2,18 +2,14 @@ package org.warriorcats.pawsOfTheForest.preys;
 
 import com.ticxo.modelengine.api.model.ModeledEntity;
 import com.ticxo.modelengine.core.ModelEngine;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.warriorcats.pawsOfTheForest.core.configurations.PreysConf;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public record Prey(String entityType, double xp, long coins, float fleeDurationSeconds, boolean isHigher, boolean isAquatic) {
+public record Prey(String entityType, double xp, long coins, float fleeDurationSeconds, boolean isHigher, boolean isAquatic, boolean isBad) {
 
     public static Optional<Prey> fromEntity(LivingEntity entity) {
         String entityType = entity.getType().name().toUpperCase();
@@ -53,6 +49,18 @@ public record Prey(String entityType, double xp, long coins, float fleeDurationS
     public static List<Prey> getAllHighers() {
         return PreysConf.Preys.PREYS.stream()
                 .filter(prey -> prey.isHigher)
+                .toList();
+    }
+
+    public static List<Prey> getAllBadsToEat() {
+        return PreysConf.Preys.PREYS.stream()
+                .filter(prey -> prey.isBad)
+                .toList();
+    }
+
+    public static List<Prey> getAllGoodsToEat() {
+        return PreysConf.Preys.PREYS.stream()
+                .filter(prey -> !prey.isBad)
                 .toList();
     }
 }

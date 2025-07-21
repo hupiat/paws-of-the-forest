@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -21,6 +22,7 @@ import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
 import org.warriorcats.pawsOfTheForest.skills.EventsSkillsPassives;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
+import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
 import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
 
 import java.util.*;
@@ -130,14 +132,13 @@ public class EventsPreys implements LoadingListener {
         }
     }
 
-    // Handling xp and coins giving when killing a prey
     @EventHandler
     public void on(EntityDeathEvent event) {
-        if (event.getEntity().getKiller() == null) return;
         Player killer = event.getEntity().getKiller();
         Optional<Prey> existingPrey = Prey.fromEntity(event.getEntity());
 
-        if (existingPrey.isPresent()) {
+        // Handling xp and coins giving when killing a prey
+        if (existingPrey.isPresent() && killer != null) {
             Prey prey = existingPrey.get();
             HibernateUtils.withTransaction(((transaction, session) -> {
                 PlayerEntity player = session.get(PlayerEntity.class, killer.getUniqueId());
@@ -148,6 +149,15 @@ public class EventsPreys implements LoadingListener {
             }));
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.SKILL_POINTS_EARNED + event.getDroppedExp());
             killer.sendMessage(MessagesConf.Preys.COLOR_FEEDBACK + MessagesConf.Preys.COINS_EARNED + prey.coins());
+        }
+
+        // Handling bad preys marking (not comestible, which can apply poisoning)
+        if (existingPrey.isPresent() && Prey.getAllBadsToEat().contains(existingPrey.get())) {
+            for (ItemStack drop : event.getDrops()) {
+                if (ItemsUtils.isRawPrey(drop)) {
+                    ItemsUtils.markAsBadPrey(drop);
+                }
+            }
         }
     }
 }

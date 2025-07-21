@@ -31,6 +31,7 @@ public final class ItemsUtils {
 
     public static final NamespacedKey META_COOLDOWN_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown");
     public static final NamespacedKey META_COOLDOWN_SECONDARY_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "cooldown_secondary");
+    public static final NamespacedKey META_BAD_PREY_KEY = new NamespacedKey(PawsOfTheForest.getInstance(), "bad_prey");
 
     public static final Set<Material> URBAN_BLOCKS = Set.of(
             Material.STONE,
@@ -141,6 +142,46 @@ public final class ItemsUtils {
             case COD, SALMON, TROPICAL_FISH, PUFFERFISH, RABBIT, CHICKEN, MUTTON, PORKCHOP, BEEF -> true;
             default -> false;
         };
+    }
+
+    public static boolean isBadPrey(ItemStack item) {
+        return item.getType() == Material.ROTTEN_FLESH || isRawPrey(item) || isMarkedBadPrey(item);
+    }
+
+    public static boolean isToxicHerb(ItemStack item) {
+        return switch (item.getType()) {
+            case DEAD_BUSH, WITHER_ROSE, FERN, LARGE_FERN,
+                 WARPED_ROOTS, CRIMSON_ROOTS, NETHER_SPROUTS,
+                 SPORE_BLOSSOM, AZALEA_LEAVES, SMALL_DRIPLEAF -> true;
+            default -> false;
+        };
+    }
+
+    public static boolean isToxicItem(ItemStack item) {
+        return switch (item.getType()) {
+            case POISONOUS_POTATO,
+                 RED_MUSHROOM, BROWN_MUSHROOM,
+                 PUFFERFISH,
+                 SPIDER_EYE, FERMENTED_SPIDER_EYE,
+                 SUSPICIOUS_STEW,
+                 DRAGON_BREATH -> true;
+            default -> false;
+        };
+    }
+
+    public static boolean isMarkedBadPrey(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.getPersistentDataContainer().has(META_BAD_PREY_KEY, PersistentDataType.BYTE);
+    }
+
+    public static void markAsBadPrey(ItemStack item) {
+        if (item == null || item.getType().isAir()) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(META_BAD_PREY_KEY, PersistentDataType.BYTE, (byte) 1);
+            item.setItemMeta(meta);
+        }
     }
 
     public static boolean isDrinkable(ItemStack item) {

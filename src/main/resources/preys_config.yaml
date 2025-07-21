@@ -4,16 +4,19 @@ prey:
     coins: 5
     higher: false
     aquatic: false
+    bad: false
     flee_duration_seconds: 8
   CHICKEN:
     xp: 1
     coins: 2
     higher: false
     aquatic: false
+    bad: false
     flee_duration_seconds: 8
   MOUSE:
     xp: 10
     coins: 5
     higher: true
     aquatic: false
+    bad: false
     flee_duration_seconds: 8

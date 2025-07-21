@@ -21,7 +21,8 @@ public abstract class PreysConf extends BaseConfiguration {
                     preysSource.getLong(entry + ".coins"),
                     (float) preysSource.getDouble(entry + ".flee_duration_seconds"),
                     preysSource.getBoolean(entry + ".higher"),
-                    preysSource.getBoolean(entry + ".aquatic")
+                    preysSource.getBoolean(entry + ".aquatic"),
+                    preysSource.getBoolean(entry + ".bad")
             );
             Preys.PREYS.add(prey);
         }
