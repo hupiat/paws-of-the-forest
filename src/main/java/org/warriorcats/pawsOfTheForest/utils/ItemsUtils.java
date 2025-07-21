@@ -148,6 +148,18 @@ public final class ItemsUtils {
         return item.getType() == Material.ROTTEN_FLESH || isRawPrey(item) || isMarkedBadPrey(item);
     }
 
+    public static boolean isCursedHerb(ItemStack item) {
+        return switch (item.getType()) {
+            case WITHER_ROSE, DEAD_BUSH, CHORUS_FLOWER,
+                 WARPED_ROOTS, CRIMSON_ROOTS,
+                 SPORE_BLOSSOM, TWISTING_VINES,
+                 NETHER_SPROUTS, NETHER_WART,
+                 WEEPING_VINES, RED_MUSHROOM_BLOCK,
+                 BROWN_MUSHROOM_BLOCK, MANGROVE_ROOTS -> true;
+            default -> false;
+        };
+    }
+
     public static boolean isToxicHerb(ItemStack item) {
         return switch (item.getType()) {
             case DEAD_BUSH, WITHER_ROSE, FERN, LARGE_FERN,

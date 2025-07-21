@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
@@ -34,11 +33,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventsIllnesses implements LoadingListener {
 
     public static final double BASE_INFECTION_RATE = 0.002;
-    public static final double NEARBY_BASE_INFECTION_RATE = 0.0011;
+    public static final double NEARBY_BASE_INFECTION_RATE = 0.25;
+    public static final double PUNCTUAL_INFECTION_RATE = 0.05;
     public static final int BASE_INFECTION_DISTANCE = 5;
 
     public static final double RABIES_AGGRESSION_RATE = 0.1;
     public static final int BROKEN_BONES_HEALTH_RATE = 2;
+    public static final int TRAUMA_HEALTH_RATE = 6;
 
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
@@ -159,7 +160,7 @@ public class EventsIllnesses implements LoadingListener {
     @EventHandler
     public void on(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (MobsUtils.canBeInfectedByRabies(entity) && Math.random() < BASE_INFECTION_RATE) {
+        if (MobsUtils.canBeInfectedByRabies(entity) && Math.random() < PUNCTUAL_INFECTION_RATE) {
             MobsUtils.markInfectedByRabies(entity);
         }
     }
@@ -174,17 +175,22 @@ public class EventsIllnesses implements LoadingListener {
             return;
         }
 
+        // RABIES
         if (MobsUtils.isInfectedWithRabies(entity) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
             applyIllness(player, Illnesses.RABIES);
+            // Secondary effect (SEIZURES)
+            if (Math.random() < PUNCTUAL_INFECTION_RATE) {
+                applyIllness(player, Illnesses.SEIZURES);
+            }
         }
 
         // INFECTED_WOUNDS
-        if ((entity instanceof Player || MobsUtils.isPredator(entity)) && Math.random() < BASE_INFECTION_RATE) {
+        if ((entity instanceof Player || MobsUtils.isPredator(entity)) && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(player, Illnesses.INFECTED_WOUNDS);
         }
 
         // BROKEN_BONES
-        if (entity instanceof Player && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE && Math.random() < BASE_INFECTION_RATE) {
+        if (entity instanceof Player && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(player, Illnesses.BROKEN_BONES);
         }
     }
@@ -192,14 +198,20 @@ public class EventsIllnesses implements LoadingListener {
     @EventHandler
     public void on(PlayerItemConsumeEvent event) {
         // INTERNAL_PARASITES
-        if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem())) && Math.random() < BASE_INFECTION_RATE) {
+        if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem()))
+                && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.INTERNAL_PARASITES);
         }
 
         // POISONING
-        // No infection rate here
-        if (ItemsUtils.isBadPrey(event.getItem()) || ItemsUtils.isToxicItem(event.getItem()) || ItemsUtils.isToxicHerb(event.getItem())) {
+        if ((ItemsUtils.isBadPrey(event.getItem()) || ItemsUtils.isToxicItem(event.getItem())
+                || ItemsUtils.isToxicHerb(event.getItem())) && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.POISONING);
+        }
+
+        // SEIZURES
+        if (ItemsUtils.isCursedHerb(event.getItem()) && Math.random() < PUNCTUAL_INFECTION_RATE) {
+            applyIllness(event.getPlayer(), Illnesses.SEIZURES);
         }
     }
 
@@ -207,22 +219,29 @@ public class EventsIllnesses implements LoadingListener {
     @EventHandler
     public void on(PlayerBedEnterEvent event) {
         Bukkit.getScheduler().runTaskLater(PawsOfTheForest.getInstance(), () -> {
-            if (Math.random() < BASE_INFECTION_RATE) {
+            if (Math.random() < PUNCTUAL_INFECTION_RATE) {
                 applyIllness(event.getPlayer(), Illnesses.EXTERNAL_PARASITES);
             }
         }, 20 * 5);
     }
 
-    // BROKEN_BONES fall behaviour
     @EventHandler
     public void on(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        // No infection rate here
-        if (event.getDamageSource().getDamageType() == DamageType.FALL && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE) {
+        // BROKEN_BONES
+        if (event.getDamageSource().getDamageType() == DamageType.FALL
+                && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE
+                && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(player, Illnesses.BROKEN_BONES);
+        }
+
+        // SEIZURES
+        if ((event.getDamageSource().getDamageType() == DamageType.FALL
+                || event.getFinalDamage() >= TRAUMA_HEALTH_RATE) && Math.random() < PUNCTUAL_INFECTION_RATE) {
+            applyIllness(player, Illnesses.SEIZURES);
         }
     }
 
