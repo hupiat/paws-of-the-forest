@@ -10,6 +10,8 @@ import org.warriorcats.pawsOfTheForest.skills.entities.SkillBranchEntity;
 import org.warriorcats.pawsOfTheForest.skills.entities.SkillEntity;
 import org.warriorcats.pawsOfTheForest.skills.Skills;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,9 @@ public class PlayerEntity {
 
     @Column(name = "biography", columnDefinition = "TEXT")
     private String biography;
+
+    @Column(name = "birth_date", nullable = false)
+    private Instant birthDate;
 
     @Column(name = "xp_perks", nullable = false)
     private double xpPerks;
@@ -80,6 +85,10 @@ public class PlayerEntity {
 
     public void setSocial(double social) {
         this.social = Math.max(0, Math.min(social, 1.0));
+    }
+
+    public long getAgeInMinecraftDays() {
+        return Duration.between(birthDate, Instant.now()).toDays();
     }
 
     public boolean hasIllness(Illnesses illness) {

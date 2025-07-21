@@ -39,7 +39,10 @@ public class EventsIllnesses implements LoadingListener {
 
     public static final double RABIES_AGGRESSION_RATE = 0.1;
     public static final int BROKEN_BONES_HEALTH_RATE = 2;
-    public static final int TRAUMA_HEALTH_RATE = 6;
+    public static final int SEIZURES_HEALTH_RATE = 6;
+    public static final int ARTHRITIS_HEALTH_RATE = 3;
+
+    public static final int ARTHRITIS_DAYS_RATE = 180;
 
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
@@ -75,8 +78,12 @@ public class EventsIllnesses implements LoadingListener {
                         }
                     }
                 }
+                // ARTHRITIS
+                if (entity.getAgeInMinecraftDays() > ARTHRITIS_DAYS_RATE && Math.random() < BASE_INFECTION_RATE) {
+                    applyIllness(player, Illnesses.ARTHRITIS);
+                }
             }
-        }, 0L, 100L);
+        }, 0L, 20 * 5);
     }
 
     @EventHandler
@@ -240,8 +247,13 @@ public class EventsIllnesses implements LoadingListener {
 
         // SEIZURES
         if ((event.getDamageSource().getDamageType() == DamageType.FALL
-                || event.getFinalDamage() >= TRAUMA_HEALTH_RATE) && Math.random() < PUNCTUAL_INFECTION_RATE) {
+                || event.getFinalDamage() >= SEIZURES_HEALTH_RATE) && Math.random() < PUNCTUAL_INFECTION_RATE) {
             applyIllness(player, Illnesses.SEIZURES);
+        }
+
+        // ARTHRITIS
+        if (event.getFinalDamage() >= ARTHRITIS_HEALTH_RATE && Math.random() < PUNCTUAL_INFECTION_RATE) {
+            applyIllness(player, Illnesses.ARTHRITIS);
         }
     }
 

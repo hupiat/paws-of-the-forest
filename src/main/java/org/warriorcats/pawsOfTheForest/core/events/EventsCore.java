@@ -29,6 +29,7 @@ import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
 import org.warriorcats.pawsOfTheForest.utils.HttpServerUtils;
 import org.warriorcats.pawsOfTheForest.utils.SkillsUtils;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +64,7 @@ public class EventsCore implements Listener {
                 existing = new PlayerEntity();
                 existing.setUuid(event.getPlayer().getUniqueId());
                 existing.setName(event.getPlayer().getName());
+                existing.setBirthDate(Instant.now());
                 existing.setSettings(new SettingsEntity());
                 for (SkillBranches branche : SkillBranches.values()) {
                     SkillBranchEntity brancheEntity = new SkillBranchEntity();
