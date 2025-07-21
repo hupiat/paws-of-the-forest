@@ -2,6 +2,8 @@ package org.warriorcats.pawsOfTheForest.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +17,7 @@ import org.warriorcats.pawsOfTheForest.skills.Skills;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +26,24 @@ public final class PlayersUtils {
     private static final String META_DOWNED_KEY = "downed";
     private static final String META_DOWNED_CD_KEY = "hold_on_cd";
     private static final String META_WAYPOINT_INDEX = "waypoint_index";
+
+    public static Optional<Player> getNearestPlayer(Player source) {
+        Location sourceLoc = source.getLocation();
+        Player nearest = null;
+        double minDistanceSquared = Double.MAX_VALUE;
+
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            if (target.equals(source) || !target.getWorld().equals(source.getWorld())) continue;
+
+            double distanceSquared = sourceLoc.distanceSquared(target.getLocation());
+            if (distanceSquared < minDistanceSquared) {
+                minDistanceSquared = distanceSquared;
+                nearest = target;
+            }
+        }
+
+        return Optional.ofNullable(nearest);
+    }
 
     public static int getWaypointIndex(Player player) {
         return player.hasMetadata(META_WAYPOINT_INDEX)

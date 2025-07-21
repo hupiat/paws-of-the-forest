@@ -398,8 +398,10 @@ public abstract class MessagesConf extends BaseConfiguration {
         public static final String ILLNESS_WORSENED =
                 getPropertyOrDefault("illnesses.illnessWorsened", "Your illness has worsened !", CONFIG_FILE_NAME);
 
-
         public static final String ILLNESS_WORSENED_DEATH =
                 getPropertyOrDefault("illnesses.illnessWorsenedDeath", "Your illness has worsened and you are dead !", CONFIG_FILE_NAME);
+
+        public static final String GROWL_RABIES =
+                getPropertyOrDefault("illnesses.growlRabies", "* raspy growl *", CONFIG_FILE_NAME);
     }
 }

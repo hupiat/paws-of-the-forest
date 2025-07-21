@@ -1,6 +1,8 @@
 package org.warriorcats.pawsOfTheForest.illnesses;
 
+import io.papermc.paper.entity.LookAnchor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Biome;
@@ -20,10 +22,7 @@ import org.warriorcats.pawsOfTheForest.core.configurations.MessagesConf;
 import org.warriorcats.pawsOfTheForest.core.events.EventsCore;
 import org.warriorcats.pawsOfTheForest.core.events.LoadingListener;
 import org.warriorcats.pawsOfTheForest.players.PlayerEntity;
-import org.warriorcats.pawsOfTheForest.utils.BiomesUtils;
-import org.warriorcats.pawsOfTheForest.utils.HibernateUtils;
-import org.warriorcats.pawsOfTheForest.utils.ItemsUtils;
-import org.warriorcats.pawsOfTheForest.utils.MobsUtils;
+import org.warriorcats.pawsOfTheForest.utils.*;
 
 import java.time.Instant;
 import java.util.*;
@@ -34,6 +33,8 @@ public class EventsIllnesses implements LoadingListener {
     public static final double BASE_INFECTION_RATE = 0.002;
     public static final double NEARBY_BASE_INFECTION_RATE = 0.0011;
     public static final int BASE_INFECTION_DISTANCE = 5;
+
+    public static final double RABIES_AGGRESSION_RATE = 0.1;
 
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
@@ -136,6 +137,18 @@ public class EventsIllnesses implements LoadingListener {
             }
         } else {
             timeInSun.remove(uuid);
+        }
+
+        // RABIES aggression behaviour
+        if (entity.hasIllness(Illnesses.RABIES)) {
+            if (Math.random() < RABIES_AGGRESSION_RATE) {
+                PlayersUtils.getNearestPlayer(event.getPlayer()).ifPresent(nearest ->
+                        event.getPlayer().lookAt(nearest, LookAnchor.EYES, LookAnchor.EYES));
+
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_WOLF_GROWL, 1f, 0.8f);
+
+                event.getPlayer().chat(ChatColor.DARK_RED + MessagesConf.Illnesses.GROWL_RABIES);
+            }
         }
     }
 
