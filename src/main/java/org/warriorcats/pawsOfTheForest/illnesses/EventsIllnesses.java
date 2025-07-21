@@ -7,10 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -36,6 +38,7 @@ public class EventsIllnesses implements LoadingListener {
     public static final int BASE_INFECTION_DISTANCE = 5;
 
     public static final double RABIES_AGGRESSION_RATE = 0.1;
+    public static final int BROKEN_BONES_HEALTH_RATE = 2;
 
     // Illnesses which causes to death when worsened will not be present here
     private final Map<UUID, Set<Illnesses>> worsened = new ConcurrentHashMap<>();
@@ -179,6 +182,11 @@ public class EventsIllnesses implements LoadingListener {
         if ((entity instanceof Player || MobsUtils.isPredator(entity)) && Math.random() < BASE_INFECTION_RATE) {
             applyIllness(player, Illnesses.INFECTED_WOUNDS);
         }
+
+        // BROKEN_BONES
+        if (entity instanceof Player && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE && Math.random() < BASE_INFECTION_RATE) {
+            applyIllness(player, Illnesses.BROKEN_BONES);
+        }
     }
 
     @EventHandler
@@ -197,6 +205,19 @@ public class EventsIllnesses implements LoadingListener {
                 applyIllness(event.getPlayer(), Illnesses.EXTERNAL_PARASITES);
             }
         }, 20 * 5);
+    }
+
+    // BROKEN_BONES fall behaviour
+    @EventHandler
+    public void on(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (event.getDamageSource().getDamageType() == DamageType.FALL && player.getHealth() - event.getFinalDamage() <= BROKEN_BONES_HEALTH_RATE) {
+            // No infection rate here, this is planned
+            applyIllness(player, Illnesses.BROKEN_BONES);
+        }
     }
 
     private void applyIllness(Player player, Illnesses illness) {
