@@ -11,6 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -181,6 +182,16 @@ public class EventsIllnesses implements LoadingListener {
         if ((ItemsUtils.isDrinkable(event.getItem()) || ItemsUtils.isRawPrey(event.getItem())) && Math.random() < BASE_INFECTION_RATE) {
             applyIllness(event.getPlayer(), Illnesses.INTERNAL_PARASITES);
         }
+    }
+
+    // EXTERNAL_PARASITES infested beds behaviour
+    @EventHandler
+    public void on(PlayerBedEnterEvent event) {
+        Bukkit.getScheduler().runTaskLater(PawsOfTheForest.getInstance(), () -> {
+            if (Math.random() < BASE_INFECTION_RATE) {
+                applyIllness(event.getPlayer(), Illnesses.EXTERNAL_PARASITES);
+            }
+        }, 20 * 5);
     }
 
     private void applyIllness(Player player, Illnesses illness) {
