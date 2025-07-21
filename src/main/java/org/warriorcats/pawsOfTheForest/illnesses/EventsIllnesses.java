@@ -174,6 +174,11 @@ public class EventsIllnesses implements LoadingListener {
         if (MobsUtils.isInfectedWithRabies(entity) && Math.random() < NEARBY_BASE_INFECTION_RATE) {
             applyIllness(player, Illnesses.RABIES);
         }
+
+        // INFECTED_WOUNDS
+        if ((entity instanceof Player || MobsUtils.isPredator(entity)) && Math.random() < BASE_INFECTION_RATE) {
+            applyIllness(player, Illnesses.INFECTED_WOUNDS);
+        }
     }
 
     @EventHandler

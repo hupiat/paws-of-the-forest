@@ -153,4 +153,11 @@ public final class MobsUtils {
     public static boolean canBeInfectedByRabies(LivingEntity entity) {
         return entity instanceof Wolf || entity instanceof Bat || entity instanceof Cat;
     }
+
+    public static boolean isPredator(LivingEntity entity) {
+        return switch (entity.getType()) {
+            case WOLF, FOX, OCELOT, CAT -> true;
+            default -> false;
+        };
+    }
 }
