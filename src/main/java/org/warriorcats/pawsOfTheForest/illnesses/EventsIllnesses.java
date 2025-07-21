@@ -140,15 +140,13 @@ public class EventsIllnesses implements LoadingListener {
         }
 
         // RABIES aggression behaviour
-        if (entity.hasIllness(Illnesses.RABIES)) {
-            if (Math.random() < RABIES_AGGRESSION_RATE) {
-                PlayersUtils.getNearestPlayer(event.getPlayer()).ifPresent(nearest ->
-                        event.getPlayer().lookAt(nearest, LookAnchor.EYES, LookAnchor.EYES));
+        if (entity.hasIllness(Illnesses.RABIES) && Math.random() < RABIES_AGGRESSION_RATE) {
+            PlayersUtils.getNearestPlayer(event.getPlayer()).ifPresent(nearest ->
+                    event.getPlayer().lookAt(nearest, LookAnchor.EYES, LookAnchor.EYES));
 
-                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_WOLF_GROWL, 1f, 0.8f);
+            event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_WOLF_GROWL, 1f, 0.8f);
 
-                event.getPlayer().chat(ChatColor.DARK_RED + MessagesConf.Illnesses.GROWL_RABIES);
-            }
+            event.getPlayer().chat(ChatColor.DARK_RED + MessagesConf.Illnesses.GROWL_RABIES);
         }
     }
 
