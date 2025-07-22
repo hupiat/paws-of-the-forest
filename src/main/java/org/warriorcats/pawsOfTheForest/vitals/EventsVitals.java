@@ -22,7 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EventsVitals implements LoadingListener {
 
     public static final int BASE_MINECRAFT_FOOD_LEVEL_FOR_REGEN = 18;
-    public static final long BASE_MINECRAFT_ACTIVITY_FREQUENCY_TICKS = (long) (20L * 1.5);
+    public static final int BASE_MINECRAFT_FOOT_STEP_BEFORE_CONSUMING = 4;
+    public static final long BASE_MINECRAFT_ACTIVITY_FREQUENCY_TICKS = 80L;
 
     public static final double BASE_REGEN_VALUE = 0.05;
     public static final double SOCIAL_REGEN_VALUE = 0.1;
@@ -39,6 +40,13 @@ public class EventsVitals implements LoadingListener {
     private final Map<UUID, Double> distances = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastSocialActivities = new ConcurrentHashMap<>();
 
+    // Algorithm :
+    // ----------------------------------------------------------
+    // When the player walk, sprint, or swim, we are counting
+    // the meters travelled. Then, when we reach a fixed value,
+    // the vitals are decreased if the activity frequency is true.
+    // ----------------------------------------------------------
+    // This is how Minecraft's algorithm works under the hood :)
     private boolean activityFrequency = false;
 
     @Override
@@ -80,7 +88,7 @@ public class EventsVitals implements LoadingListener {
         double total = distances.getOrDefault(player.getUniqueId(), 0.0);
         total += distance;
 
-        if (total >= 4 && activityFrequency) {
+        if (total >= BASE_MINECRAFT_FOOT_STEP_BEFORE_CONSUMING && activityFrequency) {
             if (player.isSprinting()) {
                 decreaseVitals(player, SPRINT_CONSUME_VALUE, SPRINT_CONSUME_VALUE, 0, 0);
             } else if (player.isInWater()) {
