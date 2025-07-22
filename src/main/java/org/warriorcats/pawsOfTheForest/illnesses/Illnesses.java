@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.illnesses;
 
 import lombok.Getter;
 import org.bukkit.potion.PotionEffectType;
+import org.warriorcats.pawsOfTheForest.utils.EnumsUtils;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 import java.util.Map;
@@ -87,11 +88,6 @@ public enum Illnesses {
     }
 
     public static Illnesses from(String illnessStr) {
-        for (Illnesses illness : values()) {
-            if (illness.toString().toLowerCase().startsWith(illnessStr.toLowerCase())) {
-                return illness;
-            }
-        }
-        return valueOf(illnessStr);
+        return EnumsUtils.from(illnessStr, Illnesses.class);
     }
 }

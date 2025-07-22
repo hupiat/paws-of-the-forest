@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.skills;
 
 import lombok.Getter;
 import org.bukkit.block.Biome;
+import org.warriorcats.pawsOfTheForest.utils.EnumsUtils;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 import javax.annotation.Nullable;
@@ -96,11 +97,6 @@ public enum Waypoints {
     }
 
     public static Waypoints from(String waypointStr) {
-        for (Waypoints waypoint : values()) {
-            if (waypoint.toString().toLowerCase().startsWith(waypointStr.toLowerCase())) {
-                return waypoint;
-            }
-        }
-        return valueOf(waypointStr);
+        return EnumsUtils.from(waypointStr, Waypoints.class);
     }
 }

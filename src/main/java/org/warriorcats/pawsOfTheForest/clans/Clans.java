@@ -1,6 +1,7 @@
 package org.warriorcats.pawsOfTheForest.clans;
 
 import lombok.Getter;
+import org.warriorcats.pawsOfTheForest.utils.EnumsUtils;
 import org.warriorcats.pawsOfTheForest.utils.StringsUtils;
 
 @Getter
@@ -18,12 +19,7 @@ public enum Clans {
     }
 
     public static Clans from(String clanStr) {
-        for (Clans clan : values()) {
-            if (clan.toString().toLowerCase().startsWith(clanStr.toLowerCase())) {
-                return clan;
-            }
-        }
-        return valueOf(clanStr);
+        return EnumsUtils.from(clanStr, Clans.class);
     }
 
     @Override

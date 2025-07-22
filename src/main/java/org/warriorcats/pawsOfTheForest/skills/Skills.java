@@ -2,6 +2,7 @@ package org.warriorcats.pawsOfTheForest.skills;
 
 import lombok.Getter;
 import org.bukkit.Material;
+import org.warriorcats.pawsOfTheForest.utils.EnumsUtils;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -98,12 +99,7 @@ public enum Skills {
     }
 
     public static Skills from(String skillsStr) {
-        for (Skills value : values()) {
-            if (value.toString().trim().equalsIgnoreCase(skillsStr.trim())) {
-                return value;
-            }
-        }
-        return valueOf(skillsStr);
+        return EnumsUtils.from(skillsStr, Skills.class);
     }
 
     public static Set<Skills> getActiveSkills() {
