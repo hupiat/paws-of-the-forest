@@ -73,12 +73,12 @@ public enum Illnesses {
     ));
 
     private final boolean fatal;
-    private final int daysBeforeWorsened;
+    private final int minecraftDaysBeforeWorsened;
     private final Map<PotionEffectType, Integer> potionEffects;
 
-    Illnesses(boolean fatal, int daysBeforeWorsened, Map<PotionEffectType, Integer> potionEffects) {
+    Illnesses(boolean fatal, int minecraftDaysBeforeWorsened, Map<PotionEffectType, Integer> potionEffects) {
         this.fatal = fatal;
-        this.daysBeforeWorsened = daysBeforeWorsened;
+        this.minecraftDaysBeforeWorsened = minecraftDaysBeforeWorsened;
         this.potionEffects = potionEffects;
     }
 

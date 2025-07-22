@@ -23,11 +23,11 @@ public class IllnessEntity {
     private Date gotAt;
 
     public int getAmplifier() {
-        if (illness.getDaysBeforeWorsened() == 0) {
+        if (illness.getMinecraftDaysBeforeWorsened() == 0) {
             return 0;
         }
         long elapsed = new Date().getTime() - gotAt.getTime();
-        long threshold = (long) illness.getDaysBeforeWorsened() * 20 * 60 * 1000;
+        long threshold = (long) illness.getMinecraftDaysBeforeWorsened() * 20 * 60 * 1000;
         return elapsed >= threshold ? 2 : 0;
     }
 
